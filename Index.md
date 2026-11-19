@@ -1,0 +1,57 @@
+---
+generated: true
+---
+# Reference
+
+> Written by the Decisions panel from the notes in this vault. Edit the notes; changes here are overwritten.
+
+1. [[#1 Glossary|Glossary]] · 30 [[term|terms]]
+2. [[#2 Decision log|Decision log]] · 8 in force
+
+## 1 Glossary
+
+- **1.1** [[adr]] *(entity, v1)*: A short file recording one decision: the [[question]], its options as [[ears|EARS]] [[rule|rules]], the choice, and its consequences.
+- **1.2** [[agent]] *(actor, v1)*: An AI model doing work in a session: it writes, checks and asks, and the [[person]] decides.
+- **1.3** [[autocommit]] *(action, v1)*: Committing changes automatically at a pace a project sets.
+- **1.4** [[ci]] *(actor, v1)*: The automated checker that runs tests whenever code is committed.
+- **1.5** [[cryptic-questions]] *(problem, v1)*: [[agent|Agent]] [[question|questions]] assume jargon and treat the [[person]]'s words as fixed picks instead of reasoning about them.
+- **1.6** [[ears]] *(entity, v1)*: A fixed sentence pattern for a [[rule]]: When, While, If or Where, then the system shall do something.
+- **1.7** [[evidence]] *(entity, v1)*: The link that backs a [[result]] in a [[verdict]]: the [[scenario]] or test run that showed it.
+- **1.8** [[finding]] *(entity, v1)*: One problem a [[verdict]] reports, tied to the [[requirement]] it breaks and written in the [[spec]]'s vocabulary.
+- **1.9** [[gherkin]] *(entity, v3)*: The Given, When, Then language used for [[scenario|scenarios]] in a [[spec]].
+- **1.10** [[hard-to-judge]] *(problem, v1)*: The [[person]] cannot tell quickly whether an [[agent]]'s output is good.
+- **1.11** [[job]] *(entity, v1)*: One piece of work an [[agent]] carries from a [[person]]'s request to a [[verdict]]: its [[spec]], its [[message]]s, and any [[adr]]s it raised.
+- **1.12** [[link]] *(entity, v1)*: A reference from text to a [[term]]'s note, written as [[term]] in notes, [[spec|specs]] and [[adr|ADRs]], and as a markdown link to the note's file in chat replies, where wiki links show as plain text; every instance of a defined word gets one.
+- **1.13** [[long-replies]] *(problem, v1)*: [[agent|Agent]] replies run far too long and are tedious to review.
+- **1.14** [[message]] *(entity, v1)*: A YAML record one [[agent]] writes to hand work to another: who, what [[job]], status, links and needs.
+- **1.15** [[person]] *(actor, v1)*: The human the [[agent|agents]] work for: the only one who decides, and the reader every [[response|reply]] is written for.
+- **1.16** [[question]] *(entity, v1)*: A request from an [[agent]] for a [[person]] to decide, written as a proposed [[adr]] and shown as a [[adr|decision]] card.
+- **1.17** [[requirement]] *(entity, v1)*: One [[rule]] in a [[spec]], with an ID such as REQ-003, that its [[gherkin|Gherkin]] [[scenario|scenarios]] check.
+- **1.18** [[response]] *(entity, v2)*: What an [[agent]] writes back to a [[person]]: up to four labelled lines (Done, Open, Needs you, Check), each included only when it has something to say, in at most 8 lines.
+- **1.19** [[result]] *(entity, v1)*: The pass or fail a [[verdict]] gives one [[requirement]].
+- **1.20** [[rule]] *(entity, v1)*: One sentence a [[adr|decision]] put in force, written in [[ears|EARS]]; [[agent|agents]] follow the newest one.
+- **1.21** [[rules-not-landing]] *(problem, v1)*: Instructions get recited back, but their effects never show up in what [[agent|agents]] do.
+- **1.22** [[scenario]] *(entity, v1)*: One concrete case under a [[requirement]], written in [[gherkin|Gherkin]] as Given, When and Then, and run as a test.
+- **1.23** [[selector]] *(entity, v1)*: An approved phrase a [[spec]] may use, such as "is assigned 20".
+- **1.24** [[skill]] *(entity, v1)*: A packaged procedure an [[agent]] loads when it is relevant, which can add its own [[selector]]s.
+- **1.25** [[spec]] *(entity, v2)*: A short file listing what a change must do: each [[ears|EARS]] [[rule]] states a [[requirement]], and its [[gherkin|Gherkin]] [[scenario|scenarios]] are the executable tests that check it, run through [[step]] code.
+- **1.26** [[step]] *(entity, v1)*: The test code that makes one [[selector]] actually run.
+- **1.27** [[term]] *(entity, v1)*: A note defining one word of the project vocabulary, which [[spec|specs]] and [[adr|decisions]] link to.
+- **1.28** [[test-sprawl]] *(problem, v1)*: Tests and QA grow far beyond what the work needs.
+- **1.29** [[verdict]] *(entity, v1)*: A YAML record giving pass or fail for each [[requirement]], with [[evidence]] and up to five [[finding|findings]].
+- **1.30** [[verifier]] *(actor, v1)*: The [[agent]] that checks a [[job]]'s change against its [[spec]] and writes the [[verdict]]; it never wrote the change.
+
+## 2 Decision log
+
+- **2.1** [[ADR-0001|ADR-0001]] *accepted (A)*: What shape must an [[agent]]'s [[question]] to a [[person]] take?
+- **2.2** [[ADR-0002|ADR-0002]] *accepted (A)*: How is a [[spec]] written, so that every [[requirement]] is checked by a test?
+- **2.3** [[ADR-0003|ADR-0003]] *accepted (A)*: What may appear in a [[spec]] line, and how is each [[term]] addressed?
+- **2.4** [[ADR-0004|ADR-0004]] *accepted (A)*: What fixed shape should an [[agent]]'s [[response|reply]] to you take instead?
+- **2.5** [[ADR-0005|ADR-0005]] *accepted (A)*: Where should each project's own layer live?
+- **2.6** [[ADR-0006|ADR-0006]] *accepted (Other)*: When should the tests you've written run automatically?
+- **2.7** [[ADR-0007|ADR-0007]] *accepted (A)*: Which sessions should load the base prompt and the Decisions panel?
+- **2.8** [[ADR-0008|ADR-0008]] *accepted (A)*: Should the base prompt leave out [[rule|rules]] an [[agent]] cannot act on?
+
+## Templates
+
+[[Term]] · [[Question (ADR)]] · [[Response]] · [[Spec]]

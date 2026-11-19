@@ -1,0 +1,56 @@
+{
+  "name": "decision-cards",
+  "version": "0.6.0",
+  "description": "Shows proposed ADRs as decision cards, with a reference browser over a shared vault of terms and decisions",
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "adrDir": {
+      "type": "string",
+      "title": "Decisions folder",
+      "description": "Folder of ADR notes: absolute for a shared vault, or relative to the project",
+      "default": "C:/Users/Aaron/Documents/Projects/personal/agent-vault/Decisions"
+    },
+    "termsDir": {
+      "type": "string",
+      "title": "Terms folder",
+      "description": "Folder of term notes: absolute for a shared vault, or relative to the project",
+      "default": "C:/Users/Aaron/Documents/Projects/personal/agent-vault/Terms"
+    },
+    "indexFile": {
+      "type": "string",
+      "title": "Index note",
+      "description": "Where the generated map of content is written; empty to skip",
+      "default": "C:/Users/Aaron/Documents/Projects/personal/agent-vault/Index.md"
+    },
+    "docsFile": {
+      "type": "string",
+      "title": "Docs note",
+      "description": "Where the generated Docs (rules and terms as one document) is written; empty to skip",
+      "default": "C:/Users/Aaron/Documents/Projects/personal/agent-vault/Docs.md"
+    },
+    "baseFile": {
+      "type": "string",
+      "title": "Base prompt",
+      "description": "Where the generated base prompt (the rules, reply and question shapes, and terms every agent follows) is written; empty to skip",
+      "default": "C:/Users/Aaron/Documents/Projects/personal/agent-vault/Base.md"
+    },
+    "claudeFile": {
+      "type": "string",
+      "title": "Workspace CLAUDE.md",
+      "description": "A CLAUDE.md the base prompt is written into, so every session under its folder loads it; empty to skip",
+      "default": "C:/Users/Aaron/Documents/Projects/CLAUDE.md"
+    },
+    "projectVault": {
+      "type": "string",
+      "title": "Project vault folder",
+      "description": "A folder inside each project whose Decisions and Terms are layered over the shared vault, the project's note winning",
+      "default": "vault"
+    },
+    "workspaceRoot": {
+      "type": "string",
+      "title": "Workspace folder",
+      "description": "The mod runs only in sessions under this folder; empty for every session",
+      "default": ""
+    }
+  }
+}

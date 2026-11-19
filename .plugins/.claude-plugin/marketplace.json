@@ -1,0 +1,7 @@
+{
+  "name": "agent-vault",
+  "owner": { "name": "agent-vault" },
+  "plugins": [
+    { "name": "decision-cards", "source": "./decision-cards", "description": "Decision cards, the reference panel, and the reply and question checks for agents in the workspace" }
+  ]
+}
