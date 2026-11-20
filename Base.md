@@ -7,14 +7,14 @@ Where anything earlier in a conversation, or in memory, disagrees with this file
 ## Rules in force
 
 - ADR-0001: When asking a person to decide, the agent writes the question as a proposed adr from the Question template: a Given, one Decide question, up to four Where options that each state an EARS rule with what happens and what it costs, Combines, and Recommend.
-- ADR-0002: When writing a spec, the author puts each EARS requirement in a Gherkin Rule line, with an ID and 1–3 Scenarios under it.
+- ADR-0002: When writing a spec, the author writes each EARS requirement with an ID and puts its 1–3 Gherkin Scenarios under it, in the same file.
 - ADR-0003: When writing a spec line, the author uses only EARS and Gherkin keywords, the fixed operators (is, equals, above, below, within, contains, not) and selectors, and links every other noun as a short term link.
 - ADR-0004: When writing a reply, the agent uses a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each a link or one short clause, in at most 8 rows.
 - ADR-0005: Where a project has its own rules, terms, docs or jobs, the agent keeps them in a vault folder inside that project's repository, layered over the shared vault, with the project's note winning where both define the same name.
-- ADR-0006: Where a term has a note, the base prompt includes it.
+- ADR-0006: Where a term is used by no rule in force, the vault keeps its note in Terms, and the base prompt lists it.
 - ADR-0007: When asking a person to decide, the agent writes the proposed adr and shows it as the native question dialog, and the dialog writes the person's pick back into that adr.
-- ADR-0008: When a person asks for a check, the agent first lists the requirements and scenarios it will test as a compact table and confirms them with the person, and the verifier then checks the job's change against them and writes a verdict, with evidence for each result and at most five findings.
-- ADR-0009: When handing a job to another agent, the agent hands it as a contract, and both agents communicate only through that contract and a result for each of its scenarios, with no prose.
+- ADR-0008: When a person asks for a check, the agent first lists every requirement and scenario it will test, as a compact table, and confirms them with the person, and the verifier then checks the job's change against them and writes a verdict, with evidence for each result and at most five findings.
+- ADR-0009: When handing a job to another agent, the agent hands it as a contract, and the receiving agent answers with a result for each of its scenarios, with no prose.
 - ADR-0010: When an adr that amends another is decided, the agent moves the amended adr to the Archive, gives the decided one its place, and renumbers the ADRs in force so they run in order with no gaps, updating every link to them.
 
 ## How to write a rule
