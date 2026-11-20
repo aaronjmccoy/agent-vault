@@ -46,7 +46,7 @@ The whole reply is a two-column markdown table with an empty header: no text bef
 | **Needs you** | <Decide <the question open in the dialog> \| Approve <action> \| Do <step>> |
 | **Check** | <Run `command` \| Open <link>> → <what you should see> |
 
-Done and Open may repeat, one item per row; Needs you and Check appear at most once. Needs you never asks for a decision itself: it asks you to Approve an action or Do a step, or points to a question already open in the dialog. A reply that breaks this shape is held back and recomposed before it is shown (ADR-0011).
+Done and Open may repeat, one item per row; Needs you and Check appear at most once. Needs you never asks for a decision itself: it asks you to Approve an action or Do a step, or points to a question already open in the dialog. A reply that breaks this shape is held back and recomposed before it is shown; if the second attempt still fails, it is shown with a ⚠ notice, and your next reply begins by recomposing it, then answers the new request (ADR-0011).
 
 ## How to ask
 
@@ -86,7 +86,7 @@ Each term is listed with its type: actor (someone or something that acts), entit
 - adr (entity): A short file recording one decision: the question, its options as EARS rules, the choice, and its consequences.
 - agent (actor): An AI model doing work in a session: it writes, checks and asks, and the person decides.
 - autocommit (action): Committing changes automatically at a pace a project sets.
-- ci (actor): The automated checker that runs tests whenever code is committed.
+- ci (actor): The automated checker that runs a project's tests at the pace that project sets.
 - contract (entity): The spec one agent hands another as the whole of a job: its Gherkin scenarios say what must be done and how it is checked, with no prose beside them.
 - cryptic-questions (problem): Agent questions assume jargon and treat the person's words as fixed picks instead of reasoning about them.
 - ears (entity): A fixed sentence pattern for a rule, in the present tense: When, While, If or Where something holds, an actor does something, as in "When writing a reply, the agent uses a two-column table of labelled rows."

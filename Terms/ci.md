@@ -2,8 +2,8 @@
 notation: t-6v1k
 type: actor
 aliases: [continuous integration]
-version: 2
+version: 3
 status: approved
-decided_by: ""
+decided_by: "[[ADR-0012]]"
 ---
-**Definition:** The automated checker that runs tests whenever code is committed.
+**Definition:** The automated checker that runs a project's tests at the pace that project sets.

@@ -73,7 +73,7 @@ How this system works, written from its 14 [[rule|rules]] in force and 31 define
 
 **[[autocommit]]** *(action)*: Committing changes automatically at a pace a project sets. Used in [[ADR-0012|ADR-0012]].
 
-**[[ci]]** *(actor)*: The automated checker that runs tests whenever code is committed. Used in [[ADR-0012|ADR-0012]].
+**[[ci]]** *(actor)*: The automated checker that runs a project's tests at the pace that project sets. Used in [[ADR-0012|ADR-0012]].
 
 **[[contract]]** *(entity)*: The [[spec]] one [[agent]] hands another as the whole of a [[job]]: its [[gherkin|Gherkin]] [[scenario|scenarios]] say what must be done and how it is checked, with no prose beside them. Used in [[ADR-0009|ADR-0009]].
 
@@ -119,7 +119,7 @@ How this system works, written from its 14 [[rule|rules]] in force and 31 define
 
 **[[spec]]** *(entity)*: A short file listing what a change must do: each [[ears|EARS]] [[rule]] states a [[requirement]], and its [[gherkin|Gherkin]] [[scenario|scenarios]] are the executable tests that check it, run through [[test-step|test step]] code. Used in [[ADR-0002|ADR-0002]], [[ADR-0003|ADR-0003]], [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]], [[ADR-0012|ADR-0012]].
 
-**[[term]]** *(entity)*: A note defining one word of the project vocabulary, which [[spec|specs]] and [[adr|decisions]] link to. Used in [[ADR-0001|ADR-0001]], [[ADR-0003|ADR-0003]], [[ADR-0004|ADR-0004]], [[ADR-0005|ADR-0005]], [[ADR-0006|ADR-0006]], [[ADR-0010|ADR-0010]], [[ADR-0011|ADR-0011]].
+**[[term]]** *(entity)*: A note defining one word of the project vocabulary, which [[spec|specs]] and [[adr|decisions]] link to. Used in [[ADR-0001|ADR-0001]], [[ADR-0003|ADR-0003]], [[ADR-0004|ADR-0004]], [[ADR-0005|ADR-0005]], [[ADR-0006|ADR-0006]], [[ADR-0010|ADR-0010]], [[ADR-0011|ADR-0011]], [[ADR-0012|ADR-0012]].
 
 **[[test-sprawl]]** *(problem)*: Tests and QA grow far beyond what the work needs.
 

@@ -13,7 +13,7 @@ generated: true
 - **1.1** [[adr]] *(entity, v2)*: A short file recording one decision: the [[question]], its options as [[ears|EARS]] [[rule|rules]], the choice, and its consequences.
 - **1.2** [[agent]] *(actor, v2)*: An AI model doing work in a session: it writes, checks and asks, and the [[person]] decides.
 - **1.3** [[autocommit]] *(action, v2)*: Committing changes automatically at a pace a project sets.
-- **1.4** [[ci]] *(actor, v2)*: The automated checker that runs tests whenever code is committed.
+- **1.4** [[ci]] *(actor, v3)*: The automated checker that runs a project's tests at the pace that project sets.
 - **1.5** [[contract]] *(entity, v1)*: The [[spec]] one [[agent]] hands another as the whole of a [[job]]: its [[gherkin|Gherkin]] [[scenario|scenarios]] say what must be done and how it is checked, with no prose beside them.
 - **1.6** [[cryptic-questions]] *(problem, v2)*: [[agent|Agent]] [[question|questions]] assume jargon and treat the [[person]]'s words as fixed picks instead of reasoning about them.
 - **1.7** [[ears]] *(entity, v4)*: A fixed sentence pattern for a [[rule]], in the present tense: When, While, If or Where something holds, an actor does something, as in "When writing a reply, the agent uses a two-column table of labelled rows."

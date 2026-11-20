@@ -168,6 +168,8 @@ Once you approve, a [[verifier]] that didn't make the change runs those checks a
 
 Agreeing on the list first means a pass covers what you expected it to cover, and you can add anything that's missing before the check runs.
 
+When tests run on their own is up to each project: it sets the pace at which [[ci]] runs its tests, and the pace at which to [[autocommit]]. There is no shared default, because projects differ too much for one pace.
+
 ## 5. Asking for work
 
 Say what outcome you want and how you'll know it's done, using the vault's own words. [[agent|Agents]] act on what they can check.
