@@ -73,7 +73,7 @@ How this system works, written from its 17 [[rule|rules]] in force and 31 define
 
 *Why:* In what order is an approved [[spec]] built, which decides how much of a half-done [[job]] you can trust? *Decided in [[ADR-0016|ADR-0016]] · Agents › Build.*
 
-**1.17** If a receiving [[agent]] cannot meet a [[scenario]] without a decision, it writes the [[question]] and asks the [[person]] in the dialog itself.
+**1.17** If a receiving [[agent]] cannot meet a [[scenario]] without a decision, it returns a fail [[result]] for that [[scenario]], and the handing [[agent]] writes the [[question]] and asks the [[person]].
 
 *Why:* Who asks you when an [[agent]] working on a handed-off [[contract]] needs a decision? *Decided in [[ADR-0017|ADR-0017]] · Agents › Communication.*
 

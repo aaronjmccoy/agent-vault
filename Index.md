@@ -60,7 +60,7 @@ generated: true
 - **2.14** [[ADR-0014|ADR-0014]] *accepted (B)*: Should the base prompt leave out [[rule|rules]] an [[agent]] cannot act on?
 - **2.15** [[ADR-0015|ADR-0015]] *accepted (A)*: Do you approve a [[job]]'s [[spec]] before any code is changed?
 - **2.16** [[ADR-0016|ADR-0016]] *accepted (A+B)*: In what order is an approved [[spec]] built, which decides how much of a half-done [[job]] you can trust?
-- **2.17** [[ADR-0017|ADR-0017]] *accepted (B)*: Who asks you when an [[agent]] working on a handed-off [[contract]] needs a decision?
+- **2.17** [[ADR-0017|ADR-0017]] *accepted (A)*: Who asks you when an [[agent]] working on a handed-off [[contract]] needs a decision?
 
 ## Templates
 

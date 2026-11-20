@@ -24,8 +24,8 @@ const split = (line: string): { label?: (typeof REPLY_LABELS)[number]; rest: str
 }
 
 // Defined terms the text mentions without a [[link]] (ADR-0003: link every
-// instance). Plurals and hyphenated names count; IDs such as ADR-0018 and
-// `code` do not.
+// instance). Plurals and hyphenated names count; IDs and placeholders such as
+// ADR-0018 or ADR-xxxx, and `code`, do not.
 const esc = (t: string) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 export const unlinkedTerms = (text: string, names: readonly string[]): string[] => {
   // A [[wiki link]] (notes) and a [markdown link](…) (chat, where wiki links do not render) both count.
@@ -36,7 +36,7 @@ export const unlinkedTerms = (text: string, names: readonly string[]): string[] 
   const found: string[] = []
   for (const name of names) {
     const body = name.split('-').map(esc).join('[\\s-]')
-    const re = new RegExp(`(^|[^\\w-])${body}(?:s|es)?(?![\\w]|-\\d)`, 'i')
+    const re = new RegExp(`(^|[^\\w-])${body}(?:s|es)?(?!\\w|-\\w)`, 'i')
     if (re.test(bare)) found.push(name)
   }
   return found

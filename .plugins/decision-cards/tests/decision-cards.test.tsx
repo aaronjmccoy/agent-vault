@@ -275,6 +275,7 @@ test('every instance of a defined term must be linked, in questions and replies'
   expect(unlinkedTerms('Each spec has two steps.', names)).toEqual(['spec', 'step'])
   expect(unlinkedTerms('This fixes long replies.', names)).toEqual(['long-replies'])
   expect(unlinkedTerms('See ADR-0018 and `spec.md`.', names)).toEqual([])
+  expect(unlinkedTerms('Write it as ADR-xxxx, then ADR-nnnn-vN.', names)).toEqual([])
   expect(unlinkedTerms('Two ADRs are open.', names)).toEqual(['adr'])
   expect(unlinkedTerms('A specification is not a spec-0001 id.', names)).toEqual([])
 
