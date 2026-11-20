@@ -328,7 +328,7 @@ export const basePrompt = (notes: readonly NoteEntry[], decisionsDir: string): s
     '| **Needs you** | <Decide <the question open in the dialog> \\| Approve <action> \\| Do <step>> |',
     '| **Check** | <Run `command` \\| Open <link>> → <what you should see> |',
     '',
-    'Done and Open may repeat, one item per row; Needs you and Check appear at most once. Needs you never asks for a decision itself: it asks you to Approve an action or Do a step, or points to a question already open in the dialog. A reply that breaks this shape is held back and recomposed before it is shown (ADR-0011).',
+    'Done and Open may repeat, one item per row; Needs you and Check appear at most once. Needs you never asks for a decision itself: it asks you to Approve an action or Do a step, or points to a question already open in the dialog. A reply that breaks this shape is held back and recomposed before it is shown; if the second attempt still fails, it is shown with a ⚠ notice, and your next reply begins by recomposing it, then answers the new request (ADR-0011).',
     '',
     '## How to ask',
     '',

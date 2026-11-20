@@ -117,7 +117,7 @@ Every reply is a two-column table and nothing else: no text before or after it, 
 
 Each row opens with its listed words and is at most two sentences; longer detail goes in a linked note. Done and Open may repeat, one item per row, while Needs you and Check appear at most once. Read **Needs you** first: it's the only row that asks something of you, and it never asks for a decision itself, because decisions are asked in the dialog.
 
-Long replies are tedious to review. This shape tells you what changed, what's left, what's waiting on you, and how to check it yourself, in a few lines. A reply that breaks the shape is held back and recomposed before you see it; only if the second attempt still fails is it shown, with a ⚠ note saying what is wrong.
+Long replies are tedious to review. This shape tells you what changed, what's left, what's waiting on you, and how to check it yourself, in a few lines. A reply that breaks the shape is held back and recomposed before you see it; only if the second attempt still fails is it shown, with a ⚠ note saying what is wrong, and the [[agent]]'s next [[response|reply]] begins by recomposing it before answering your new request.
 
 ### 4.2 Questions: a proposed ADR, asked in the dialog
 
