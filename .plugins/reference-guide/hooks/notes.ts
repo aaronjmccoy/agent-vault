@@ -86,7 +86,12 @@ export const ruleOf = (body: string): string => {
   const decision = body.match(/^Decision\s+(\S+)/m)?.[1]
   if (!decision) return ''
   if (decision === 'Other') return body.match(/^Other\s+(.+)$/m)?.[1]?.trim() ?? ''
-  return body.match(new RegExp(`^Where\\s+${decision}:\\s*(.+)$`, 'm'))?.[1]?.trim() ?? ''
+  // ADR-0018: options that combine are decided together, as "A+C"; all their rules hold.
+  return decision
+    .split('+')
+    .map(letter => body.match(new RegExp(`^Where\\s+${letter}:\\s*(.+)$`, 'm'))?.[1]?.trim() ?? '')
+    .filter(Boolean)
+    .join(' ')
 }
 
 export const decisionNote = (name: string, file: string, text: string): NoteEntry => {
@@ -110,7 +115,7 @@ export const decisionNote = (name: string, file: string, text: string): NoteEntr
     outcome: outcomeOf(body),
     scope: meta.scope ?? '',
     rule: ruleOf(body),
-    // ADR-0013: a rule that only records setup, or leaves the choice to each project,
+    // ADR-0014: a rule that only records setup, or leaves the choice to each project,
     // stays in force and in Docs but is kept out of what agents read.
     record: (meta.prompt ?? '').toLowerCase() === 'record',
   }

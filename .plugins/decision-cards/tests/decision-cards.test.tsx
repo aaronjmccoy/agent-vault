@@ -476,3 +476,22 @@ test('a step that calls a tool streams through unchanged', async ($, on) => {
   for await (const c of $.turn.step({ turnId: 't2', index: 0, model: 'claude-opus-5-5', messageCount: 1 } as never)) if ((c as { kind: string }).kind === 'text') shown.push((c as { text: string }).text)
   expect(shown.join('')).toBe('Looking.')
 })
+
+test('options that combine can be picked together, and both rules are recorded', async ($, on) => {
+  const combinable = ADR.replace('Combines  exclusive', 'Combines  A and B combine')
+  const files: Record<string, string> = { 'decisions/ADR-0007.md': combinable }
+  fakeDisk(on, files)
+  let multi = false
+  on('tool.call', (_, e) => {
+    const qs = (e as unknown as { questions: { question: string; multiSelect: boolean }[] }).questions
+    multi = qs[0]!.multiSelect
+    return { result: { questions: qs, answers: { [qs[0]!.question]: 'Option A (Recommended), Option B' } } } as never
+  })
+  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
+  await $.tool.call({ tool: 'AskUserQuestion', questions: [{ question: 'q', header: 'ADR-0007', multiSelect: false, options: [{ label: 'x', description: 'x' }, { label: 'y', description: 'y' }] }] } as never)
+  expect(multi).toBe(true)
+  expect(files['decisions/ADR-0007.md']).toContain('Decision  A+B')
+  const note = decisionNote('ADR-0007', 'decisions/ADR-0007.md', files['decisions/ADR-0007.md']!)
+  expect(note.rule).toContain('rejects it')
+  expect(note.rule).toContain('warns')
+})

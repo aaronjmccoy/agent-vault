@@ -1,0 +1,23 @@
+---
+id: Draft-0018
+status: superseded
+superseded_by: ADR-0001
+scope: agents/communication
+---
+Given     A [[question]] asked in free prose turns [[cryptic-questions|cryptic]]: its options have no actor or trigger, and nothing records what was chosen.
+Decide    What shape does each [[question]] an [[agent]] puts to you take?
+
+Where A:  When asking a [[person]] to decide, the [[agent]] writes the [[question]] as a proposed [[adr]] from the Question template: a Given, one Decide question, up to four Where options that each state an [[ears|EARS]] [[rule]] with what happens and what it costs, Combines, and Recommend.
+          → each option is the exact [[rule]] that goes into force, and the answer becomes the record · every [[question]] takes a file to write
+Where B:  When asking a [[person]] to decide, the [[agent]] writes the [[question]] as a proposed [[adr]] from the Question template: a Given, one Decide question, up to four Where options that each state an [[ears|EARS]] [[rule]] with what happens and what it costs, and Combines, with no Recommend.
+          → you weigh the options with no nudge from the [[agent]] · there is no pick to accept quickly, and the [[agent]]'s view is lost
+Combines  exclusive
+Recommend A: the [[agent]]'s pick and its reason allow a quick answer without hiding the other options.
+
+Decision  A
+
+Consequences
+- When writing an option, the [[agent]] writes one [[ears|EARS]] [[rule]] in the present tense that follows the [[rule|rules]] in force and differs from the other options only in what is being decided.
+- When writing the Decide line, the [[agent]] names what changes for the [[person]], not only the mechanism.
+- When a [[question]] uses a new word, the [[agent]] first writes its [[term]] note and links it.
+- If the answer can be looked up, or a sensible default exists, the [[agent]] does not ask.

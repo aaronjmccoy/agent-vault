@@ -124,13 +124,14 @@ When an [[agent]] needs you to decide, it writes a proposed [[adr|ADR]] in the D
 | ADR line | What it holds | Example (ADR-0008) | In the dialog |
 | --- | --- | --- | --- |
 | Header | The ADR's id | ADR-0008 | The chip above the question |
-| Given | Why the question came up, and which problem it serves | Most people ask an agent to "check your work" and expect it to know what that means. | The preview beside each option, with every term's definition |
-| Decide | One question ending in "?" | What must happen when a person asks for a check? | The question |
-| Where A, B… | One EARS [[rule]] per option, then → what happens · what it costs | A: When asked for a check, the agent lists what it will test in a table, then confirms with you before checking. → you agree what a check covers · one confirmation step. B: When asked for a check, the agent writes what it will test as a spec, then confirms with you before checking. → the tests are kept for later · slower to set up. | One option each: the [[rule]] and its cost |
+| Given | At most two sentences: why the question came up, and which problem it serves | Most people ask an agent to "check your work" and expect it to know what that means. | The preview beside each option, with every term's definition |
+| Decide | One question ending in "?" that names what changes for you, not only the mechanism | What must happen when a person asks for a check? | The question |
+| Where A, B… | Two to four options, each one EARS [[rule]], then → what happens · what it costs | A: When asked for a check, the agent lists what it will test in a table, then confirms with you before checking. → you agree what a check covers · one confirmation step. B: When asked for a check, the agent writes what it will test as a spec, then confirms with you before checking. → the tests are kept for later · slower to set up. | One option each: the [[rule]] and its cost |
+| Combines | Which options can be picked together; "exclusive" means pick one | exclusive | A single choice, or several boxes when options combine |
 | Recommend | The [[agent]]'s pick and its reason | A: a check starts by agreeing what will be tested. | The first option, marked "(Recommended)" |
 | (none) | | | Other: a free-text box under the options |
 
-Every option follows the [[rule|rules]] already in force, and options differ only in the one thing being decided. Each is the exact [[rule]] that goes into force, so you choose the wording itself, not a direction an [[agent]] will interpret later. The dialog works on desktop and on mobile. Only picking an option decides anything. Words typed into Other leave the [[question]] open: the [[agent]] reads them and asks again. [[agent|Agents]] never ask in chat, where a decision would scroll away unrecorded.
+An [[agent]] asks only what it can't look up and has no sensible default for, and defines any new word as a [[term]] first, so the dialog can show its meaning. Every option follows the [[rule|rules]] already in force, and options differ only in the course of action they suggest. Each is the exact [[rule]] that goes into force, so you choose the wording itself, not a direction an [[agent]] will interpret later. The dialog works on desktop and on mobile. Only picking an option decides anything. Words typed into Other leave the [[question]] open: the [[agent]] reads them and asks again. [[agent|Agents]] never ask in chat, where a decision would scroll away unrecorded.
 
 ### 4.3 Handoffs: contracts in Gherkin
 

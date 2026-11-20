@@ -86,7 +86,12 @@ export const ruleOf = (body: string): string => {
   const decision = body.match(/^Decision\s+(\S+)/m)?.[1]
   if (!decision) return ''
   if (decision === 'Other') return body.match(/^Other\s+(.+)$/m)?.[1]?.trim() ?? ''
-  return body.match(new RegExp(`^Where\\s+${decision}:\\s*(.+)$`, 'm'))?.[1]?.trim() ?? ''
+  // ADR-0018: options that combine are decided together, as "A+C"; all their rules hold.
+  return decision
+    .split('+')
+    .map(letter => body.match(new RegExp(`^Where\\s+${letter}:\\s*(.+)$`, 'm'))?.[1]?.trim() ?? '')
+    .filter(Boolean)
+    .join(' ')
 }
 
 export const decisionNote = (name: string, file: string, text: string): NoteEntry => {
@@ -110,7 +115,7 @@ export const decisionNote = (name: string, file: string, text: string): NoteEntr
     outcome: outcomeOf(body),
     scope: meta.scope ?? '',
     rule: ruleOf(body),
-    // ADR-0013: a rule that only records setup, or leaves the choice to each project,
+    // ADR-0014: a rule that only records setup, or leaves the choice to each project,
     // stays in force and in Docs but is kept out of what agents read.
     record: (meta.prompt ?? '').toLowerCase() === 'record',
   }
@@ -327,7 +332,7 @@ export const basePrompt = (notes: readonly NoteEntry[], decisionsDir: string): s
     '',
     '## How to ask',
     '',
-    `Never ask in chat (ADR-0007). Write a proposed ADR into ${decisionsDir} from the Question template: Given (why the question came up, and which problem it serves), Decide (one sentence ending in "?"), one Where line per option (at most 4) written as an EARS rule with "→ what happens · what it costs" under it, Combines, and Recommend (your pick and why). Every option follows the rules already in force and differs only in the one thing being decided. Then call AskUserQuestion with one question per ADR (at most 4) and its header set to the ADR id, such as ADR-0009. The dialog is filled from the file, and the person's pick is written back into it.`,
+    `Never ask in chat (ADR-0007). Ask only if the answer can't be looked up and no sensible default exists, and write a term note first for any new word the question uses. Write a proposed ADR into ${decisionsDir} from the Question template: Given (at most two sentences: why the question came up, and which problem it serves), Decide (one sentence ending in "?" that names what changes for the person, not only the mechanism), two to four Where lines, each an EARS rule in the present tense with "→ what happens · what it costs" under it, Combines (which options can be picked together; "exclusive" if none), and Recommend (your pick and why). Every option follows the rules already in force and differs from the others only in the course of action it suggests. Then call AskUserQuestion with one question per ADR (at most 4) and its header set to the ADR id, such as ADR-0009. The dialog is filled from the file, and the person's pick is written back into it.`,
     '',
     'Only a picked option decides. If the person types in Other instead, the ADR stays proposed: read what they mean, talk it through or revise the ADR, and ask again. If they say a question is unclear, rewrite it. A question left unanswered stays proposed: ask it again later.',
     '',

@@ -281,13 +281,13 @@ async function indexNotes($: EngineInterface): Promise<void> {
       lastBase = text
     }
   }
-  // ADR-0012: the workspace CLAUDE.md carries the base prompt itself, since an
+  // ADR-0013: the workspace CLAUDE.md carries the base prompt itself, since an
   // @import of a file outside a session's project is not expanded.
   for (const file of shared.length ? config.claudeFiles : []) {
     const text = [
       '# Workspace base prompt',
       '',
-      `Every agent working under this folder follows the guidelines below (ADR-0012). This file is generated from the shared vault (${vaultRootOf(config.adrDir)}); change a decision there, not this file.`,
+      `Every agent working under this folder follows the guidelines below (ADR-0013). This file is generated from the shared vault (${vaultRootOf(config.adrDir)}); change a decision there, not this file.`,
       '',
       basePrompt(shared, config.adrDir).replace(/^# Base prompt\n+/, '').replace(/^## /gm, '### '),
     ].join('\n')
@@ -442,7 +442,8 @@ export const dialogOf = (file: string, p: Parsed, terms: CardTerm[]): Dialog => 
   return {
     file,
     id: p.id,
-    question: { question: `${plain(p.decide)}${why}`, header: p.id, multiSelect: false, options },
+    // ADR-0018: options that combine can be picked together.
+    question: { question: `${plain(p.decide)}${why}`, header: p.id, multiSelect: !/^exclusive\b/i.test(p.combines.trim()), options },
     byLabel,
     rules,
   }
@@ -451,7 +452,9 @@ export const dialogOf = (file: string, p: Parsed, terms: CardTerm[]): Dialog => 
 // Writes a picked option into its ADR. Anything else the dialog returns (typed
 // words, no answer) leaves the ADR proposed, and the agent reads it from the result.
 async function recordAnswer($: EngineInterface, d: Dialog, said: string): Promise<string> {
-  const letter = d.byLabel[said] ?? (/^[A-Z]$/.test(said) && d.rules[said] ? said : '')
+  // Several picks (when options combine) arrive comma-separated, and are recorded as "A+C".
+  const letters = said.split(/,\s*(?=Option [A-Z]\b)/).map(x => x.trim()).map(x => d.byLabel[x] ?? (/^[A-Z]$/.test(x) && d.rules[x] ? x : ''))
+  const letter = letters.every(Boolean) ? letters.join('+') : ''
   if (!letter) return ''
   const path = joinPath(config.adrDir, d.file)
   const before = String(await $.fs.read(path))
@@ -465,7 +468,7 @@ async function recordAnswer($: EngineInterface, d: Dialog, said: string): Promis
   }
   seen.delete(d.file)
   void refresh($).catch(() => {})
-  return `[decision-cards] ${d.id} accepted: ${letter}. Rule in force: ${d.rules[letter]}`
+  return `[decision-cards] ${d.id} accepted: ${letter}. Rule in force: ${letter.split("+").map(l => d.rules[l]).join(" ")}`
 }
 
 export const register: Register = (on, options) => {
@@ -581,7 +584,7 @@ export const register: Register = (on, options) => {
 
   // Each main-thread reply is checked against the reply rule in force (REPLY_RULE):
   // a broken one is flagged under the reply, and the agent is told.
-  // ADR-0014: a final reply is checked before it enters the chat. One that breaks the
+  // ADR-0011: a final reply is checked before it enters the chat. One that breaks the
   // reply rule is held back and recomposed by the agent from the problems found, so
   // only the corrected reply is shown. Steps that call tools pass through unchanged.
   on('turn.step', async function* ($, e, next) {
