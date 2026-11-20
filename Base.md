@@ -10,7 +10,7 @@ Where anything earlier in a conversation, or in memory, disagrees with this file
 - ADR-0002: When writing a spec, the author puts each EARS requirement in a Gherkin Rule line, with an ID and 1–3 Scenarios under it.
 - ADR-0003: When writing a spec line, the author uses only EARS and Gherkin keywords, the fixed operators (is, equals, above, below, within, contains, not) and selectors, and links every other noun as a short term link.
 - ADR-0004: When writing a reply, the agent uses a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each at most two sentences, in at most 8 rows.
-- ADR-0005: Where a project has its own rules, terms, docs or jobs, the agent keeps them in a vault folder inside that project's repository, layered over the shared vault, with the project's note winning where both define the same name.
+- ADR-0005: Where a project has its own rules or terms, the agent keeps them in a vault folder at the root of that project's repository, layered over the shared vault, so a project term wins over a shared one of the same name and a project decision replaces a shared one only when its amends line names it.
 - ADR-0006: Where a term has a note, the base prompt includes it.
 - ADR-0007: When asking a person to decide, the agent writes the proposed adr and shows it as the native question dialog, and the dialog writes the person's pick back into that adr.
 - ADR-0008: When a person asks for a check, the agent first lists the requirements and scenarios it will test as a compact table and confirms them with the person, and the verifier then checks the job's change against them and writes a verdict, with evidence for each result and at most five findings.
@@ -29,7 +29,7 @@ A rule is one EARS sentence in the present tense: a keyword clause, then the act
 | If <unwanted condition>, <actor> <responds>. | Handling a failure |
 | Where <context or feature>, <actor> <responds>. | Something that applies only in some places |
 
-Example: "When writing a reply, the agent uses a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each a link or one short clause, in at most 8 rows." One actor, one trigger, one response, so whether it was followed shows in what the agent does next.
+Example: "When writing a reply, the agent uses a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each at most two sentences, in at most 8 rows." One actor, one trigger, one response, so whether it was followed shows in what the agent does next.
 
 ## How to link
 
@@ -37,16 +37,16 @@ Every defined word is a link to its term note, every time it appears, not only t
 
 ## How to reply
 
-A two-column markdown table with an empty header, one row per labelled line, in this order, each row included only when it has something to say, at most 8 rows in all. Never put it in a code block: links must render.
+The whole reply is a two-column markdown table with an empty header: no text before or after it, and never in a code block, so links render. One row per labelled line, in this order, each row at most two sentences and included only when it has something to say, at most 8 rows in all. Start each row with its listed words.
 
 | | |
 | --- | --- |
 | **Done** | <Added \| Changed \| Fixed \| Removed \| Found> <thing> |
 | **Open** | <thing> is <not started \| not done \| blocked> |
-| **Needs you** | <Decide ADR-nnnn \| Approve <action> \| Do <step>> |
+| **Needs you** | <Decide <the question open in the dialog> \| Approve <action> \| Do <step>> |
 | **Check** | <Run `command` \| Open <link>> → <what you should see> |
 
-Done and Open may repeat, one item per row.
+Done and Open may repeat, one item per row; Needs you and Check appear at most once. Needs you never asks for a decision itself: it asks you to Approve an action or Do a step, or points to a question already open in the dialog. A reply that breaks this shape is held back and recomposed before it is shown (ADR-0011).
 
 ## How to ask
 

@@ -44,6 +44,19 @@ const isBase = (n: NoteEntry): boolean => slashed(n.file).startsWith(`${slashed(
 const noteCache = new Map<string, { mtimeMs: number; entry: NoteEntry }>()
 
 // Reads every term note and ADR (only the files that changed); the project's note wins.
+// ADR-0005: a project's layer sits at its repository's root, so a session started in
+// any subfolder finds it. Without a repository, the session's own folder is used.
+async function repoRootOf($: EngineInterface, start: string): Promise<string> {
+  let dir = start.replace(/\\/g, '/').replace(/\/+$/, '')
+  for (let i = 0; i < 30 && dir; i++) {
+    if (await $.fs.exists(`${dir}/.git`)) return dir
+    const up = dir.replace(/\/[^/]*$/, '')
+    if (!up || up === dir) break
+    dir = up
+  }
+  return start
+}
+
 async function indexNotes($: EngineInterface): Promise<void> {
   const layer = config.projectRoot && config.projectVault ? joinPath(config.projectRoot.replace(/\\/g, '/'), config.projectVault) : ''
   const sharedRoot = config.adrDir.replace(/\/Decisions$/, '').toLowerCase()
@@ -70,12 +83,20 @@ async function indexNotes($: EngineInterface): Promise<void> {
           continue
         }
       }
-      const id = `${kind}:${hit.entry.name.toLowerCase()}`
+      const id = kind === 'term' ? `term:${hit.entry.name.toLowerCase()}` : `decision:${path.toLowerCase()}`
       if (named.has(id)) continue
       named.add(id)
       found.push(hit.entry)
     }
   }
+  // ADR-0005: a project decision replaces a shared one only when it names it in an
+  // amends line; same-named notes never hide a shared decision by accident.
+  const amended = new Set(
+    found.filter(n => n.kind === 'decision' && !isBase(n) && n.status === 'accepted' && n.supersedes).map(n => n.supersedes.toLowerCase()),
+  )
+  const kept = found.filter(n => !(n.kind === 'decision' && isBase(n) && amended.has(n.name.toLowerCase())))
+  found.length = 0
+  found.push(...kept)
   found.sort((x, y) => x.kind.localeCompare(y.kind) || x.title.localeCompare(y.title))
   if (JSON.stringify(found) !== JSON.stringify(await read($, notes))) await update($, notes, () => found)
 }
@@ -712,7 +733,7 @@ export const register: Register = (on, options) => {
 
   on('session.start', async ($, e, next) => {
     await $.command.register({ name: 'ref-guide', description: 'Open the reference guide: rules in force, the glossary and the docs' })
-    config.projectRoot = e.cwd
+    config.projectRoot = await repoRootOf($, e.cwd)
     const fromEnv = String((await $.env.get('AGENT_VAULT').catch(() => '')) ?? '').trim()
     if (fromEnv) setVault(fromEnv)
     const result = await next(e)

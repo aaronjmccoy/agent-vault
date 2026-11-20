@@ -111,7 +111,7 @@ export const decisionNote = (name: string, file: string, text: string): NoteEntr
     status,
     version: '',
     supersededBy: (meta.superseded_by ?? '').replace(/^\[\[|\]\]$/g, ''),
-    supersedes: (meta.supersedes ?? '').replace(/^\[\[|\]\]$/g, ''),
+    supersedes: (meta.supersedes || meta.amends || '').replace(/^"|"$/g, '').replace(/^\[\[|\]\]$/g, ''),
     outcome: outcomeOf(body),
     scope: meta.scope ?? '',
     rule: ruleOf(body),

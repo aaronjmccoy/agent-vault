@@ -220,13 +220,15 @@ From then on, each workspace folder gets a CLAUDE.md holding the base prompt. Th
 
 ### 6.3 Rules for one project
 
-A project under a workspace can add its own [[term|terms]] and [[rule|rules]] in a `vault` folder at its root. Where a project's note and a shared note have the same name, the project's wins, in that project only.
+A project under a workspace can add its own [[term|terms]] and [[rule|rules]] in a `vault` folder at the root of its repository. Every session in that repository reads it, whichever subfolder it starts in. A project's [[term]] wins over a shared [[term]] of the same name, in that project only. A project's decisions are numbered in their own series with a project prefix, such as SHOP-0001, and one replaces a shared decision only when its amends line names that decision. Project docs and [[job|jobs]] live elsewhere in the repository.
 
 ```
 Documents/Projects/              ← a workspace
-└── shop-app/                    ← a project
+└── shop-app/                    ← a project's repository
     ├── src/
     └── vault/
+        ├── Decisions/
+        │   └── SHOP-0001.md     ← a rule for shop-app only; amends: "[[ADR-0004]]" would replace that shared rule here
         └── Terms/
             ├── sku.md           ← new here: "A stock-keeping unit: one sellable variant of a product."
             └── job.md           ← replaces the shared "job", in shop-app only

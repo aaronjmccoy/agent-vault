@@ -1,0 +1,17 @@
+---
+id: Draft-0039
+status: superseded
+superseded_by: ADR-0005
+scope: agents/process
+---
+Given     A project's own [[rule|rules]], [[term|terms]], docs and [[job|jobs]] sit on top of the shared vault, and where that layer lives decides who can read it. It serves [[rules-not-landing]]: a project's own [[rule|rules]] need a home its [[agent|agents]] load.
+Decide    Where should each project's own layer live?
+
+Where A:  Where a project has its own [[rule|rules]], [[term|terms]], docs or [[job|jobs]], the [[agent]] keeps them in a vault folder inside that project's repository, layered over the shared vault, with the project's note winning where both define the same name.
+          → the project layer travels with its code, to collaborators and pull requests · each repository gains a vault folder
+Where B:  Where a project has its own [[rule|rules]], [[term|terms]], docs or [[job|jobs]], the [[agent]] keeps them in a folder named for that project inside the shared vault, layered the same way.
+          → everything stays in one Obsidian vault on this machine · the project layer does not travel with the code
+Combines  exclusive
+Recommend A: a project owns its layer, so the layer lives with the project's code.
+
+Decision  A

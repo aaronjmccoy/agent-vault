@@ -495,3 +495,53 @@ test('options that combine can be picked together, and both rules are recorded',
   expect(note.rule).toContain('rejects it')
   expect(note.rule).toContain('warns')
 })
+
+test("a session in a subfolder reads the repository's layer, and a project decision replaces a shared one only through amends", async ($, on) => {
+  const files: Record<string, string> = {
+    'decisions/ADR-0007.md': ADR.replace('status: proposed', 'status: accepted') + '\nDecision  A\n',
+    'decisions/ADR-0008.md': ADR.replace('id: ADR-0007', 'id: ADR-0008').replace('status: proposed', 'status: accepted').replace('the linter rejects it', 'the shared linter rejects it') + '\nDecision  A\n',
+    'terms/selector.md': '---\ntype: entity\n---\n**Definition:** The shared meaning.\n',
+    'terms/step.md': '---\ntype: entity\n---\n**Definition:** Shared step.\n',
+    '/proj/vault/Terms/selector.md': '---\ntype: entity\n---\n**Definition:** The project meaning.\n',
+    '/proj/.git/HEAD': 'ref: refs/heads/main',
+    '/proj/vault/Decisions/SHOP-0001.md': ADR.replace('id: ADR-0007', 'id: SHOP-0001\namends: "[[ADR-0007]]"').replace('status: proposed', 'status: accepted').replace('the linter rejects it', 'the shop linter rejects it') + '\nDecision  A\n',
+  }
+  // Project paths keep their /proj/ tail; shared ones fold to decisions/ and terms/.
+  const norm = (path: string) => {
+    const p = path.replace(/\\/g, '/')
+    const at = p.indexOf('/proj/')
+    if (at >= 0 && !/\/decisions(\/|$)/i.test(p.slice(0, at))) return p.slice(at)
+    const r = rel(p)
+    return /^(terms|decisions)$/i.test(r) ? r.toLowerCase() : r
+  }
+  const under = (dir: string) => `${norm(dir).replace(/\/+$/, '')}/`
+  on('fs.exists', (_, e) => ({ value: norm(e.path) in files || Object.keys(files).some(k => k.startsWith(under(e.path))) }))
+  on('fs.list', (_, e) => ({
+    value: Object.keys(files)
+      .filter(k => k.startsWith(under(e.path)) && !k.slice(under(e.path).length).includes('/'))
+      .map(k => ({ name: k.slice(under(e.path).length), kind: 'file' as const, size: 1, mtimeMs: 1, isLink: false })),
+  }))
+  on('fs.read', (_, e) => {
+    const text = files[norm(e.path)]
+    if (text === undefined) throw new Error('ENOENT')
+    return { value: text }
+  })
+  on('fs.write', (_, e) => {
+    files[norm(e.path)] = e.text
+    return { value: undefined }
+  })
+  on('command.register', () => ({ value: { command: 'decisions' } }))
+  on('ui.open', () => ({ value: { isPlaced: true } }))
+  on('ui.toast', () => ({ value: undefined }))
+  on('clock.every', () => ({ value: undefined }))
+  on('clock.after', () => ({ value: undefined }))
+  on('session.start', (_, e) => ({ cwd: e.cwd }))
+  on('prompt.compose', () => ({ sections: [] }) as never)
+  await $.session.start({ cwd: '/proj/src', surface: 'desktop', isInteractive: true })
+  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
+  const composed = JSON.stringify(await $.prompt.compose({ model: 'claude-opus-5-5', promptModel: 'claude-opus-5-5', surfaces: ['mobile'], tools: [], outputStyle: null, traits: [], sections: [] } as never))
+  expect(composed).toContain('The project meaning.')
+  expect(composed).toContain('SHOP-0001')
+  expect(composed).toContain('the shared linter rejects it')
+  expect(composed).not.toContain('ADR-0007:')
+})

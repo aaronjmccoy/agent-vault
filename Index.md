@@ -48,7 +48,7 @@ generated: true
 - **2.2** [[ADR-0002|ADR-0002]] *accepted (A)*: How is a [[spec]] written, so that you can see each [[requirement]] pass or fail in a test?
 - **2.3** [[ADR-0003|ADR-0003]] *accepted (A)*: Which words may a [[spec]] line use, and so which of them can you look up as a [[term]]?
 - **2.4** [[ADR-0004|ADR-0004]] *accepted (A)*: What shape does each [[response|reply]] you read from an [[agent]] take?
-- **2.5** [[ADR-0005|ADR-0005]] *accepted (A)*: Where should each project's own layer live?
+- **2.5** [[ADR-0005|ADR-0005]] *accepted (A)*: Where does a project's own layer live?
 - **2.6** [[ADR-0006|ADR-0006]] *accepted (C)*: What happens to a [[term]] that no [[rule]] in force uses, in the base prompt you read and in the vault?
 - **2.7** [[ADR-0007|ADR-0007]] *accepted (A)*: Where do you answer an [[agent]]'s [[question|questions]]?
 - **2.8** [[ADR-0008|ADR-0008]] *accepted (A)*: What must happen when a [[person]] asks for a check?

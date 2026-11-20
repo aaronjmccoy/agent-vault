@@ -25,9 +25,9 @@ How this system works, written from its 14 [[rule|rules]] in force and 31 define
 
 *Why:* What shape does each [[response|reply]] you read from an [[agent]] take? *Decided in [[ADR-0004|ADR-0004]] · Agents › Communication.*
 
-**1.5** Where a project has its own [[rule|rules]], [[term|terms]], docs or [[job|jobs]], the [[agent]] keeps them in a vault folder inside that project's repository, layered over the shared vault, with the project's note winning where both define the same name.
+**1.5** Where a project has its own [[rule|rules]] or [[term|terms]], the [[agent]] keeps them in a vault folder at the root of that project's repository, layered over the shared vault, so a project [[term]] wins over a shared one of the same name and a project decision replaces a shared one only when its amends line names it.
 
-*Why:* Where should each project's own layer live? *Decided in [[ADR-0005|ADR-0005]] · Agents › Process.*
+*Why:* Where does a project's own layer live? *Decided in [[ADR-0005|ADR-0005]] · Agents › Process.*
 
 **1.6** Where a [[term]] has a note, the base prompt includes it.
 
