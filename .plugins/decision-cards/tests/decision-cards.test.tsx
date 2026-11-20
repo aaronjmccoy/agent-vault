@@ -326,7 +326,7 @@ test('the base prompt carries the rules in force, the reply and question shapes,
   const term = termNote('selector', 't/selector.md', '---\ntype: entity\n---\n**Definition:** An approved [[phrase]].\n')
   const text = basePrompt([accepted, waiting, term], 'C:/vault/Decisions')
   expect(text).toContain('- ADR-0007: When a spec is approved, the linter shall reject it if any selector has no step.')
-  expect(text).toContain('Needs you  <Decide ADR-nnnn')
+  expect(text).toContain('| **Needs you** | <Decide ADR-nnnn')
   expect(text).toContain('Write a proposed ADR into C:/vault/Decisions')
   expect(text).toContain('Waiting on the person: ADR-0009.')
   expect(text).toContain('- selector (entity): An approved phrase.')
@@ -417,4 +417,23 @@ test('picking a revision in the dialog marks the old decision superseded', async
   expect(files['decisions/ADR-0009.md']).toContain('status: accepted')
   expect(files['decisions/ADR-0007.md']).toContain('status: superseded')
   expect(files['decisions/ADR-0007.md']).toContain('superseded_by: ADR-0009')
+})
+
+test('/ref-guide opens the reference guide panel with the rules and the glossary', async ($, on) => {
+  const accepted = ADR.replace('status: proposed', 'status: accepted') + '\nDecision  A\n'
+  fakeDisk(on, { 'decisions/ADR-0007.md': accepted, 'terms/selector.md': '---\ntype: entity\n---\n**Definition:** An approved phrase.' })
+  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
+  const ran = await $.command.run({ command: 'ref-guide', args: '' } as Parameters<typeof $.command.run>[0])
+  expect(JSON.stringify(ran)).toContain('Reference guide opened')
+  const ui = await $.ui.mount({
+    plugin: 'decision-cards',
+    component: 'Pane',
+    requestId: 'ref-guide',
+    surface: 'desktop',
+    props: { title: 'Reference guide', isFocused: false, bodyColumns: 100, placement: 'dock', scroll: { offset: 0, bodyRows: 40 }, view: {} },
+  } as never)
+  expect(await ui.find({ type: 'Markdown', text: /Rules in force/ })).toBeDefined()
+  expect(await ui.find({ type: 'Markdown', text: /\*\*selector\*\*/ })).toBeDefined()
+  expect(await ui.find({ type: 'Markdown', text: /\[\[/ })).toBeUndefined()
+  await ui.unmount()
 })

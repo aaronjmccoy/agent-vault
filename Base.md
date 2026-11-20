@@ -11,9 +11,13 @@ Where anything earlier in a conversation, or in memory, disagrees with this file
 - ADR-0003: When a spec line is written, the author shall use only EARS and Gherkin keywords, the fixed operators (is, equals, above, below, within, contains, not) and selectors, and shall link every other noun as a short term link.
 - ADR-0004: When an agent replies to a person, the agent shall use four labelled lines (Done, Open, Needs you, Check), each a link or one short clause, in at most 8 lines.
 - ADR-0005: Where a project has its own rules, terms, docs or jobs, the agent shall keep them in a vault folder inside that project's repository, layered over the shared vault, with the project's note winning where both define the same name.
+- ADR-0006: The ci shall run a project's tests automatically at the pace that project specifies.
+- ADR-0007: Where an agent works in any folder under Documents\Projects, the agent shall load Base.md, through a CLAUDE.md in Documents\Projects, and the decision-cards mod shall run in that session.
+- ADR-0008: Where a rule only records setup or leaves the choice to each project, the decision-cards mod shall keep it out of the base prompt and list it in Docs only.
 - ADR-0009: Where a term has a note, the decision-cards mod shall put it in the base prompt.
 - ADR-0010: When an agent asks a person to decide, the agent shall write the proposed adr and show it as the native question dialog, and the decision-cards mod shall write the answer back into that adr.
 - ADR-0011: When a person asks for a check, the verifier shall check the job's change against its spec and write a verdict, with evidence for each result and at most five findings.
+- ADR-0012: When an agent hands a job to another agent, the agent shall hand it as a contract, and both agents shall communicate only through that contract and a result for each of its scenarios, with no prose.
 
 ## How to reply
 
@@ -26,13 +30,11 @@ Needs you  <Decide ADR-nnnn | Approve <action> | Do <step>>
 Check      <Run `command` | Open <link>> → <what you should see>
 ```
 
-Done and Open may repeat, one item per line. Link every instance of a defined term. In chat replies, where [[wiki links]] show as plain text, use a markdown link to that term's own note, for example [adr](C:/Users/Aaron/Documents/Projects/personal/agent-vault/Terms/adr.md). Link only words that have a note under Terms; others stay plain. In notes, specs and ADRs, use [[term]].
+Done and Open may repeat, one item per line. Link every defined term as [[term]], in replies, notes and specs alike.
 
 ## How to ask
 
-Never ask in chat (ADR-0010). Write a proposed ADR into C:/Users/Aaron/Documents/Projects/personal/agent-vault/Decisions from the Question template: Given, Decide (one sentence ending in "?"), one Where line per option (at most 4) written as an EARS rule with its consequence, Combines, and Recommend. Then call AskUserQuestion with one question per ADR (at most 4) and its header set to the ADR id, such as ADR-0012. The mod fills the question and options from the file and writes the answer back into it. A question left unanswered stays proposed: ask it again later.
-
-Waiting on the person: ADR-0012, ADR-0013. Do not act as if these were decided.
+Never ask in chat or with a question tool. Write a proposed ADR into C:/Users/Aaron/Documents/Projects/personal/agent-vault/Decisions from the Question template: Given, Decide (one sentence ending in "?"), one Where line per option written as an EARS rule with its consequence, Combines, and Recommend. Then end your turn; the answer comes back as a note.
 
 ## Terms
 
@@ -40,6 +42,7 @@ Waiting on the person: ADR-0012, ADR-0013. Do not act as if these were decided.
 - agent (actor): An AI model doing work in a session: it writes, checks and asks, and the person decides.
 - autocommit (action): Committing changes automatically at a pace a project sets.
 - ci (actor): The automated checker that runs tests whenever code is committed.
+- contract (entity): The spec one agent hands another as the whole of a job: its Gherkin scenarios say what must be done and how it is checked, with no prose beside them.
 - cryptic-questions (problem): Agent questions assume jargon and treat the person's words as fixed picks instead of reasoning about them.
 - ears (entity): A fixed sentence pattern for a rule: When, While, If or Where, then the system shall do something.
 - evidence (entity): The link that backs a result in a verdict: the scenario or test run that showed it.

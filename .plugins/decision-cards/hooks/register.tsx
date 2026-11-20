@@ -19,6 +19,8 @@ import { TEMPLATES, inWorkspace, vaultRootOf } from './vault'
 import { setTermsHref, checkQuestion, checkReply, QUESTION_RULE, REPLY_RULE } from './lint'
 
 const POLL_MS = 2000
+// The reference guide: rules in force, the glossary and open questions, read-only.
+const REF_GUIDE = 'ref-guide'
 
 const pending = atom({ plugin: 'decision-cards', key: 'pending' } as const, [], {
   shape: 'pending-1',
@@ -455,6 +457,10 @@ async function recordAnswer($: EngineInterface, d: Dialog, said: string): Promis
   return `[decision-cards] ${d.id} accepted: ${letter}. Rule in force: ${d.rules[letter]}`
 }
 
+// The generated Docs as the reference guide shows it: [[name|label]] reads as **label**.
+export const refGuideText = (all: readonly NoteEntry[]): string =>
+  docsDocument(all).replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (_, n: string, l?: string) => `**${(l ?? n).trim()}**`)
+
 export const register: Register = (on, options) => {
   config.adrDir = String(options.adrDir ?? 'decisions')
   config.termsDir = String(options.termsDir ?? 'terms')
@@ -470,6 +476,10 @@ export const register: Register = (on, options) => {
       name: 'decisions',
       description: 'Ask the decisions waiting for you in the question dialog',
     })
+    await $.command.register({
+      name: 'ref-guide',
+      description: 'Open the reference guide: rules in force, the glossary and open questions',
+    })
     config.projectRoot = e.cwd
     config.active = inWorkspace(e.cwd, config.workspaceRoot)
     if (!config.active) return next(e)
@@ -480,6 +490,24 @@ export const register: Register = (on, options) => {
       void refresh($).catch(() => {})
     })
     return result
+  })
+
+  on('command.run', { command: 'ref-guide' }, async $ => {
+    await refresh($).catch(() => {})
+    const { isPlaced } = await $.ui.open({ id: REF_GUIDE, title: 'Reference guide', columns: 72 })
+    return { text: isPlaced ? 'Reference guide opened.' : `This surface draws no panel. The same content is in ${config.docsFile || 'Docs.md'}.` }
+  })
+
+  // The reference guide's panel: the generated Docs, links shown in bold.
+  on('ui.render', { component: 'Pane', requestId: REF_GUIDE }, async ($, e, next) => {
+    if (!config.active) return next(e)
+    const { Box, Text, Markdown } = $.ui.resolve(e)
+    const text = refGuideText(await read($, notes))
+    return (
+      <Box flexDirection="column" paddingX={1}>
+        {Markdown ? <Markdown text={text} /> : <Text>{text}</Text>}
+      </Box>
+    )
   })
 
   on('command.run', { command: 'decisions' }, async $ => {
