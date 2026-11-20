@@ -242,7 +242,6 @@ test('writing a proposed ADR that breaks the question rule is refused, with what
   fakeDisk(on, { 'decisions/ADR-0007.md': ADR, 'terms/test-sprawl.md': '---\ntype: problem\n---\n**Definition:** Tests grow.' })
   on('tool.call', () => ({ result: {} }) as never)
   await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
   const ran = await $.tool.call({
     tool: 'Write',
     file_path: 'C:/Users/Aaron/Documents/Projects/personal/agent-vault/Decisions/ADR-0099.md',
@@ -259,7 +258,6 @@ test('a reply that breaks the reply rule is flagged under it, and the agent is t
   const session = mock.session(on)
   on('turn.complete', (_, e) => ({ text: e.answer }))
   await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
   const result = await $.turn.complete({
     reason: 'answer',
     answer: 'I did a lot of things today and here is a long story about them.',
@@ -395,7 +393,6 @@ test("a project's vault folder is layered over the shared vault, the project's n
   on('session.start', (_, e) => ({ cwd: e.cwd }))
   on('prompt.compose', () => ({ sections: [] }) as never)
   await $.session.start({ cwd: '/proj', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
   const composed = JSON.stringify(await $.prompt.compose({ model: 'claude-opus-5-5', promptModel: 'claude-opus-5-5', surfaces: ['mobile'], tools: [], outputStyle: null, traits: [], sections: [] } as never))
   expect(composed).toContain('The project meaning.')
   expect(composed).not.toContain('The shared meaning.')
@@ -425,7 +422,6 @@ test('AGENT_VAULT and AGENT_WORKSPACES set the vault and the workspaces, each wo
   fakeDisk(on, files)
   on('env.get', (_, e) => ({ value: e.name === 'AGENT_WORKSPACES' ? 'C:/work; D:/clients/' : e.name === 'AGENT_VAULT' ? 'C:/shared-vault' : undefined }) as never)
   await $.session.start({ cwd: 'D:/clients/acme', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
   const written = Object.keys(files)
   expect(written).toContain('C:/work/CLAUDE.md')
   expect(written).toContain('D:/clients/CLAUDE.md')
@@ -456,7 +452,6 @@ test('a final reply that breaks the reply rule is recomposed before it is shown'
     return { value: { isAnswered: true, text: fixed, usage: { input_tokens: 1, output_tokens: 1, cache_creation_input_tokens: 0, cache_read_input_tokens: 0 } } } as never
   })
   await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
   const shown: string[] = []
   const stream = $.turn.step({ turnId: 't1', index: 0, model: 'claude-opus-5-5', messageCount: 1 } as never)
   for await (const c of stream) if ((c as { kind: string }).kind === 'text') shown.push((c as { text: string }).text)
@@ -538,7 +533,6 @@ test("a session in a subfolder reads the repository's layer, and a project decis
   on('session.start', (_, e) => ({ cwd: e.cwd }))
   on('prompt.compose', () => ({ sections: [] }) as never)
   await $.session.start({ cwd: '/proj/src', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
   const composed = JSON.stringify(await $.prompt.compose({ model: 'claude-opus-5-5', promptModel: 'claude-opus-5-5', surfaces: ['mobile'], tools: [], outputStyle: null, traits: [], sections: [] } as never))
   expect(composed).toContain('The project meaning.')
   expect(composed).toContain('SHOP-0001')

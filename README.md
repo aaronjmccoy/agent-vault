@@ -15,7 +15,7 @@ Start with the [Cheat sheet](Cheat%20sheet.md). It walks through the whole loop 
 | [Base.md](Base.md) | The base prompt every agent reads, generated from Decisions and Terms |
 | [Docs.md](Docs.md), [Index.md](Index.md) | The same rules and terms as a numbered document, and a map of every note |
 | [Archive](Archive) | Superseded drafts, kept as history |
-| `.plugins` | The Claude Code modules that apply the rules (below) |
+| `.plugins` | The Claude Code module that applies the rules (below) |
 
 ## Adopt it
 
@@ -36,20 +36,18 @@ Start with the [Cheat sheet](Cheat%20sheet.md). It walks through the whole loop 
    }
    ```
 
-3. Install the modules in Claude Code:
+3. Install the module in Claude Code:
 
    ```
    /plugin marketplace add C:/Users/you/agent-vault/.plugins
    /plugin install decision-cards@agent-vault
-   /plugin install reference-guide@agent-vault
    ```
 
 4. Start a session in any project under one of your workspaces. Its CLAUDE.md now carries the base prompt.
 
 | Module | What it does |
 | --- | --- |
-| decision-cards | Writes the base prompt into a CLAUDE.md at each workspace, and into Base.md, Docs.md and Index.md. Asks proposed ADRs in the native question dialog and records your pick; `/decisions` lists any still waiting. Checks each reply and question against the rules. |
-| reference-guide | `/ref-guide` opens a panel for browsing and editing the rules, terms and docs. See [its README](.plugins/reference-guide/README.md). |
+| decision-cards | Writes the base prompt into a CLAUDE.md at each workspace, and into Base.md, Docs.md and Index.md. Asks proposed ADRs in the native question dialog and records your pick. Checks each reply and question against the rules. |
 
 Agents other than Claude Code (Codex, for example) read their own instruction file, such as AGENTS.md. Point that file at [Base.md](Base.md) until this is automated.
 

@@ -376,7 +376,7 @@ async function refreshOnce($: EngineInterface): Promise<void> {
   const ids = next.map(c => c.id || c.file)
   const fresh = ids.filter(id => !knownPending.has(id))
   if (!announced && ids.length) {
-    $.ui.toast(`${ids.length} decision${ids.length > 1 ? 's are' : ' is'} waiting for you. Run /decisions to answer.`)
+    $.ui.toast(`${ids.length} decision${ids.length > 1 ? 's are' : ' is'} waiting for you; the agent asks at the start of its next turn.`)
   } else if (announced && fresh.length) {
     $.ui.toast(`${fresh.join(', ')} ${fresh.length > 1 ? 'need' : 'needs'} your decision.`)
   }
@@ -506,10 +506,6 @@ export const register: Register = (on, options) => {
   config.projectVault = String(options.projectVault ?? 'vault')
   config.workspaceRoots = String(options.workspaceRoot ?? '').trim() ? [String(options.workspaceRoot)] : []
   on('session.start', async ($, e, next) => {
-    await $.command.register({
-      name: 'decisions',
-      description: 'List the decisions waiting for you; the agent asks them at the start of its next turn',
-    })
     config.projectRoot = await repoRootOf($, e.cwd)
     // Env settings win over the options: AGENT_VAULT is the vault folder, AGENT_WORKSPACES
     // one or more workspace folders separated by ";".
@@ -534,18 +530,12 @@ export const register: Register = (on, options) => {
     if (!config.active) return next(e)
     const result = await next(e)
     await ensureVault($).catch(() => {})
-    void refresh($).catch(() => {})
+    // The first read finishes before the session goes on, so the prompt and checks start current.
+    await refresh($).catch(() => {})
     $.clock.every(POLL_MS, () => {
       void refresh($).catch(() => {})
     })
     return result
-  })
-
-  on('command.run', { command: 'decisions' }, async $ => {
-    await refresh($).catch(() => {})
-    const ids = (await read($, pending)).map(c => c.id || c.file)
-    if (!ids.length) return { text: 'Nothing is waiting for you.' }
-    return { text: `${ids.join(', ')} ${ids.length > 1 ? 'are' : 'is'} waiting. The agent asks ${ids.length > 1 ? 'them' : 'it'} again at the start of its next turn.` }
   })
 
   // Agents ask through the native question dialog (ADR-0007), one question per

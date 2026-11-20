@@ -182,7 +182,7 @@ Say what outcome you want and how you'll know it's done, using the vault's own w
 | A one-off exception | "Just this once, …" | Nothing is recorded, and the [[rule]] stays as it is |
 | Options to weigh | "Propose a decision on…" | A [[question]] with each option written as a [[rule]] with its cost |
 | A long explanation | "Write it up as a doc" or "…as a note in the vault" | A document, since replies stop at 8 rows |
-| To answer waiting questions | Nothing: just carry on | The [[agent]] asks them again at the start of its next turn; `/decisions` lists what is waiting |
+| To answer waiting questions | Nothing: just carry on | The [[agent]] asks them again at the start of its next turn |
 
 Pitfalls to avoid:
 
