@@ -60,9 +60,13 @@ Never ask in chat (ADR-0007). Ask only if the answer can't be looked up and no s
 
 Only a picked option decides. If the person types in Other instead, the ADR stays proposed: read what they mean, talk it through or revise the ADR, and ask again. If they say a question is unclear, rewrite it. A question left unanswered stays proposed: ask it again at the start of your next turn, before other work.
 
+## How to plan and build
+
+Before changing any code, draft the job's spec and ask the person to approve it (ADR-0015). Then build one requirement at a time: first write the test step for every selector the spec uses and see each scenario fail, then build until all of that requirement's scenarios pass before starting the next (ADR-0016).
+
 ## How to hand off work
 
-When handing a job to another agent, hand it a contract: a spec from the Spec template, each requirement an EARS rule on a Gherkin Rule line with an ID and 1–3 Scenarios under it. Every test traces to a requirement ID; a bug gets a new requirement first. A spec stays a draft until every selector its scenarios use has a test step; only then is it approved. A spec line uses only EARS and Gherkin keywords, the operators is, equals, above, below, within, contains and not, and selectors: pick one from a skill already present, and when none fits, propose a new skill that defines the phrase with its test step; every other noun is a term link. Send the contract alone, with no envelope: every instruction is a requirement in it. Both agents communicate only through the contract and a result for each scenario, with no prose.
+When handing a job to another agent, hand it a contract: a spec from the Spec template, each requirement an EARS rule on a Gherkin Rule line with an ID and 1–3 Scenarios under it. Every test traces to a requirement ID; a bug gets a new requirement first. A spec stays a draft until every selector its scenarios use has a test step; only then is it approved. A spec line uses only EARS and Gherkin keywords, the operators is, equals, above, below, within, contains and not, and selectors: pick one from a skill already present, and when none fits, propose a new skill that defines the phrase with its test step; every other noun is a term link. Send the contract alone, with no envelope: every instruction is a requirement in it. Both agents communicate only through the contract and a result for each scenario, with no prose. If the receiving agent cannot meet a scenario without a decision, it returns a fail result for it, and the handing agent writes the question and asks the person (ADR-0017).
 
 ## How to check
 
@@ -76,7 +80,7 @@ When the person asks for a check ("check your work"), first list what you will t
 
 | The person says | Do this |
 | --- | --- |
-| "Add X. It is done when …" | The done-when becomes your Check row |
+| "Add X. It is done when …" | Draft the spec and get it approved before changing code; the done-when becomes your Check row |
 | "Check your work" | List what you will test, get it approved, then check (above) |
 | "Make this a rule: …" | Write a proposed ADR with the rule as an option, and ask it |
 | "Revise ADR-nnnn so that …" | Write an ADR that amends it, and ask it; never work around a rule quietly. Once it is decided, archive both as ADR-nnnn-vN and rewrite ADR-nnnn with the new rule as a Consequences line |

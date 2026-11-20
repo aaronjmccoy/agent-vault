@@ -176,7 +176,7 @@ Say what outcome you want and how you'll know it's done, using the vault's own w
 
 | You want | Say | What you get |
 | --- | --- | --- |
-| A task done | "Add X. It's done when `npm test` passes and the page shows Y." | The done-when becomes the Check row |
+| A task done | "Add X. It's done when `npm test` passes and the page shows Y." | A [[spec]] to approve before any code changes; the done-when becomes the Check row |
 | Exact meaning | Defined words: [[spec]], [[rule]], [[contract]], [[verdict]], [[job]] | No guessing, because each word has one note |
 | A checked result | "Check your work." | A table of what will be tested, to confirm, then a [[verdict]] |
 | A standing behaviour | "Make this a rule: when X, the agent does Y." | A proposed [[adr\|ADR]] in the dialog; once you pick it, every [[agent]] follows it |
@@ -193,7 +193,6 @@ Pitfalls to avoid:
 | Vague asks ("clean it up") | The [[agent]] guesses what done means | Say what done looks like, as something you can run or open |
 | Typing a rule into Other | It isn't in force until it's asked again as an option | Pick an option, or ask for a revised [[question]] |
 | Reopening a settled point | [[agent\|Agents]] won't reopen it on their own | Ask for a revising [[adr\|ADR]] by number |
-| A rule that only describes setup | It's kept out of the base prompt | Phrase it as something an [[agent]] does |
 | Editing Base.md or CLAUDE.md | Your edit is overwritten at the next rebuild | Change the decision behind it |
 
 ## 6. One prompt for every agent and project

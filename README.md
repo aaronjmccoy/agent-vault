@@ -1,6 +1,6 @@
 # agent-vault
 
-A set of agent best practices you can adopt as a whole: how you ask agents for work, how they reply, how they ask you to decide, and how they hand work to each other. Every rule is a decision record in this repo, and one base prompt generated from them is what every agent reads.
+A set of agent best practices you can adopt as a whole: how you ask agents for work, how they reply, how they ask you to decide, how they plan and build, and how they hand work to each other. Every rule is a decision record in this repo, and one base prompt generated from them is what every agent reads.
 
 Start with the [Cheat sheet](Cheat%20sheet.md). It walks through the whole loop and explains why each format was chosen.
 
