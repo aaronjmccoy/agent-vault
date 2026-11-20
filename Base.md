@@ -11,9 +11,6 @@ Where anything earlier in a conversation, or in memory, disagrees with this file
 - ADR-0003: When writing a spec line, the author uses only EARS and Gherkin keywords, the fixed operators (is, equals, above, below, within, contains, not) and selectors, and links every other noun as a short term link.
 - ADR-0004: When writing a reply, the agent uses four labelled lines (Done, Open, Needs you, Check), each a link or one short clause, in at most 8 lines.
 - ADR-0005: Where a project has its own rules, terms, docs or jobs, the agent keeps them in a vault folder inside that project's repository, layered over the shared vault, with the project's note winning where both define the same name.
-- ADR-0006: The ci runs a project's tests automatically at the pace that project specifies.
-- ADR-0007: Where an agent works in any folder under Documents\Projects, the agent loads Base.md, through a CLAUDE.md in Documents\Projects, and the decision-cards mod runs in that session.
-- ADR-0008: Where a rule only records setup or leaves the choice to each project, the decision-cards mod keeps it out of the base prompt and lists it in Docs only.
 - ADR-0009: Where a term has a note, the decision-cards mod puts it in the base prompt.
 - ADR-0010: When asking a person to decide, the agent writes the proposed adr and shows it as the native question dialog, and the decision-cards mod writes the answer back into that adr.
 - ADR-0011: When a person asks for a check, the agent first lists the requirements and scenarios it will test as a compact table and confirms them with the person, and the verifier then checks the job's change against them and writes a verdict, with evidence for each result and at most five findings.
@@ -22,20 +19,20 @@ Where anything earlier in a conversation, or in memory, disagrees with this file
 
 ## How to reply
 
-Up to four labelled lines, in this order, each included only when it has something to say, at most 8 lines in all:
+A two-column markdown table with an empty header, one row per labelled line, in this order, each row included only when it has something to say, at most 8 rows in all. Never put it in a code block: links must render.
 
-```
-Done       <Added | Changed | Fixed | Removed | Found> <thing>
-Open       <thing> is <not started | not done | blocked>
-Needs you  <Decide ADR-nnnn | Approve <action> | Do <step>>
-Check      <Run `command` | Open <link>> → <what you should see>
-```
+| | |
+| --- | --- |
+| **Done** | <Added \| Changed \| Fixed \| Removed \| Found> <thing> |
+| **Open** | <thing> is <not started \| not done \| blocked> |
+| **Needs you** | <Decide ADR-nnnn \| Approve <action> \| Do <step>> |
+| **Check** | <Run `command` \| Open <link>> → <what you should see> |
 
-Done and Open may repeat, one item per line. Link every defined term as [[term]], in replies, notes and specs alike.
+Done and Open may repeat, one item per row. Link every instance of a defined term. In chat replies, where [[wiki links]] show as plain text, use a markdown link to that term's own note, for example [adr](C:/Users/Aaron/Documents/Projects/personal/agent-vault/Terms/adr.md). Link only words that have a note under Terms; others stay plain. In notes, specs and ADRs, use [[term]].
 
 ## How to ask
 
-Never ask in chat or with a question tool. Write a proposed ADR into C:/Users/Aaron/Documents/Projects/personal/agent-vault/Decisions from the Question template: Given, Decide (one sentence ending in "?"), one Where line per option written as an EARS rule with its consequence, Combines, and Recommend. Then end your turn; the answer comes back as a note.
+Never ask in chat (ADR-0010). Write a proposed ADR into C:/Users/Aaron/Documents/Projects/personal/agent-vault/Decisions from the Question template: Given, Decide (one sentence ending in "?"), one Where line per option (at most 4) written as an EARS rule with its consequence, Combines, and Recommend. Then call AskUserQuestion with one question per ADR (at most 4) and its header set to the ADR id, such as ADR-0012. The mod fills the question and options from the file and writes the answer back into it. A question left unanswered stays proposed: ask it again later.
 
 ## Terms
 

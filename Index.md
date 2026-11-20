@@ -3,12 +3,10 @@ generated: true
 ---
 # Reference
 
-> Written by the Decisions panel from the notes in this vault. Edit the notes; changes here are overwritten.
+> Written by the decision-cards mod from the notes in this vault. Edit the notes; changes here are overwritten.
 
 1. [[#1 Glossary|Glossary]] · 31 [[term|terms]]
 2. [[#2 Decision log|Decision log]] · 13 in force
-3. [[#3 Waiting on you|Waiting on you]] · 0
-4. [[#4 Superseded|Superseded]] · 0
 
 ## 1 Glossary
 
@@ -59,20 +57,6 @@ generated: true
 - **2.11** [[ADR-0011|ADR-0011]] *accepted (A)*: What must happen when a [[person]] asks for a check?
 - **2.12** [[ADR-0012|ADR-0012]] *accepted (A)*: How must an [[agent]] hand a [[job]] to another [[agent]]?
 - **2.13** [[ADR-0013|ADR-0013]] *accepted (A)*: What happens to the numbering when an [[adr]] that amends another is decided?
-
-## 3 Waiting on you
-
-Nothing.
-
-## 4 Superseded
-
-Nothing.
-
-## 5 Parked
-
-> Set aside until a real failure calls for them; not in force.
-
-Nothing.
 
 ## Templates
 
