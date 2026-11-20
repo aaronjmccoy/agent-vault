@@ -16,6 +16,7 @@ Where anything earlier in a conversation, or in memory, disagrees with this file
 - ADR-0008: When a person asks for a check, the agent first lists the requirements and scenarios it will test as a compact table and confirms them with the person, and the verifier then checks the job's change against them and writes a verdict, with evidence for each result and at most five findings.
 - ADR-0009: When handing a job to another agent, the agent hands it as a contract, and both agents communicate only through that contract and a result for each of its scenarios, with no prose.
 - ADR-0010: When an adr that amends another is decided, the agent moves the amended adr to the Archive, gives the decided one its place, and renumbers the ADRs in force so they run in order with no gaps, updating every link to them.
+- ADR-0014: When a reply breaks the reply rule, the reply check holds it back before it enters the chat, and the agent recomposes the whole reply from the problems found, so only the corrected reply is shown.
 
 ## How to write a rule
 

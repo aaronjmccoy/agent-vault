@@ -439,3 +439,40 @@ test('EARS rules are in the present tense: "shall" is refused', () => {
   expect(isEars('When an agent replies, the agent shall use four lines.')).toBe(false)
   expect(isEars('Use four lines.')).toBe(false)
 })
+
+test('a final reply that breaks the reply rule is recomposed before it is shown', async ($, on) => {
+  const replyRule = '---\nid: ADR-0004\nstatus: accepted\n---\nGiven     x [[long-replies]]\nDecide    Which shape?\nWhere A:  When writing a reply, the agent uses a table of labelled rows.\n          → a · b\nWhere B:  When writing a reply, the agent uses prose.\n          → c · d\nRecommend A: x\n\nDecision  A\n'
+  fakeDisk(on, { 'decisions/ADR-0004.md': replyRule })
+  const draft = 'I did a lot of things today and here is a long story about them.'
+  const fixed = '| | |\n| --- | --- |\n| **Done** | Added the thing |'
+  let asked = ''
+  on('turn.step', async function* (_: unknown, e: { turnId: string; index: number }) {
+    yield { kind: 'text', index: 0, text: draft }
+    yield { kind: 'stop', stopReason: 'end_turn', usage: null }
+    return { turnId: e.turnId, index: e.index, answer: draft, toolUses: [] }
+  } as never)
+  on('model.fork', (_, e) => {
+    asked = String((e as { prompt?: unknown }).prompt ?? '')
+    return { value: { isAnswered: true, text: fixed, usage: { input_tokens: 1, output_tokens: 1, cache_creation_input_tokens: 0, cache_read_input_tokens: 0 } } } as never
+  })
+  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
+  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
+  const shown: string[] = []
+  const stream = $.turn.step({ turnId: 't1', index: 0, model: 'claude-opus-5-5', messageCount: 1 } as never)
+  for await (const c of stream) if ((c as { kind: string }).kind === 'text') shown.push((c as { text: string }).text)
+  expect(asked).toContain('breaks ADR-0004')
+  expect(shown.join('')).toBe(fixed)
+})
+
+test('a step that calls a tool streams through unchanged', async ($, on) => {
+  fakeDisk(on, {})
+  on('turn.step', async function* (_: unknown, e: { turnId: string; index: number }) {
+    yield { kind: 'text', index: 0, text: 'Looking.' }
+    yield { kind: 'stop', stopReason: 'tool_use', usage: null }
+    return { turnId: e.turnId, index: e.index, answer: 'Looking.', toolUses: [{ id: 'x', name: 'Read', input: {} }] }
+  } as never)
+  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
+  const shown: string[] = []
+  for await (const c of $.turn.step({ turnId: 't2', index: 0, model: 'claude-opus-5-5', messageCount: 1 } as never)) if ((c as { kind: string }).kind === 'text') shown.push((c as { text: string }).text)
+  expect(shown.join('')).toBe('Looking.')
+})

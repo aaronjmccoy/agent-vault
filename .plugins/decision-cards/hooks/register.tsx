@@ -1,5 +1,5 @@
 import { atom, read, update } from 'claude-code'
-import type { EngineInterface, Register } from 'claude-code'
+import type { EngineInterface, Register, TurnStepChunk } from 'claude-code'
 
 import type { Pending, CardOption, CardTerm, NoteEntry } from '../types'
 import {
@@ -581,6 +581,69 @@ export const register: Register = (on, options) => {
 
   // Each main-thread reply is checked against the reply rule in force (REPLY_RULE):
   // a broken one is flagged under the reply, and the agent is told.
+  // ADR-0014: a final reply is checked before it enters the chat. One that breaks the
+  // reply rule is held back and recomposed by the agent from the problems found, so
+  // only the corrected reply is shown. Steps that call tools pass through unchanged.
+  on('turn.step', async function* ($, e, next) {
+    if (!config.active || e.agentId !== undefined) return yield* next(e)
+    const held: TurnStepChunk[] = []
+    const stream = next(e)
+    let step = await stream.next()
+    while (!step.done) {
+      held.push(step.value)
+      step = await stream.next()
+    }
+    const result = step.value
+    const pass = function* () {
+      for (const c of held) yield c
+    }
+    if (result.toolUses.length || !result.answer.trim()) {
+      yield* pass()
+      return result
+    }
+    const all = await read($, notes)
+    const rule = findNote(REPLY_RULE, all)
+    const terms = all.filter(n => n.kind === 'term' && isCurrent(n)).map(n => n.name)
+    const problems = rule && rule.status === 'accepted' ? checkReply(result.answer, terms) : []
+    if (!problems.length) {
+      yield* pass()
+      return result
+    }
+    // If recomposing fails, the draft shows as it was, and turn.complete flags it.
+    let fixed = ''
+    try {
+      const redo = await $.model.fork({
+        prompt: [
+          `The reply you just drafted breaks ${REPLY_RULE}: ${problems.join('; ')}.`,
+          `Recompose the whole reply so it follows the reply rule in force: a two-column table with an empty header, up to four labelled rows (Done, Open, Needs you, Check) in that order, at most 8 rows, nothing outside the table, and every defined term written as a markdown link to its note in ${config.termsDir}.`,
+          'Keep its content. Answer with the corrected reply only.',
+          '',
+          'The draft:',
+          result.answer,
+        ].join('\n'),
+      })
+      fixed = redo.isAnswered ? redo.text.trim() : ''
+    } catch {
+      fixed = ''
+    }
+    if (!fixed) {
+      yield* pass()
+      return result
+    }
+    // The corrected text replaces the draft's text blocks; everything else streams as it came.
+    let placed = false
+    for (const c of held) {
+      if (c.kind !== 'text') yield c
+      else if (!placed) {
+        placed = true
+        yield { kind: 'text', index: c.index, text: fixed }
+      }
+    }
+    return { ...result, answer: fixed }
+  }).catch(async function* ($, e, next) {
+    return yield* next(e)
+  })
+
   on('turn.complete', async ($, e, next) => {
     if (!config.active) return next(e)
     const result = await next(e)

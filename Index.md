@@ -6,7 +6,7 @@ generated: true
 > Generated from the notes in this vault. Edit the notes; changes here are overwritten.
 
 1. [[#1 Glossary|Glossary]] · 31 [[term|terms]]
-2. [[#2 Decision log|Decision log]] · 13 in force
+2. [[#2 Decision log|Decision log]] · 14 in force
 
 ## 1 Glossary
 
@@ -57,6 +57,7 @@ generated: true
 - **2.11** [[ADR-0011|ADR-0011]] *accepted (D)*: When do the tests you've written run automatically?
 - **2.12** [[ADR-0012|ADR-0012]] *accepted (A)*: Which sessions should load the base prompt?
 - **2.13** [[ADR-0013|ADR-0013]] *accepted (A)*: Should the base prompt leave out [[rule|rules]] an [[agent]] cannot act on?
+- **2.14** [[ADR-0014|ADR-0014]] *accepted (A)*: What happens to a [[response|reply]] that breaks the reply [[rule]] before you see it?
 
 ## Templates
 
