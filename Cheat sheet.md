@@ -9,7 +9,7 @@ You and your [[agent|agents]] talk in a few fixed formats, one for each stage of
 All the work follows one cycle of six stages:
 
 1. **You ask** for work in plain words, saying what done looks like.
-2. **The [[agent]] works**, then **replies** in the [[response]] table.
+2. **The [[agent]] plans**, drafting the [[job]]'s [[spec]] for you to approve before it changes any code. Then it **builds** one [[requirement]] at a time, writing each [[test-step|test step]] first and seeing it fail, and **replies** in the [[response]] table.
 3. When it needs a choice from you, it writes a proposed [[adr|ADR]] and **asks** it in the question dialog.
 4. **You pick** an option. Your pick is written into the [[adr|ADR]], and its [[rule]] is in force.
 5. The base prompt is rebuilt, so **every [[agent]]** follows the new [[rule]] from its next session.
@@ -151,7 +151,7 @@ Rule: REQ-001 When a [[person]] asks for a check, the [[verifier]] writes one [[
 
 Every test traces to a [[requirement]] ID, and a bug gets a new [[requirement]] before its test is written. A [[spec]] stays a draft until every [[selector]] its [[scenario|scenarios]] use has a [[test-step|test step]]; only then is it approved.
 
-A [[spec]] line may use only EARS and Gherkin keywords, the operators is, equals, above, below, within, contains and not, and [[selector|selectors]]: fixed phrases such as "is written", each defined by a [[skill]] together with its [[test-step|test step]], the code that makes it run. The author picks one from a [[skill]] already present, and when none fits, proposes a new [[skill]] that defines it. Every other noun is a [[term]] [[link]]. The handing [[agent]] sends the [[contract]] alone: every instruction it gives is a [[requirement]] in it. The receiving [[agent]] answers with a [[result]] for each [[scenario]]. Neither writes any prose.
+A [[spec]] line may use only EARS and Gherkin keywords, the operators is, equals, above, below, within, contains and not, and [[selector|selectors]]: fixed phrases such as "is written", each defined by a [[skill]] together with its [[test-step|test step]], the code that makes it run. The author picks one from a [[skill]] already present, and when none fits, proposes a new [[skill]] that defines it. Every other noun is a [[term]] [[link]]. The handing [[agent]] sends the [[contract]] alone: every instruction it gives is a [[requirement]] in it. The receiving [[agent]] answers with a [[result]] for each [[scenario]]. Neither writes any prose. If the receiving [[agent]] cannot meet a [[scenario]] without a decision, it writes the [[question]] and asks you in the dialog itself, since it knows the problem best.
 
 Prose between [[agent|agents]] hides both what was asked and what came back. A [[contract]] settles both before the work starts, and its [[scenario|scenarios]] test the result afterwards.
 

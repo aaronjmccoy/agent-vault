@@ -1,6 +1,6 @@
 # Docs
 
-How this system works, written from its 14 [[rule|rules]] in force and 31 defined [[term|terms]]. Each [[rule]] says who acts, when, and what they do. Follow a link for a [[term]]'s definition or the [[adr|decision]] behind a [[rule]].
+How this system works, written from its 17 [[rule|rules]] in force and 31 defined [[term|terms]]. Each [[rule]] says who acts, when, and what they do. Follow a link for a [[term]]'s definition or the [[adr|decision]] behind a [[rule]].
 
 ## Contents
 
@@ -65,19 +65,31 @@ How this system works, written from its 14 [[rule|rules]] in force and 31 define
 
 *Why:* Should the base prompt leave out [[rule|rules]] an [[agent]] cannot act on? *Decided in [[ADR-0014|ADR-0014]] · Agents › Process.*
 
+**1.15** When a [[person]] makes a request, the [[agent]] drafts the [[job]]'s [[spec]] and asks the [[person]] to approve it before changing any code.
+
+*Why:* Do you approve a [[job]]'s [[spec]] before any code is changed? *Decided in [[ADR-0015|ADR-0015]] · Agents › Planning.*
+
+**1.16** While building a [[job]], the [[agent]] works one [[requirement]] at a time and makes all its [[scenario|scenarios]] pass before starting the next. While building a [[job]], the [[agent]] first writes the [[test-step|test step]] for every [[selector]] the [[spec]] uses, sees each [[scenario]] fail, then builds until all of them pass.
+
+*Why:* In what order is an approved [[spec]] built, which decides how much of a half-done [[job]] you can trust? *Decided in [[ADR-0016|ADR-0016]] · Agents › Build.*
+
+**1.17** If a receiving [[agent]] cannot meet a [[scenario]] without a decision, it writes the [[question]] and asks the [[person]] in the dialog itself.
+
+*Why:* Who asks you when an [[agent]] working on a handed-off [[contract]] needs a decision? *Decided in [[ADR-0017|ADR-0017]] · Agents › Communication.*
+
 ## 2. Glossary
 
 **[[adr]]** *(entity)*: A short file recording one decision: the [[question]], its options as [[ears|EARS]] [[rule|rules]], the choice, and its consequences. Used in [[ADR-0001|ADR-0001]], [[ADR-0003|ADR-0003]], [[ADR-0007|ADR-0007]], [[ADR-0010|ADR-0010]], [[ADR-0014|ADR-0014]].
 
-**[[agent]]** *(actor)*: An AI model doing work in a session: it writes, checks and asks, and the [[person]] decides. Used in [[ADR-0001|ADR-0001]], [[ADR-0002|ADR-0002]], [[ADR-0003|ADR-0003]], [[ADR-0004|ADR-0004]], [[ADR-0005|ADR-0005]], [[ADR-0006|ADR-0006]], [[ADR-0007|ADR-0007]], [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]], [[ADR-0010|ADR-0010]], [[ADR-0011|ADR-0011]], [[ADR-0013|ADR-0013]], [[ADR-0014|ADR-0014]].
+**[[agent]]** *(actor)*: An AI model doing work in a session: it writes, checks and asks, and the [[person]] decides. Used in [[ADR-0001|ADR-0001]], [[ADR-0002|ADR-0002]], [[ADR-0003|ADR-0003]], [[ADR-0004|ADR-0004]], [[ADR-0005|ADR-0005]], [[ADR-0006|ADR-0006]], [[ADR-0007|ADR-0007]], [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]], [[ADR-0010|ADR-0010]], [[ADR-0011|ADR-0011]], [[ADR-0013|ADR-0013]], [[ADR-0014|ADR-0014]], [[ADR-0015|ADR-0015]], [[ADR-0016|ADR-0016]], [[ADR-0017|ADR-0017]].
 
 **[[autocommit]]** *(action)*: Committing changes automatically at a pace a project sets. Used in [[ADR-0012|ADR-0012]].
 
 **[[ci]]** *(actor)*: The automated checker that runs a project's tests at the pace that project sets. Used in [[ADR-0012|ADR-0012]].
 
-**[[contract]]** *(entity)*: The [[spec]] one [[agent]] hands another as the whole of a [[job]]: its [[gherkin|Gherkin]] [[scenario|scenarios]] say what must be done and how it is checked, with no prose beside them. Used in [[ADR-0009|ADR-0009]].
+**[[contract]]** *(entity)*: The [[spec]] one [[agent]] hands another as the whole of a [[job]]: its [[gherkin|Gherkin]] [[scenario|scenarios]] say what must be done and how it is checked, with no prose beside them. Used in [[ADR-0009|ADR-0009]], [[ADR-0017|ADR-0017]].
 
-**[[cryptic-questions]]** *(problem)*: [[agent|Agent]] [[question|questions]] assume jargon and treat the [[person]]'s words as fixed picks instead of reasoning about them. Used in [[ADR-0001|ADR-0001]].
+**[[cryptic-questions]]** *(problem)*: [[agent|Agent]] [[question|questions]] assume jargon and treat the [[person]]'s words as fixed picks instead of reasoning about them. Used in [[ADR-0001|ADR-0001]], [[ADR-0017|ADR-0017]].
 
 **[[ears]]** *(entity)*: A fixed sentence pattern for a [[rule]], in the present tense: When, While, If or Where something holds, an actor does something, as in "When writing a reply, the agent uses a two-column table of labelled rows." Used in [[ADR-0001|ADR-0001]], [[ADR-0002|ADR-0002]], [[ADR-0003|ADR-0003]].
 
@@ -87,9 +99,9 @@ How this system works, written from its 14 [[rule|rules]] in force and 31 define
 
 **[[gherkin]]** *(entity)*: The Given, When, Then language used for [[scenario|scenarios]] in a [[spec]]. Used in [[ADR-0002|ADR-0002]], [[ADR-0003|ADR-0003]], [[ADR-0009|ADR-0009]].
 
-**[[hard-to-judge]]** *(problem)*: The [[person]] cannot tell quickly whether an [[agent]]'s output is good. Used in [[ADR-0003|ADR-0003]], [[ADR-0004|ADR-0004]], [[ADR-0007|ADR-0007]], [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]], [[ADR-0010|ADR-0010]], [[ADR-0012|ADR-0012]].
+**[[hard-to-judge]]** *(problem)*: The [[person]] cannot tell quickly whether an [[agent]]'s output is good. Used in [[ADR-0003|ADR-0003]], [[ADR-0004|ADR-0004]], [[ADR-0007|ADR-0007]], [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]], [[ADR-0010|ADR-0010]], [[ADR-0012|ADR-0012]], [[ADR-0015|ADR-0015]], [[ADR-0016|ADR-0016]].
 
-**[[job]]** *(entity)*: One piece of work an [[agent]] carries from a [[person]]'s request to a [[verdict]]: its [[spec]], and any [[adr]]s it raised. Used in [[ADR-0005|ADR-0005]], [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]].
+**[[job]]** *(entity)*: One piece of work an [[agent]] carries from a [[person]]'s request to a [[verdict]]: its [[spec]], and any [[adr]]s it raised. Used in [[ADR-0005|ADR-0005]], [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]], [[ADR-0015|ADR-0015]], [[ADR-0016|ADR-0016]], [[ADR-0017|ADR-0017]].
 
 **[[link]]** *(entity)*: A reference from text to a [[term]]'s note, written as [[term]] in notes, [[spec|specs]] and [[adr|ADRs]], and as a markdown link to the note's file in chat replies, where wiki links show as plain text; every instance of a defined word gets one. Used in [[ADR-0003|ADR-0003]], [[ADR-0004|ADR-0004]], [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]], [[ADR-0010|ADR-0010]], [[ADR-0011|ADR-0011]].
 
@@ -97,33 +109,33 @@ How this system works, written from its 14 [[rule|rules]] in force and 31 define
 
 **[[long-replies]]** *(problem)*: [[agent|Agent]] replies run far too long and are tedious to review. Used in [[ADR-0004|ADR-0004]], [[ADR-0006|ADR-0006]].
 
-**[[person]]** *(actor)*: The human the [[agent|agents]] work for: the only one who decides, and the reader every [[response|reply]] is written for. Used in [[ADR-0001|ADR-0001]], [[ADR-0006|ADR-0006]], [[ADR-0007|ADR-0007]], [[ADR-0008|ADR-0008]].
+**[[person]]** *(actor)*: The human the [[agent|agents]] work for: the only one who decides, and the reader every [[response|reply]] is written for. Used in [[ADR-0001|ADR-0001]], [[ADR-0006|ADR-0006]], [[ADR-0007|ADR-0007]], [[ADR-0008|ADR-0008]], [[ADR-0015|ADR-0015]], [[ADR-0017|ADR-0017]].
 
-**[[question]]** *(entity)*: A request from an [[agent]] for a [[person]] to decide, written as a proposed [[adr]] and asked in the client's native question dialog, which records the answer in that [[adr]]. Used in [[ADR-0001|ADR-0001]], [[ADR-0004|ADR-0004]], [[ADR-0007|ADR-0007]].
+**[[question]]** *(entity)*: A request from an [[agent]] for a [[person]] to decide, written as a proposed [[adr]] and asked in the client's native question dialog, which records the answer in that [[adr]]. Used in [[ADR-0001|ADR-0001]], [[ADR-0004|ADR-0004]], [[ADR-0007|ADR-0007]], [[ADR-0017|ADR-0017]].
 
-**[[requirement]]** *(entity)*: One [[rule]] in a [[spec]], with an ID such as REQ-003, that its [[gherkin|Gherkin]] [[scenario|scenarios]] check. Used in [[ADR-0002|ADR-0002]], [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]].
+**[[requirement]]** *(entity)*: One [[rule]] in a [[spec]], with an ID such as REQ-003, that its [[gherkin|Gherkin]] [[scenario|scenarios]] check. Used in [[ADR-0002|ADR-0002]], [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]], [[ADR-0016|ADR-0016]].
 
 **[[response]]** *(entity)*: What an [[agent]] writes back to a [[person]]: a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each at most two sentences and included only when it has something to say, in at most 8 rows, with nothing outside the table. Used in [[ADR-0003|ADR-0003]], [[ADR-0004|ADR-0004]], [[ADR-0007|ADR-0007]], [[ADR-0008|ADR-0008]], [[ADR-0011|ADR-0011]], [[ADR-0013|ADR-0013]].
 
-**[[result]]** *(entity)*: The pass or fail a [[verdict]] gives one [[scenario]]; a [[requirement]] passes only when all its [[scenario|scenarios]] pass. Used in [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]].
+**[[result]]** *(entity)*: The pass or fail a [[verdict]] gives one [[scenario]]; a [[requirement]] passes only when all its [[scenario|scenarios]] pass. Used in [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]], [[ADR-0017|ADR-0017]].
 
-**[[rule]]** *(entity)*: One sentence a [[adr|decision]] put in force, written in [[ears|EARS]]; [[agent|agents]] follow the newest one. Used in [[ADR-0001|ADR-0001]], [[ADR-0005|ADR-0005]], [[ADR-0006|ADR-0006]], [[ADR-0010|ADR-0010]], [[ADR-0011|ADR-0011]], [[ADR-0014|ADR-0014]].
+**[[rule]]** *(entity)*: One sentence a [[adr|decision]] put in force, written in [[ears|EARS]]; [[agent|agents]] follow the newest one. Used in [[ADR-0001|ADR-0001]], [[ADR-0005|ADR-0005]], [[ADR-0006|ADR-0006]], [[ADR-0010|ADR-0010]], [[ADR-0011|ADR-0011]], [[ADR-0014|ADR-0014]], [[ADR-0015|ADR-0015]], [[ADR-0016|ADR-0016]], [[ADR-0017|ADR-0017]].
 
 **[[rules-not-landing]]** *(problem)*: Instructions get recited back, but their effects never show up in what [[agent|agents]] do. Used in [[ADR-0002|ADR-0002]], [[ADR-0005|ADR-0005]], [[ADR-0011|ADR-0011]], [[ADR-0013|ADR-0013]].
 
-**[[scenario]]** *(entity)*: One concrete case under a [[requirement]], written in [[gherkin|Gherkin]] as Given, When and Then, and run as a test. Used in [[ADR-0002|ADR-0002]], [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]], [[ADR-0012|ADR-0012]].
+**[[scenario]]** *(entity)*: One concrete case under a [[requirement]], written in [[gherkin|Gherkin]] as Given, When and Then, and run as a test. Used in [[ADR-0002|ADR-0002]], [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]], [[ADR-0012|ADR-0012]], [[ADR-0016|ADR-0016]], [[ADR-0017|ADR-0017]].
 
-**[[selector]]** *(entity)*: A fixed phrase a [[skill]] defines, together with its [[test-step|test step]], that a [[spec]] line may use, such as "is assigned 20". Used in [[ADR-0002|ADR-0002]], [[ADR-0003|ADR-0003]].
+**[[selector]]** *(entity)*: A fixed phrase a [[skill]] defines, together with its [[test-step|test step]], that a [[spec]] line may use, such as "is assigned 20". Used in [[ADR-0002|ADR-0002]], [[ADR-0003|ADR-0003]], [[ADR-0016|ADR-0016]].
 
 **[[skill]]** *(entity)*: A packaged procedure an [[agent]] loads when it is relevant, which can add its own [[selector]]s. Used in [[ADR-0003|ADR-0003]].
 
-**[[spec]]** *(entity)*: A short file listing what a change must do: each [[ears|EARS]] [[rule]] states a [[requirement]], and its [[gherkin|Gherkin]] [[scenario|scenarios]] are the executable tests that check it, run through [[test-step|test step]] code. Used in [[ADR-0002|ADR-0002]], [[ADR-0003|ADR-0003]], [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]], [[ADR-0012|ADR-0012]].
+**[[spec]]** *(entity)*: A short file listing what a change must do: each [[ears|EARS]] [[rule]] states a [[requirement]], and its [[gherkin|Gherkin]] [[scenario|scenarios]] are the executable tests that check it, run through [[test-step|test step]] code. Used in [[ADR-0002|ADR-0002]], [[ADR-0003|ADR-0003]], [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]], [[ADR-0012|ADR-0012]], [[ADR-0015|ADR-0015]], [[ADR-0016|ADR-0016]].
 
 **[[term]]** *(entity)*: A note defining one word of the project vocabulary, which [[spec|specs]] and [[adr|decisions]] link to. Used in [[ADR-0001|ADR-0001]], [[ADR-0003|ADR-0003]], [[ADR-0004|ADR-0004]], [[ADR-0005|ADR-0005]], [[ADR-0006|ADR-0006]], [[ADR-0010|ADR-0010]], [[ADR-0011|ADR-0011]], [[ADR-0012|ADR-0012]].
 
 **[[test-sprawl]]** *(problem)*: Tests and QA grow far beyond what the work needs.
 
-**[[test-step]]** *(entity)*: The test code that makes one [[selector]] actually run, so a [[scenario]] line using it can be executed. Used in [[ADR-0002|ADR-0002]], [[ADR-0003|ADR-0003]], [[ADR-0012|ADR-0012]].
+**[[test-step]]** *(entity)*: The test code that makes one [[selector]] actually run, so a [[scenario]] line using it can be executed. Used in [[ADR-0002|ADR-0002]], [[ADR-0003|ADR-0003]], [[ADR-0012|ADR-0012]], [[ADR-0016|ADR-0016]].
 
 **[[verdict]]** *(entity)*: A YAML record, saved next to its [[spec]], giving a [[result]] for each [[scenario]], with [[evidence]] and up to five [[finding|findings]]. Used in [[ADR-0008|ADR-0008]].
 

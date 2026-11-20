@@ -20,6 +20,9 @@ Where anything earlier in a conversation, or in memory, disagrees with this file
 - ADR-0012: Where a project sets a test pace, ci runs that project's tests at that pace, and the project also sets the pace at which to autocommit.
 - ADR-0013: Where an agent works in any folder under a workspace listed in AGENT_WORKSPACES, the agent loads the base prompt through the CLAUDE.md at that workspace's root.
 - ADR-0014: Where a rule is in force, the base prompt includes it.
+- ADR-0015: When a person makes a request, the agent drafts the job's spec and asks the person to approve it before changing any code.
+- ADR-0016: While building a job, the agent works one requirement at a time and makes all its scenarios pass before starting the next. While building a job, the agent first writes the test step for every selector the spec uses, sees each scenario fail, then builds until all of them pass.
+- ADR-0017: If a receiving agent cannot meet a scenario without a decision, it writes the question and asks the person in the dialog itself.
 
 ## How to write a rule
 
