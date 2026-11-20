@@ -342,7 +342,7 @@ export const basePrompt = (notes: readonly NoteEntry[], decisionsDir: string): s
     '',
     '## How to check',
     '',
-    'When the person asks for a check ("check your work"), first list what you will test as a compact table and ask them to approve it (Needs you: Approve the test list). Only then does a verifier that did not make the change run the checks and write a verdict: pass or fail for each requirement, with evidence and at most five findings.',
+    'When the person asks for a check ("check your work"), first list what you will test as a compact table and ask them to approve it (Needs you: Approve the test list). Only then does a verifier that did not make the change run the checks and write a verdict: a YAML record saved next to the spec, with a result (pass or fail) for each scenario, evidence for each, and at most five findings. A requirement passes only when all its scenarios pass. Link the verdict in your Check row.',
     '',
     '| ID | Requirement | How it is tested |',
     '| --- | --- | --- |',

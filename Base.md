@@ -103,7 +103,7 @@ Each term is listed with its type: actor (someone or something that acts), entit
 - question (entity): A request from an agent for a person to decide, written as a proposed adr and asked in the client's native question dialog, which records the answer in that adr.
 - requirement (entity): One rule in a spec, with an ID such as REQ-003, that its Gherkin scenarios check.
 - response (entity): What an agent writes back to a person: a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each at most two sentences and included only when it has something to say, in at most 8 rows, with nothing outside the table.
-- result (entity): The pass or fail a verdict gives one requirement.
+- result (entity): The pass or fail a verdict gives one scenario; a requirement passes only when all its scenarios pass.
 - rule (entity): One sentence a decision put in force, written in EARS; agents follow the newest one.
 - rules-not-landing (problem): Instructions get recited back, but their effects never show up in what agents do.
 - scenario (entity): One concrete case under a requirement, written in Gherkin as Given, When and Then, and run as a test.
@@ -113,5 +113,5 @@ Each term is listed with its type: actor (someone or something that acts), entit
 - term (entity): A note defining one word of the project vocabulary, which specs and decisions link to.
 - test-sprawl (problem): Tests and QA grow far beyond what the work needs.
 - test-step (entity): The test code that makes one selector actually run, so a scenario line using it can be executed.
-- verdict (entity): A YAML record giving pass or fail for each requirement, with evidence and up to five findings.
+- verdict (entity): A YAML record, saved next to its spec, giving a result for each scenario, with evidence and up to five findings.
 - verifier (actor): The agent that checks a job's change against its spec and writes the verdict; it never wrote the change.

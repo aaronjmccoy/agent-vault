@@ -30,7 +30,7 @@ generated: true
 - **1.18** [[question]] *(entity, v2)*: A request from an [[agent]] for a [[person]] to decide, written as a proposed [[adr]] and asked in the client's native question dialog, which records the answer in that [[adr]].
 - **1.19** [[requirement]] *(entity, v2)*: One [[rule]] in a [[spec]], with an ID such as REQ-003, that its [[gherkin|Gherkin]] [[scenario|scenarios]] check.
 - **1.20** [[response]] *(entity, v4)*: What an [[agent]] writes back to a [[person]]: a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each at most two sentences and included only when it has something to say, in at most 8 rows, with nothing outside the table.
-- **1.21** [[result]] *(entity, v2)*: The pass or fail a [[verdict]] gives one [[requirement]].
+- **1.21** [[result]] *(entity, v3)*: The pass or fail a [[verdict]] gives one [[scenario]]; a [[requirement]] passes only when all its [[scenario|scenarios]] pass.
 - **1.22** [[rule]] *(entity, v2)*: One sentence a [[adr|decision]] put in force, written in [[ears|EARS]]; [[agent|agents]] follow the newest one.
 - **1.23** [[rules-not-landing]] *(problem, v2)*: Instructions get recited back, but their effects never show up in what [[agent|agents]] do.
 - **1.24** [[scenario]] *(entity, v2)*: One concrete case under a [[requirement]], written in [[gherkin|Gherkin]] as Given, When and Then, and run as a test.
@@ -40,7 +40,7 @@ generated: true
 - **1.28** [[term]] *(entity, v1)*: A note defining one word of the project vocabulary, which [[spec|specs]] and [[adr|decisions]] link to.
 - **1.29** [[test-sprawl]] *(problem, v2)*: Tests and QA grow far beyond what the work needs.
 - **1.30** [[test-step]] *(entity, v3)*: The test code that makes one [[selector]] actually run, so a [[scenario]] line using it can be executed.
-- **1.31** [[verdict]] *(entity, v2)*: A YAML record giving pass or fail for each [[requirement]], with [[evidence]] and up to five [[finding|findings]].
+- **1.31** [[verdict]] *(entity, v3)*: A YAML record, saved next to its [[spec]], giving a [[result]] for each [[scenario]], with [[evidence]] and up to five [[finding|findings]].
 - **1.32** [[verifier]] *(actor, v2)*: The [[agent]] that checks a [[job]]'s change against its [[spec]] and writes the [[verdict]]; it never wrote the change.
 
 ## 2 Decision log

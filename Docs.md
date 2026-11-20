@@ -91,7 +91,7 @@ How this system works, written from its 14 [[rule|rules]] in force and 32 define
 
 **[[job]]** *(entity)*: One piece of work an [[agent]] carries from a [[person]]'s request to a [[verdict]]: its [[spec]], its [[message]]s, and any [[adr]]s it raised. Used in [[ADR-0005|ADR-0005]], [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]].
 
-**[[link]]** *(entity)*: A reference from text to a [[term]]'s note, written as [[term]] in notes, [[spec|specs]] and [[adr|ADRs]], and as a markdown link to the note's file in chat replies, where wiki links show as plain text; every instance of a defined word gets one. Used in [[ADR-0003|ADR-0003]], [[ADR-0004|ADR-0004]], [[ADR-0009|ADR-0009]], [[ADR-0010|ADR-0010]], [[ADR-0011|ADR-0011]].
+**[[link]]** *(entity)*: A reference from text to a [[term]]'s note, written as [[term]] in notes, [[spec|specs]] and [[adr|ADRs]], and as a markdown link to the note's file in chat replies, where wiki links show as plain text; every instance of a defined word gets one. Used in [[ADR-0003|ADR-0003]], [[ADR-0004|ADR-0004]], [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]], [[ADR-0010|ADR-0010]], [[ADR-0011|ADR-0011]].
 
 **[[long-prompt]]** *(problem)*: The base prompt runs so long that [[agent|agents]] spend their attention reading what they cannot act on. Used in [[ADR-0006|ADR-0006]], [[ADR-0014|ADR-0014]].
 
@@ -105,9 +105,9 @@ How this system works, written from its 14 [[rule|rules]] in force and 32 define
 
 **[[requirement]]** *(entity)*: One [[rule]] in a [[spec]], with an ID such as REQ-003, that its [[gherkin|Gherkin]] [[scenario|scenarios]] check. Used in [[ADR-0002|ADR-0002]], [[ADR-0008|ADR-0008]].
 
-**[[response]]** *(entity)*: What an [[agent]] writes back to a [[person]]: a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each at most two sentences and included only when it has something to say, in at most 8 rows, with nothing outside the table. Used in [[ADR-0003|ADR-0003]], [[ADR-0004|ADR-0004]], [[ADR-0007|ADR-0007]], [[ADR-0011|ADR-0011]].
+**[[response]]** *(entity)*: What an [[agent]] writes back to a [[person]]: a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each at most two sentences and included only when it has something to say, in at most 8 rows, with nothing outside the table. Used in [[ADR-0003|ADR-0003]], [[ADR-0004|ADR-0004]], [[ADR-0007|ADR-0007]], [[ADR-0008|ADR-0008]], [[ADR-0011|ADR-0011]].
 
-**[[result]]** *(entity)*: The pass or fail a [[verdict]] gives one [[requirement]]. Used in [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]].
+**[[result]]** *(entity)*: The pass or fail a [[verdict]] gives one [[scenario]]; a [[requirement]] passes only when all its [[scenario|scenarios]] pass. Used in [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]].
 
 **[[rule]]** *(entity)*: One sentence a [[adr|decision]] put in force, written in [[ears|EARS]]; [[agent|agents]] follow the newest one. Used in [[ADR-0001|ADR-0001]], [[ADR-0005|ADR-0005]], [[ADR-0006|ADR-0006]], [[ADR-0011|ADR-0011]], [[ADR-0014|ADR-0014]].
 
@@ -127,6 +127,6 @@ How this system works, written from its 14 [[rule|rules]] in force and 32 define
 
 **[[test-step]]** *(entity)*: The test code that makes one [[selector]] actually run, so a [[scenario]] line using it can be executed. Used in [[ADR-0002|ADR-0002]], [[ADR-0003|ADR-0003]], [[ADR-0012|ADR-0012]].
 
-**[[verdict]]** *(entity)*: A YAML record giving pass or fail for each [[requirement]], with [[evidence]] and up to five [[finding|findings]]. Used in [[ADR-0008|ADR-0008]].
+**[[verdict]]** *(entity)*: A YAML record, saved next to its [[spec]], giving a [[result]] for each [[scenario]], with [[evidence]] and up to five [[finding|findings]]. Used in [[ADR-0008|ADR-0008]].
 
 **[[verifier]]** *(actor)*: The [[agent]] that checks a [[job]]'s change against its [[spec]] and writes the [[verdict]]; it never wrote the change. Used in [[ADR-0008|ADR-0008]].

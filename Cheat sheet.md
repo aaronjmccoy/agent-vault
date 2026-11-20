@@ -157,14 +157,14 @@ Prose between [[agent|agents]] hides both what was asked and what came back. A [
 
 ### 4.4 Checks: agree what will be tested, then check
 
-Most people simply ask an [[agent]] to "check your work". Before checking anything, the [[agent]] lists what it will test, in a compact table, and asks you to confirm:
+Most people simply ask an [[agent]] to "check your work". Before checking anything, the [[agent]] lists what it will test, in a compact table, and asks you to Approve it in the Needs you row:
 
 | ID | Requirement | How it's tested |
 | --- | --- | --- |
 | REQ-001 | Saving a term bumps its version | Run the term-edit scenario; the file shows version 2 |
 | REQ-002 | A reply over 8 rows is flagged | Run the reply-check scenario; a ⚠ note appears |
 
-Once you confirm, a [[verifier]] that didn't make the change runs those checks and writes a [[verdict]]: pass or fail for each [[requirement]], with [[evidence]] and at most five [[finding|findings]].
+Once you approve, a [[verifier]] that didn't make the change runs those checks and writes a [[verdict]]: a YAML record saved next to the [[spec]], with a [[result]] for each [[scenario]], [[evidence]] for each, and at most five [[finding|findings]]. A [[requirement]] passes only when all its [[scenario|scenarios]] pass, and the [[response|reply]]'s Check row gives a [[link]] to the [[verdict]].
 
 Agreeing on the list first means a pass covers what you expected it to cover, and you can add anything that's missing before the check runs.
 
