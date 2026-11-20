@@ -105,7 +105,7 @@ export const checkQuestion = (adr: AdrShape, notes: readonly KnownNote[]): strin
   if (adr.error) problems.push(adr.error)
   if (adr.decide && !adr.decide.trim().endsWith('?')) problems.push('Decide must be one question ending in "?"')
   for (const o of adr.options) {
-    if (!isEars(plainText(o.rule))) problems.push(`Where ${o.letter} is not an EARS rule ("When …, the … shall …")`)
+    if (!isEars(plainText(o.rule))) problems.push(`Where ${o.letter} is not an EARS rule in the present tense ("When …, <actor> <does> …", no "shall")`)
     if (!o.consequence) problems.push(`Where ${o.letter} has no "→ what happens · what it costs" line`)
   }
   if (!adr.recommend) problems.push('no Recommend line')
@@ -122,12 +122,14 @@ export const checkQuestion = (adr: AdrShape, notes: readonly KnownNote[]): strin
   return problems
 }
 
-const EARS = /^(When|While|If|Where|The)\b.+\bshall\b.+/
+// An EARS sentence in the present tense: a keyword clause, then the actor and what it does
+// ("When writing a reply, the agent uses four labelled lines."). "shall" marks the old,
+// future-tense form and is refused.
+const EARS = /^(When|While|If|Where)\b[^,]+,\s*\S+.*\s\S+/
 // Whether a sentence follows one of the EARS patterns.
 export const isEars = (s: string): boolean => {
   const t = s.trim()
-  if (!EARS.test(t)) return false
-  if (/^If\b/.test(t)) return /,\s*then the\b/i.test(t)
-  if (/^(When|While|Where)\b/.test(t)) return /,\s*the\b/i.test(t)
-  return true
+  if (/\bshall\b/i.test(t)) return false
+  if (/^The\s+\S+.*\s\S+/.test(t)) return true
+  return EARS.test(t)
 }

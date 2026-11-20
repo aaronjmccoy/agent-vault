@@ -6,7 +6,7 @@ version: 1
 ```gherkin
 Feature: [[feature-term]]
 
-Rule: REQ-001 When [[trigger]], the [[system]] shall [[response]].
+Rule: REQ-001 When <trigger>, <actor> <responds>.
   Scenario: <one concrete case>
     Given [[thing]] is <state>
     When [[actor]] <does something>

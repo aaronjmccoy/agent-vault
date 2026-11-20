@@ -10,9 +10,9 @@ scope: testing
 Given     Specs run through a Gherkin runner. Each [[selector]] needs a [[step]] to be testable.
 Decide    Can a spec be approved while one of its selectors has no step?
 
-Where A:  When a spec is approved, the linter shall reject it if any [[selector]] has no [[step]].
+Where A:  When a spec is approved, the linter rejects it if any [[selector]] has no [[step]].
           → every approved spec runs · can't approve before tests exist
-Where B:  When a spec is approved, the linter shall warn if any [[selector]] has no [[step]].
+Where B:  When a spec is approved, the linter warns if any [[selector]] has no [[step]].
           → approve early · specs and tests can drift apart
 Combines  exclusive
 Recommend A: keeps tests from outgrowing specs.

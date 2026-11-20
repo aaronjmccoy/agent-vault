@@ -14,14 +14,16 @@ const LINK = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g
 const plain = (text: string): string => text.replace(LINK, (_, name: string, label?: string) => (label ?? name).trim())
 const joinPath = (dir: string, name: string) => `${dir.replace(/[\\/]+$/, '')}/${name}`
 
-const EARS = /^(When|While|If|Where|The)\b.+\bshall\b.+/
+// An EARS sentence in the present tense: a keyword clause, then the actor and what it does
+// ("When writing a reply, the agent uses four labelled lines."). "shall" marks the old,
+// future-tense form and is refused.
+const EARS = /^(When|While|If|Where)\b[^,]+,\s*\S+.*\s\S+/
 // Whether a sentence follows one of the EARS patterns.
 export const isEars = (s: string): boolean => {
   const t = s.trim()
-  if (!EARS.test(t)) return false
-  if (/^If\b/.test(t)) return /,\s*then the\b/i.test(t)
-  if (/^(When|While|Where)\b/.test(t)) return /,\s*the\b/i.test(t)
-  return true
+  if (/\bshall\b/i.test(t)) return false
+  if (/^The\s+\S+.*\s\S+/.test(t)) return true
+  return EARS.test(t)
 }
 
 // The vault comes from AGENT_VAULT where set, else from the vaultDir option.
@@ -170,7 +172,7 @@ async function openFile($: EngineInterface, path: string): Promise<void> {
 async function saveRule($: EngineInterface, note: NoteEntry): Promise<void> {
   const text = ((await read($, ruleEdits))[note.name] ?? note.rule).replace(/\s*\n\s*/g, ' ').trim()
   if (!isEars(text)) {
-    $.ui.toast('Write the rule as one EARS sentence, e.g. "When <trigger>, the <system> shall <response>."')
+    $.ui.toast('Write the rule as one EARS sentence in the present tense, e.g. "When writing a reply, the agent uses four labelled lines."')
     return
   }
   await $.fs.write(note.file, replaceRule(String(await $.fs.read(note.file)), text))
@@ -501,7 +503,7 @@ async function drawReference(
     blocks.push(
       md(
         'docs-body',
-        `# Docs\n\nHow this system works, from its **${inForce.length} [[rule|rules]] in force** and **${terms.length} defined [[term|terms]]**. Each [[rule]] says who acts, when, and what they shall do. Open a section to read it; follow a link to the note behind any [[rule]] or [[term]].`,
+        `# Docs\n\nHow this system works, from its **${inForce.length} [[rule|rules]] in force** and **${terms.length} defined [[term|terms]]**. Each [[rule]] says who acts, when, and what they do. Open a section to read it; follow a link to the note behind any [[rule]] or [[term]].`,
       ),
     )
     if (!querySeeds.has('docs')) querySeeds.set('docs', docsQ)

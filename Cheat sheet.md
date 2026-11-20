@@ -126,11 +126,11 @@ When an [[agent]] needs you to decide, it writes a proposed [[adr|ADR]] in the D
 | Header | The ADR's id | ADR-0011 | The chip above the question |
 | Given | Why the question came up, and which problem it serves | Most people ask an agent to "check your work" and expect it to know what that means. | The preview beside each option, with every term's definition |
 | Decide | One question ending in "?" | What must happen when a person asks for a check? | The question |
-| Where A, B… | One EARS [[rule]] per option, then → what happens · what it costs | A: When asked for a check, the agent lists what it will test and confirms it with you before checking. → you see what a check covers before it runs · one extra confirmation. B: When asked for a check, the verifier checks against the spec without asking you first. → faster · you only see what was tested afterwards. | One option each: the [[rule]] and its cost |
+| Where A, B… | One EARS [[rule]] per option, then → what happens · what it costs | A: When asked for a check, the agent lists what it will test and confirms it with you before checking. → you see what a check covers before it runs · one extra confirmation. B: When asked for a check, the agent lists only what the change touches and confirms it with you before checking. → a shorter list · indirect effects go unchecked. | One option each: the [[rule]] and its cost |
 | Recommend | The [[agent]]'s pick and its reason | A: a check starts by agreeing what will be tested. | The first option, marked "(Recommended)" |
 | (none) | | | Other: a free-text box under the options |
 
-Every option is the exact [[rule]] that goes into force, so you choose the wording itself, not a direction an [[agent]] will interpret later. The dialog works on desktop and on mobile. Only picking an option decides anything. Words typed into Other leave the [[question]] open: the [[agent]] reads them and asks again. [[agent|Agents]] never ask in chat, where a decision would scroll away unrecorded.
+Every option follows the [[rule|rules]] already in force, and options differ only in the one thing being decided. Each is the exact [[rule]] that goes into force, so you choose the wording itself, not a direction an [[agent]] will interpret later. The dialog works on desktop and on mobile. Only picking an option decides anything. Words typed into Other leave the [[question]] open: the [[agent]] reads them and asks again. [[agent|Agents]] never ask in chat, where a decision would scroll away unrecorded.
 
 ### 4.3 Handoffs: contracts in Gherkin
 

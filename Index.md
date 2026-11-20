@@ -3,10 +3,12 @@ generated: true
 ---
 # Reference
 
-> Written by the decision-cards mod from the notes in this vault. Edit the notes; changes here are overwritten.
+> Written by the Decisions panel from the notes in this vault. Edit the notes; changes here are overwritten.
 
 1. [[#1 Glossary|Glossary]] · 31 [[term|terms]]
 2. [[#2 Decision log|Decision log]] · 13 in force
+3. [[#3 Waiting on you|Waiting on you]] · 0
+4. [[#4 Superseded|Superseded]] · 0
 
 ## 1 Glossary
 
@@ -16,7 +18,7 @@ generated: true
 - **1.4** [[ci]] *(actor, v1)*: The automated checker that runs tests whenever code is committed.
 - **1.5** [[contract]] *(entity, v1)*: The [[spec]] one [[agent]] hands another as the whole of a [[job]]: its [[gherkin|Gherkin]] [[scenario|scenarios]] say what must be done and how it is checked, with no prose beside them.
 - **1.6** [[cryptic-questions]] *(problem, v1)*: [[agent|Agent]] [[question|questions]] assume jargon and treat the [[person]]'s words as fixed picks instead of reasoning about them.
-- **1.7** [[ears]] *(entity, v1)*: A fixed sentence pattern for a [[rule]]: When, While, If or Where, then the system shall do something.
+- **1.7** [[ears]] *(entity, v2)*: A fixed sentence pattern for a [[rule]], in the present tense: When, While, If or Where something holds, an actor does something, as in "When writing a reply, the agent uses four labelled lines."
 - **1.8** [[evidence]] *(entity, v1)*: The link that backs a [[result]] in a [[verdict]]: the [[scenario]] or test run that showed it.
 - **1.9** [[finding]] *(entity, v1)*: One problem a [[verdict]] reports, tied to the [[requirement]] it breaks and written in the [[spec]]'s vocabulary.
 - **1.10** [[gherkin]] *(entity, v3)*: The Given, When, Then language used for [[scenario|scenarios]] in a [[spec]].
@@ -57,6 +59,20 @@ generated: true
 - **2.11** [[ADR-0011|ADR-0011]] *accepted (A)*: What must happen when a [[person]] asks for a check?
 - **2.12** [[ADR-0012|ADR-0012]] *accepted (A)*: How must an [[agent]] hand a [[job]] to another [[agent]]?
 - **2.13** [[ADR-0013|ADR-0013]] *accepted (A)*: What happens to the numbering when an [[adr]] that amends another is decided?
+
+## 3 Waiting on you
+
+Nothing.
+
+## 4 Superseded
+
+Nothing.
+
+## 5 Parked
+
+> Set aside until a real failure calls for them; not in force.
+
+Nothing.
 
 ## Templates
 

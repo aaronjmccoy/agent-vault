@@ -163,7 +163,7 @@ export const docsDocument = (notes: readonly NoteEntry[]): string => {
   const out: string[] = [
     '# Docs',
     '',
-    `How this system works, written from its ${rules.length} [[rule|rules]] in force and ${terms.length} defined [[term|terms]]. Each [[rule]] says who acts, when, and what they shall do. Follow a link for a [[term]]'s definition or the [[adr|decision]] behind a [[rule]].`,
+    `How this system works, written from its ${rules.length} [[rule|rules]] in force and ${terms.length} defined [[term|terms]]. Each [[rule]] says who acts, when, and what they do. Follow a link for a [[term]]'s definition or the [[adr|decision]] behind a [[rule]].`,
     '',
     '## Contents',
     '',

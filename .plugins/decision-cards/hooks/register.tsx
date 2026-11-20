@@ -387,14 +387,14 @@ export const askInstead = (nextId: string, adrDir: string, termsDir: string): st
     '---',
     'Given     <at most two plain sentences; link terms as [[term]]>',
     'Decide    <one sentence ending in "?" saying what changes for the person>',
-    'Where A:  When <trigger>, the [[system]] shall <response>.',
+    'Where A:  When <trigger>, <actor> <responds>.',
     '          → <what happens> · <what it costs>',
-    'Where B:  When <trigger>, the [[system]] shall <response>.',
+    'Where B:  When <trigger>, <actor> <responds>.',
     '          → <what happens> · <what it costs>',
     'Combines  exclusive | <how options combine>',
     'Recommend A: <one-sentence reason>',
     '',
-    `Each option is one EARS rule. Link only terms that have a note in ${termsDir}; define a new term there first.`,
+    `Each option is one EARS rule in the present tense ("When writing a reply, the agent uses…"), and every option follows the rules in force, differing only in what is being decided. Link only terms that have a note in ${termsDir}; define a new term there first.`,
     'Write the file with the Write tool, then call AskUserQuestion with one question per ADR (at most 4), its header set to the ADR id, such as ' + nextId + '. The mod fills the question and options from the file and records the answer in it.',
   ].join('\n')
 

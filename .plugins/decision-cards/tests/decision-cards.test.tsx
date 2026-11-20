@@ -2,7 +2,7 @@ import { expect, mock, test } from 'claude-code/testing'
 import type { TestBody } from 'claude-code/testing'
 
 import { inWorkspace } from '../hooks/vault'
-import { checkQuestion, checkReply, unlinkedTerms } from '../hooks/lint'
+import { checkQuestion, checkReply, isEars, unlinkedTerms } from '../hooks/lint'
 import { basePrompt, currentReference, decisionNote, docsDocument, supersedeText, termNote, vaultIndex } from '../hooks/notes'
 
 const ADR = `---
@@ -13,9 +13,9 @@ scope: testing
 Given     Specs run through a Gherkin runner. Each [[selector]] needs a [[step]] to be testable.
 Decide    Can a spec be approved while one of its selectors has no step?
 
-Where A:  When a spec is approved, the linter shall reject it if any [[selector]] has no [[step]].
+Where A:  When a spec is approved, the linter rejects it if any [[selector]] has no [[step]].
           → every approved spec runs · can't approve before tests exist
-Where B:  When a spec is approved, the linter shall warn if any [[selector]] has no [[step]].
+Where B:  When a spec is approved, the linter warns if any [[selector]] has no [[step]].
           → approve early · specs and tests can drift apart
 Combines  exclusive
 Recommend A: keeps tests from outgrowing specs.
@@ -82,7 +82,7 @@ test('Docs reads as one document: rules in ADR number order, then the glossary, 
     termNote('selector', 'Terms/selector.md', '---\ntype: entity\n---\n**Definition:** An approved phrase.'),
   ])
   expect(docs).toContain('## 1. Rules in force')
-  expect(docs).toContain('**1.1** When a spec is approved, the linter shall reject it if any [[selector]] has no [[step]].')
+  expect(docs).toContain('**1.1** When a spec is approved, the linter rejects it if any [[selector]] has no [[step]].')
   expect(docs).toContain('Decided in [[ADR-0007|ADR-0007]]')
   expect(docs).toContain('**[[selector]]** *(entity)*: An approved phrase. Used in [[ADR-0007|ADR-0007]], [[ADR-0008|ADR-0008]].')
   expect(docs).toContain('## 3. Open questions')
@@ -154,7 +154,7 @@ test('the native dialog is filled from the ADR, and the pick is written back', a
   } as never)
   expect(shown[0]!.question).toContain('Can a spec be approved while one of its selectors has no step?')
   expect(shown[0]!.options.map(o => o.label)).toEqual(['Option A (Recommended)', 'Option B'])
-  expect(shown[0]!.options[1]!.description).toContain('the linter shall warn')
+  expect(shown[0]!.options[1]!.description).toContain('the linter warns')
   expect(shown[0]!.options[0]!.preview).toContain('selector: An approved phrase.')
   expect(files['decisions/ADR-0007.md']).toContain('status: accepted')
   expect(files['decisions/ADR-0007.md']).toContain('Decision  B')
@@ -216,8 +216,8 @@ test('the question check catches a broken proposed ADR, and passes a good one', 
   const good = {
     decide: 'Should tests run on every commit?',
     options: [
-      { letter: 'A', rule: 'When a change is committed, the [[ci]] shall run every step.', consequence: 'fast · costly' },
-      { letter: 'B', rule: 'When a release is prepared, the [[ci]] shall run every step.', consequence: 'cheap · late' },
+      { letter: 'A', rule: 'When a change is committed, the [[ci]] runs every step.', consequence: 'fast · costly' },
+      { letter: 'B', rule: 'When a release is prepared, the [[ci]] runs every step.', consequence: 'cheap · late' },
     ],
     recommend: 'A',
     names: ['ci', 'test-sprawl'],
@@ -254,7 +254,7 @@ test('writing a proposed ADR that breaks the question rule is refused, with what
 })
 
 test('a reply that breaks the reply rule is flagged under it, and the agent is told', async ($, on) => {
-  const accepted17 = '---\nid: ADR-0004\nstatus: accepted\n---\nGiven     x [[long-replies]]\nDecide    Which shape?\nWhere A:  When an agent replies, the agent shall use four lines.\n          → a · b\nWhere B:  When an agent replies, the agent shall write prose.\n          → c · d\nRecommend A: x\n\nDecision  A\n'
+  const accepted17 = '---\nid: ADR-0004\nstatus: accepted\n---\nGiven     x [[long-replies]]\nDecide    Which shape?\nWhere A:  When an agent replies, the agent uses four lines.\n          → a · b\nWhere B:  When an agent replies, the agent writes prose.\n          → c · d\nRecommend A: x\n\nDecision  A\n'
   fakeDisk(on, { 'decisions/ADR-0004.md': accepted17 })
   const session = mock.session(on)
   on('turn.complete', (_, e) => ({ text: e.answer }))
@@ -291,8 +291,8 @@ test('every instance of a defined term must be linked, in questions and replies'
     given: 'The ci runs too much, which is [[test-sprawl]].',
     decide: 'Should the [[ci]] run less?',
     options: [
-      { letter: 'A', rule: 'When a change is committed, the [[ci]] shall run every step.', consequence: 'fast · costly' },
-      { letter: 'B', rule: 'When a release is prepared, the [[ci]] shall run every step.', consequence: 'cheap · late' },
+      { letter: 'A', rule: 'When a change is committed, the [[ci]] runs every step.', consequence: 'fast · costly' },
+      { letter: 'B', rule: 'When a release is prepared, the [[ci]] runs every step.', consequence: 'cheap · late' },
     ],
     recommend: 'A',
     names: ['ci', 'test-sprawl'],
@@ -325,7 +325,7 @@ test('the base prompt carries the rules in force, the reply and question shapes,
   const waiting = decisionNote('ADR-0009', 'd/ADR-0009.md', ADR.replace('ADR-0007', 'ADR-0009'))
   const term = termNote('selector', 't/selector.md', '---\ntype: entity\n---\n**Definition:** An approved [[phrase]].\n')
   const text = basePrompt([accepted, waiting, term], 'C:/vault/Decisions')
-  expect(text).toContain('- ADR-0007: When a spec is approved, the linter shall reject it if any selector has no step.')
+  expect(text).toContain('- ADR-0007: When a spec is approved, the linter rejects it if any selector has no step.')
   expect(text).toContain('| **Needs you** | <Decide ADR-nnnn')
   expect(text).toContain('Write a proposed ADR into C:/vault/Decisions')
   expect(text).toContain('Waiting on the person: ADR-0009.')
@@ -430,4 +430,12 @@ test('AGENT_VAULT and AGENT_WORKSPACES set the vault and the workspaces, each wo
   expect(written).toContain('C:/work/CLAUDE.md')
   expect(written).toContain('D:/clients/CLAUDE.md')
   expect(written).toContain('C:/shared-vault/Base.md')
+})
+
+test('EARS rules are in the present tense: "shall" is refused', () => {
+  expect(isEars('When writing a reply, the agent uses four labelled lines.')).toBe(true)
+  expect(isEars('If a test fails, the ci blocks the merge.')).toBe(true)
+  expect(isEars('The agent links every term.')).toBe(true)
+  expect(isEars('When an agent replies, the agent shall use four lines.')).toBe(false)
+  expect(isEars('Use four lines.')).toBe(false)
 })
