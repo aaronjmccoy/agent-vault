@@ -126,7 +126,7 @@ When an [[agent]] needs you to decide, it writes a proposed [[adr|ADR]] in the D
 | Header | The ADR's id | ADR-0008 | The chip above the question |
 | Given | Why the question came up, and which problem it serves | Most people ask an agent to "check your work" and expect it to know what that means. | The preview beside each option, with every term's definition |
 | Decide | One question ending in "?" | What must happen when a person asks for a check? | The question |
-| Where A, B… | One EARS [[rule]] per option, then → what happens · what it costs | A: When asked for a check, the agent lists everything it will test, then confirms with you before checking. → you agree what a check covers. B: When asked for a check, the agent lists only what the change touches, then confirms with you before checking. → a shorter list to confirm · indirect effects go unchecked. | One option each: the [[rule]] and its cost |
+| Where A, B… | One EARS [[rule]] per option, then → what happens · what it costs | A: When asked for a check, the agent lists what it will test in a table, then confirms with you before checking. → you agree what a check covers · one confirmation step. B: When asked for a check, the agent writes what it will test as a spec, then confirms with you before checking. → the tests are kept for later · slower to set up. | One option each: the [[rule]] and its cost |
 | Recommend | The [[agent]]'s pick and its reason | A: a check starts by agreeing what will be tested. | The first option, marked "(Recommended)" |
 | (none) | | | Other: a free-text box under the options |
 
