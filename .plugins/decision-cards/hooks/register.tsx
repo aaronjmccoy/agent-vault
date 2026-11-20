@@ -589,7 +589,7 @@ export const register: Register = (on, options) => {
     if (!rule || rule.status !== 'accepted') return result
     const problems = checkReply(e.answer, (await read($, notes)).filter(n => n.kind === 'term' && isCurrent(n)).map(n => n.name))
     if (!problems.length) return result
-    await tellAgent($, `[decision-cards] Your last reply broke ${REPLY_RULE} (four labelled lines: Done, Open, Needs you, Check; at most 8 lines): ${problems.join('; ')}. Use that shape for every reply.`)
+    await tellAgent($, `[decision-cards] Your last reply broke ${REPLY_RULE} (a two-column table of up to four labelled rows: Done, Open, Needs you, Check; at most 8 rows): ${problems.join('; ')}. Use that shape for every reply.`)
     return { ...result, text: `⚠ This reply breaks ${REPLY_RULE}: ${problems.join('; ')}.` }
   }).catch(($, e, next) => next(e))
 

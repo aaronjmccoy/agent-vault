@@ -61,7 +61,7 @@ const FRAMES: Record<(typeof REPLY_LABELS)[number], { test: (rest: string) => bo
 
 // A reply to the person, per the template: each line optional; Done and Open
 // may repeat, Needs you and Check at most once; in that order; each opening
-// with one of its listed words; at most 8 lines in all.
+// with one of its listed words; at most 8 rows in all.
 export const checkReply = (text: string, terms: readonly string[] = []): string[] => {
   const lines = text
     .split('\n')
@@ -70,7 +70,7 @@ export const checkReply = (text: string, terms: readonly string[] = []): string[
     .filter(l => l && !/^\|?[\s|:-]*\|[\s|:-]*$/.test(l) && !l.startsWith('```'))
   const problems: string[] = []
   const parts = lines.map(split)
-  if (!parts.some(p => p.label)) return ['no labelled lines (Done, Open, Needs you, Check)']
+  if (!parts.some(p => p.label)) return ['no labelled rows (Done, Open, Needs you, Check)']
   const unlabelled = parts.filter(p => !p.label).length
   if (unlabelled) problems.push(`${unlabelled} line${unlabelled > 1 ? 's' : ''} without a label`)
   const order = parts.map(p => p.label).filter((l): l is (typeof REPLY_LABELS)[number] => !!l)
@@ -123,7 +123,7 @@ export const checkQuestion = (adr: AdrShape, notes: readonly KnownNote[]): strin
 }
 
 // An EARS sentence in the present tense: a keyword clause, then the actor and what it does
-// ("When writing a reply, the agent uses four labelled lines."). "shall" marks the old,
+// ("When writing a reply, the agent uses a two-column table of labelled rows."). "shall" marks the old,
 // future-tense form and is refused.
 const EARS = /^(When|While|If|Where)\b[^,]+,\s*\S+.*\s\S+/
 // Whether a sentence follows one of the EARS patterns.

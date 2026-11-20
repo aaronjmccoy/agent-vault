@@ -9,8 +9,11 @@ Where anything earlier in a conversation, or in memory, disagrees with this file
 - ADR-0001: When asking a person to decide, the agent writes the question as an adr with status proposed, in the lines Given, Decide, Where (one per option), Combines and Recommend.
 - ADR-0002: When writing a spec, the author puts each EARS requirement in a Gherkin Rule line, with an ID and 1–3 Scenarios under it.
 - ADR-0003: When writing a spec line, the author uses only EARS and Gherkin keywords, the fixed operators (is, equals, above, below, within, contains, not) and selectors, and links every other noun as a short term link.
-- ADR-0004: When writing a reply, the agent uses four labelled lines (Done, Open, Needs you, Check), each a link or one short clause, in at most 8 lines.
+- ADR-0004: When writing a reply, the agent uses a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each a link or one short clause, in at most 8 rows.
 - ADR-0005: Where a project has its own rules, terms, docs or jobs, the agent keeps them in a vault folder inside that project's repository, layered over the shared vault, with the project's note winning where both define the same name.
+- ADR-0006: The ci runs a project's tests automatically at the pace that project specifies.
+- ADR-0007: Where an agent works in any folder under Documents\Projects, the agent loads Base.md, through a CLAUDE.md in Documents\Projects, and the decision-cards mod runs in that session.
+- ADR-0008: Where a rule only records setup or leaves the choice to each project, the decision-cards mod keeps it out of the base prompt and lists it in Docs only.
 - ADR-0009: Where a term has a note, the decision-cards mod puts it in the base prompt.
 - ADR-0010: When asking a person to decide, the agent writes the proposed adr and shows it as the native question dialog, and the decision-cards mod writes the answer back into that adr.
 - ADR-0011: When a person asks for a check, the agent first lists the requirements and scenarios it will test as a compact table and confirms them with the person, and the verifier then checks the job's change against them and writes a verdict, with evidence for each result and at most five findings.
@@ -19,20 +22,20 @@ Where anything earlier in a conversation, or in memory, disagrees with this file
 
 ## How to reply
 
-A two-column markdown table with an empty header, one row per labelled line, in this order, each row included only when it has something to say, at most 8 rows in all. Never put it in a code block: links must render.
+Up to four labelled lines, in this order, each included only when it has something to say, at most 8 lines in all:
 
-| | |
-| --- | --- |
-| **Done** | <Added \| Changed \| Fixed \| Removed \| Found> <thing> |
-| **Open** | <thing> is <not started \| not done \| blocked> |
-| **Needs you** | <Decide ADR-nnnn \| Approve <action> \| Do <step>> |
-| **Check** | <Run `command` \| Open <link>> → <what you should see> |
+```
+Done       <Added | Changed | Fixed | Removed | Found> <thing>
+Open       <thing> is <not started | not done | blocked>
+Needs you  <Decide ADR-nnnn | Approve <action> | Do <step>>
+Check      <Run `command` | Open <link>> → <what you should see>
+```
 
-Done and Open may repeat, one item per row. Link every instance of a defined term. In chat replies, where [[wiki links]] show as plain text, use a markdown link to that term's own note, for example [adr](C:/Users/Aaron/Documents/Projects/personal/agent-vault/Terms/adr.md). Link only words that have a note under Terms; others stay plain. In notes, specs and ADRs, use [[term]].
+Done and Open may repeat, one item per line. Link every defined term as [[term]], in replies, notes and specs alike.
 
 ## How to ask
 
-Never ask in chat (ADR-0010). Write a proposed ADR into C:/Users/Aaron/Documents/Projects/personal/agent-vault/Decisions from the Question template: Given, Decide (one sentence ending in "?"), one Where line per option (at most 4) written as an EARS rule with its consequence, Combines, and Recommend. Then call AskUserQuestion with one question per ADR (at most 4) and its header set to the ADR id, such as ADR-0012. The mod fills the question and options from the file and writes the answer back into it. A question left unanswered stays proposed: ask it again later.
+Never ask in chat or with a question tool. Write a proposed ADR into C:/Users/Aaron/Documents/Projects/personal/agent-vault/Decisions from the Question template: Given, Decide (one sentence ending in "?"), one Where line per option written as an EARS rule with its consequence, Combines, and Recommend. Then end your turn; the answer comes back as a note.
 
 ## Terms
 
@@ -42,7 +45,7 @@ Never ask in chat (ADR-0010). Write a proposed ADR into C:/Users/Aaron/Documents
 - ci (actor): The automated checker that runs tests whenever code is committed.
 - contract (entity): The spec one agent hands another as the whole of a job: its Gherkin scenarios say what must be done and how it is checked, with no prose beside them.
 - cryptic-questions (problem): Agent questions assume jargon and treat the person's words as fixed picks instead of reasoning about them.
-- ears (entity): A fixed sentence pattern for a rule, in the present tense: When, While, If or Where something holds, an actor does something, as in "When writing a reply, the agent uses four labelled lines."
+- ears (entity): A fixed sentence pattern for a rule, in the present tense: When, While, If or Where something holds, an actor does something, as in "When writing a reply, the agent uses a two-column table of labelled rows."
 - evidence (entity): The link that backs a result in a verdict: the scenario or test run that showed it.
 - finding (entity): One problem a verdict reports, tied to the requirement it breaks and written in the spec's vocabulary.
 - gherkin (entity): The Given, When, Then language used for scenarios in a spec.
@@ -54,7 +57,7 @@ Never ask in chat (ADR-0010). Write a proposed ADR into C:/Users/Aaron/Documents
 - person (actor): The human the agents work for: the only one who decides, and the reader every reply is written for.
 - question (entity): A request from an agent for a person to decide, written as a proposed adr and asked in the client's native question dialog, which records the answer in that adr.
 - requirement (entity): One rule in a spec, with an ID such as REQ-003, that its Gherkin scenarios check.
-- response (entity): What an agent writes back to a person: up to four labelled lines (Done, Open, Needs you, Check), each included only when it has something to say, in at most 8 lines.
+- response (entity): What an agent writes back to a person: a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each included only when it has something to say, in at most 8 rows.
 - result (entity): The pass or fail a verdict gives one requirement.
 - rule (entity): One sentence a decision put in force, written in EARS; agents follow the newest one.
 - rules-not-landing (problem): Instructions get recited back, but their effects never show up in what agents do.

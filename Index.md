@@ -3,10 +3,12 @@ generated: true
 ---
 # Reference
 
-> Written by the decision-cards mod from the notes in this vault. Edit the notes; changes here are overwritten.
+> Written by the Decisions panel from the notes in this vault. Edit the notes; changes here are overwritten.
 
 1. [[#1 Glossary|Glossary]] · 31 [[term|terms]]
 2. [[#2 Decision log|Decision log]] · 13 in force
+3. [[#3 Waiting on you|Waiting on you]] · 0
+4. [[#4 Superseded|Superseded]] · 0
 
 ## 1 Glossary
 
@@ -16,7 +18,7 @@ generated: true
 - **1.4** [[ci]] *(actor, v1)*: The automated checker that runs tests whenever code is committed.
 - **1.5** [[contract]] *(entity, v1)*: The [[spec]] one [[agent]] hands another as the whole of a [[job]]: its [[gherkin|Gherkin]] [[scenario|scenarios]] say what must be done and how it is checked, with no prose beside them.
 - **1.6** [[cryptic-questions]] *(problem, v1)*: [[agent|Agent]] [[question|questions]] assume jargon and treat the [[person]]'s words as fixed picks instead of reasoning about them.
-- **1.7** [[ears]] *(entity, v2)*: A fixed sentence pattern for a [[rule]], in the present tense: When, While, If or Where something holds, an actor does something, as in "When writing a reply, the agent uses four labelled lines."
+- **1.7** [[ears]] *(entity, v3)*: A fixed sentence pattern for a [[rule]], in the present tense: When, While, If or Where something holds, an actor does something, as in "When writing a reply, the agent uses a two-column table of labelled rows."
 - **1.8** [[evidence]] *(entity, v1)*: The link that backs a [[result]] in a [[verdict]]: the [[scenario]] or test run that showed it.
 - **1.9** [[finding]] *(entity, v1)*: One problem a [[verdict]] reports, tied to the [[requirement]] it breaks and written in the [[spec]]'s vocabulary.
 - **1.10** [[gherkin]] *(entity, v3)*: The Given, When, Then language used for [[scenario|scenarios]] in a [[spec]].
@@ -28,7 +30,7 @@ generated: true
 - **1.16** [[person]] *(actor, v1)*: The human the [[agent|agents]] work for: the only one who decides, and the reader every [[response|reply]] is written for.
 - **1.17** [[question]] *(entity, v2)*: A request from an [[agent]] for a [[person]] to decide, written as a proposed [[adr]] and asked in the client's native question dialog, which records the answer in that [[adr]].
 - **1.18** [[requirement]] *(entity, v1)*: One [[rule]] in a [[spec]], with an ID such as REQ-003, that its [[gherkin|Gherkin]] [[scenario|scenarios]] check.
-- **1.19** [[response]] *(entity, v2)*: What an [[agent]] writes back to a [[person]]: up to four labelled lines (Done, Open, Needs you, Check), each included only when it has something to say, in at most 8 lines.
+- **1.19** [[response]] *(entity, v3)*: What an [[agent]] writes back to a [[person]]: a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each included only when it has something to say, in at most 8 rows.
 - **1.20** [[result]] *(entity, v1)*: The pass or fail a [[verdict]] gives one [[requirement]].
 - **1.21** [[rule]] *(entity, v1)*: One sentence a [[adr|decision]] put in force, written in [[ears|EARS]]; [[agent|agents]] follow the newest one.
 - **1.22** [[rules-not-landing]] *(problem, v1)*: Instructions get recited back, but their effects never show up in what [[agent|agents]] do.
@@ -47,7 +49,7 @@ generated: true
 - **2.1** [[ADR-0001|ADR-0001]] *accepted (A)*: What shape must an [[agent]]'s [[question]] to a [[person]] take?
 - **2.2** [[ADR-0002|ADR-0002]] *accepted (A)*: How is a [[spec]] written, so that every [[requirement]] is checked by a test?
 - **2.3** [[ADR-0003|ADR-0003]] *accepted (A)*: What may appear in a [[spec]] line, and how is each [[term]] addressed?
-- **2.4** [[ADR-0004|ADR-0004]] *accepted (A)*: What fixed shape should an [[agent]]'s [[response|reply]] to you take instead?
+- **2.4** [[ADR-0004|ADR-0004]] *accepted (A)*: Should the [[response|reply]] [[rule]] describe the table that replies now use?
 - **2.5** [[ADR-0005|ADR-0005]] *accepted (A)*: Where should each project's own layer live?
 - **2.6** [[ADR-0006|ADR-0006]] *accepted (Other)*: When should the tests you've written run automatically?
 - **2.7** [[ADR-0007|ADR-0007]] *accepted (A)*: Which sessions should load the base prompt and run the decision-cards mod?
@@ -57,6 +59,20 @@ generated: true
 - **2.11** [[ADR-0011|ADR-0011]] *accepted (A)*: What must happen when a [[person]] asks for a check?
 - **2.12** [[ADR-0012|ADR-0012]] *accepted (A)*: How must an [[agent]] hand a [[job]] to another [[agent]]?
 - **2.13** [[ADR-0013|ADR-0013]] *accepted (A)*: What happens to the numbering when an [[adr]] that amends another is decided?
+
+## 3 Waiting on you
+
+Nothing.
+
+## 4 Superseded
+
+Nothing.
+
+## 5 Parked
+
+> Set aside until a real failure calls for them; not in force.
+
+Nothing.
 
 ## Templates
 

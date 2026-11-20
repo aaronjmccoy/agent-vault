@@ -15,7 +15,7 @@ const plain = (text: string): string => text.replace(LINK, (_, name: string, lab
 const joinPath = (dir: string, name: string) => `${dir.replace(/[\\/]+$/, '')}/${name}`
 
 // An EARS sentence in the present tense: a keyword clause, then the actor and what it does
-// ("When writing a reply, the agent uses four labelled lines."). "shall" marks the old,
+// ("When writing a reply, the agent uses a two-column table of labelled rows."). "shall" marks the old,
 // future-tense form and is refused.
 const EARS = /^(When|While|If|Where)\b[^,]+,\s*\S+.*\s\S+/
 // Whether a sentence follows one of the EARS patterns.
@@ -172,7 +172,7 @@ async function openFile($: EngineInterface, path: string): Promise<void> {
 async function saveRule($: EngineInterface, note: NoteEntry): Promise<void> {
   const text = ((await read($, ruleEdits))[note.name] ?? note.rule).replace(/\s*\n\s*/g, ' ').trim()
   if (!isEars(text)) {
-    $.ui.toast('Write the rule as one EARS sentence in the present tense, e.g. "When writing a reply, the agent uses four labelled lines."')
+    $.ui.toast('Write the rule as one EARS sentence in the present tense, e.g. "When writing a reply, the agent uses a two-column table of labelled rows."')
     return
   }
   await $.fs.write(note.file, replaceRule(String(await $.fs.read(note.file)), text))

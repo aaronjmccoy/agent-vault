@@ -200,7 +200,7 @@ test('the reply check follows the template: optional lines, fixed opening words,
   expect(checkReply('Done Added one thing')).toEqual([])
   expect(checkReply('```\nDone       Added it\n```')).toEqual([])
   expect(checkReply('| Done | Changed the template |\n| Check | Open Docs.md → the rule shows |')).toEqual([])
-  expect(checkReply('Here is what I did. It went well.').join(' ')).toContain('no labelled lines')
+  expect(checkReply('Here is what I did. It went well.').join(' ')).toContain('no labelled rows')
   expect(checkReply('Done I wrote the checker').join(' ')).toContain('Done line must be')
   expect(checkReply('Open the checker is unverified').join(' ')).toContain('Open line must be')
   expect(checkReply('Check Run the tests').join(' ')).toContain('Check line must be')

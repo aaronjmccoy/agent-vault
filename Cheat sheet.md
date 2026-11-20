@@ -89,7 +89,7 @@ A [[rule]] is one EARS sentence that names who acts, when, and what they do. It 
 | If \<unwanted condition>, \<actor> \<responds>. | Handling a failure |
 | Where \<context or feature>, \<actor> \<responds>. | Something that applies only in some places |
 
-For example: "When writing a reply, the agent uses four labelled lines (Done, Open, Needs you, Check), each a link or one short clause, in at most 8 lines." Rules are written in the present tense, as what happens, not what will happen.
+For example: "When writing a reply, the agent uses a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each a link or one short clause, in at most 8 rows." Rules are written in the present tense, as what happens, not what will happen.
 
 Because each [[rule]] has a single actor, trigger and response, you can see in the [[agent]]'s next action whether it was followed. [[rule|Rules]] written as general advice tend to get repeated back to you but not acted on.
 
