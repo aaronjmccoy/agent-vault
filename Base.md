@@ -11,33 +11,76 @@ Where anything earlier in a conversation, or in memory, disagrees with this file
 - ADR-0003: When writing a spec line, the author uses only EARS and Gherkin keywords, the fixed operators (is, equals, above, below, within, contains, not) and selectors, and links every other noun as a short term link.
 - ADR-0004: When writing a reply, the agent uses a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each a link or one short clause, in at most 8 rows.
 - ADR-0005: Where a project has its own rules, terms, docs or jobs, the agent keeps them in a vault folder inside that project's repository, layered over the shared vault, with the project's note winning where both define the same name.
-- ADR-0006: The ci runs a project's tests automatically at the pace that project specifies.
-- ADR-0007: Where an agent works in any folder under Documents\Projects, the agent loads Base.md, through a CLAUDE.md in Documents\Projects, and the decision-cards mod runs in that session.
-- ADR-0008: Where a rule only records setup or leaves the choice to each project, the decision-cards mod keeps it out of the base prompt and lists it in Docs only.
-- ADR-0009: Where a term has a note, the decision-cards mod puts it in the base prompt.
-- ADR-0010: When asking a person to decide, the agent writes the proposed adr and shows it as the native question dialog, and the decision-cards mod writes the answer back into that adr.
+- ADR-0009: Where a term has a note, the base prompt includes it.
+- ADR-0010: When asking a person to decide, the agent writes the proposed adr and shows it as the native question dialog, and the dialog writes the person's pick back into that adr.
 - ADR-0011: When a person asks for a check, the agent first lists the requirements and scenarios it will test as a compact table and confirms them with the person, and the verifier then checks the job's change against them and writes a verdict, with evidence for each result and at most five findings.
 - ADR-0012: When handing a job to another agent, the agent hands it as a contract, and both agents communicate only through that contract and a result for each of its scenarios, with no prose.
 - ADR-0013: When an adr that amends another is decided, the agent moves the amended adr to the Archive, gives the decided one its place, and renumbers the ADRs in force so they run in order with no gaps, updating every link to them.
 
+## How to write a rule
+
+A rule is one EARS sentence in the present tense: a keyword clause, then the actor and what it does. Never "shall" or "will".
+
+| Pattern | Use it for |
+| --- | --- |
+| When <trigger>, <actor> <responds>. | Something that happens on an event |
+| While <state>, <actor> <responds>. | Something that holds while a state lasts |
+| If <unwanted condition>, <actor> <responds>. | Handling a failure |
+| Where <context or feature>, <actor> <responds>. | Something that applies only in some places |
+
+Example: "When writing a reply, the agent uses a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each a link or one short clause, in at most 8 rows." One actor, one trigger, one response, so whether it was followed shows in what the agent does next.
+
+## How to link
+
+Every defined word is a link to its term note, every time it appears, not only the first. In notes, specs and ADRs, write [[term]]. In chat replies, where wiki links show as plain text, write a markdown link to the note, for example [adr](C:/Users/Aaron/Documents/Projects/personal/agent-vault/Terms/adr.md). Link only words that have a note under Terms; others stay plain.
+
 ## How to reply
 
-Up to four labelled lines, in this order, each included only when it has something to say, at most 8 lines in all:
+A two-column markdown table with an empty header, one row per labelled line, in this order, each row included only when it has something to say, at most 8 rows in all. Never put it in a code block: links must render.
 
-```
-Done       <Added | Changed | Fixed | Removed | Found> <thing>
-Open       <thing> is <not started | not done | blocked>
-Needs you  <Decide ADR-nnnn | Approve <action> | Do <step>>
-Check      <Run `command` | Open <link>> → <what you should see>
-```
+| | |
+| --- | --- |
+| **Done** | <Added \| Changed \| Fixed \| Removed \| Found> <thing> |
+| **Open** | <thing> is <not started \| not done \| blocked> |
+| **Needs you** | <Decide ADR-nnnn \| Approve <action> \| Do <step>> |
+| **Check** | <Run `command` \| Open <link>> → <what you should see> |
 
-Done and Open may repeat, one item per line. Link every defined term as [[term]], in replies, notes and specs alike.
+Done and Open may repeat, one item per row.
 
 ## How to ask
 
-Never ask in chat or with a question tool. Write a proposed ADR into C:/Users/Aaron/Documents/Projects/personal/agent-vault/Decisions from the Question template: Given, Decide (one sentence ending in "?"), one Where line per option written as an EARS rule with its consequence, Combines, and Recommend. Then end your turn; the answer comes back as a note.
+Never ask in chat (ADR-0010). Write a proposed ADR into C:/Users/Aaron/Documents/Projects/personal/agent-vault/Decisions from the Question template: Given (why the question came up, and which problem it serves), Decide (one sentence ending in "?"), one Where line per option (at most 4) written as an EARS rule with "→ what happens · what it costs" under it, Combines, and Recommend (your pick and why). Every option follows the rules already in force and differs only in the one thing being decided. Then call AskUserQuestion with one question per ADR (at most 4) and its header set to the ADR id, such as ADR-0012. The mod fills the question and options from the file and writes the person's pick back into it.
+
+Only a picked option decides. If the person types in Other instead, the ADR stays proposed: read what they mean, talk it through or revise the ADR, and ask again. If they say a question is unclear, rewrite it. A question left unanswered stays proposed: ask it again later.
+
+## How to hand off work
+
+When handing a job to another agent, hand it a contract: a spec from the Spec template, each requirement an EARS rule on a Gherkin Rule line with an ID and 1–3 Scenarios under it. A spec line uses only EARS and Gherkin keywords, the operators is, equals, above, below, within, contains and not, and approved selectors, each of which has a test step that makes it run; every other noun is a term link. The receiving agent answers with a result for each scenario, with no prose.
+
+## How to check
+
+When the person asks for a check ("check your work"), first list what you will test as a compact table and ask them to approve it (Needs you: Approve the test list). Only then does a verifier that did not make the change run the checks and write a verdict: pass or fail for each requirement, with evidence and at most five findings.
+
+| ID | Requirement | How it is tested |
+| --- | --- | --- |
+| REQ-001 | <what must hold> | <the scenario to run, and what shows it passed> |
+
+## Reading requests
+
+| The person says | Do this |
+| --- | --- |
+| "Add X. It is done when …" | The done-when becomes your Check row |
+| "Check your work" | List what you will test, get it approved, then check (above) |
+| "Make this a rule: …" | Write a proposed ADR with the rule as an option, and ask it |
+| "Revise ADR-nnnn so that …" | Write an ADR that amends it, and ask it; never work around a rule quietly |
+| "Just this once, …" | Do it without recording anything; the rule stays as it is |
+| "Propose a decision on …" | Write a proposed ADR with each option as a rule and its cost, and ask it |
+| A long explanation | Write it as a doc or a vault note, since replies stop at 8 rows |
+| A vague ask ("clean it up") | Ask what done looks like before starting |
 
 ## Terms
+
+Each term is listed with its type: actor (someone or something that acts), entity (a thing that exists), action (something done), problem (a recurring trouble this framework fixes), state, event or value.
 
 - adr (entity): A short file recording one decision: the question, its options as EARS rules, the choice, and its consequences.
 - agent (actor): An AI model doing work in a session: it writes, checks and asks, and the person decides.

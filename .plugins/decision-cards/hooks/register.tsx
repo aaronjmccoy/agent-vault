@@ -395,7 +395,7 @@ export const askInstead = (nextId: string, adrDir: string, termsDir: string): st
     'Recommend A: <one-sentence reason>',
     '',
     `Each option is one EARS rule in the present tense ("When writing a reply, the agent uses…"), and every option follows the rules in force, differing only in what is being decided. Link only terms that have a note in ${termsDir}; define a new term there first.`,
-    'Write the file with the Write tool, then call AskUserQuestion with one question per ADR (at most 4), its header set to the ADR id, such as ' + nextId + '. The mod fills the question and options from the file and records the answer in it.',
+    'Write the file with the Write tool, then call AskUserQuestion with one question per ADR (at most 4), its header set to the ADR id, such as ' + nextId + '. The dialog is filled from the file, and the pick the person makes is written back into it.',
   ].join('\n')
 
 // Puts a note in the conversation for the agent: the model reads it on its next request.

@@ -219,7 +219,7 @@ export const vaultIndex = (notes: readonly NoteEntry[]): string => {
     '---',
     '# Reference',
     '',
-    '> Written by the decision-cards mod from the notes in this vault. Edit the notes; changes here are overwritten.',
+    '> Generated from the notes in this vault. Edit the notes; changes here are overwritten.',
     '',
     `1. [[#1 Glossary|Glossary]] · ${terms.length} [[term|terms]]`,
     `2. [[#2 Decision log|Decision log]] · ${inForce.length} in force`,
@@ -266,7 +266,7 @@ export const currentReference = (notes: readonly NoteEntry[], limit = 6000): str
     ...(pending.length ? ['', `Waiting on the person: ${pending.join(', ')}. Do not act as if these were decided.`] : []),
     '',
     'How to link in chat: [[wiki links]] show as plain text in chat, so in replies link each defined term as a markdown link to its note in the Terms folder, such as [adr](<Terms folder>/adr.md); words with no note stay plain. Keep [[term]] in notes, specs and ADRs.',
-    'How to ask the person: never ask in chat. Write a proposed ADR into the Decisions folder with the Write tool, from the Question template: each option one EARS rule in the present tense, every option following the rules in force and differing only in what is being decided. Then call AskUserQuestion with one question per ADR, its header set to the ADR id (such as ADR-0012); the decision-cards mod fills the question and options from the file and records a picked option in it. Words typed in Other leave the ADR proposed: read them, revise or talk it through, and ask again.',
+    'How to ask the person: never ask in chat. Write a proposed ADR into the Decisions folder with the Write tool, from the Question template: each option one EARS rule in the present tense, every option following the rules in force and differing only in what is being decided. Then call AskUserQuestion with one question per ADR, its header set to the ADR id (such as ADR-0012); the dialog is filled from the file, and a picked option is written back into it. Words typed in Other leave the ADR proposed: read them, revise or talk it through, and ask again.',
   ].join('\n')
   return out.length > limit ? out.slice(0, limit - 40) + '\n… (reference cut to fit)' : out
 }
@@ -287,7 +287,7 @@ export const basePrompt = (notes: readonly NoteEntry[], decisionsDir: string): s
   return [
     '# Base prompt',
     '',
-    'Generated from the shared vault by the decision-cards mod. Do not edit it: change a decision instead, and this file follows.',
+    'Generated from the shared vault. Do not edit it: change a decision instead, and this file follows.',
     'Every agent in this workspace follows it. Where a project keeps its own `vault/` folder, that project\'s rules and terms are layered on top, and its note wins where both define the same name.',
     'Where anything earlier in a conversation, or in memory, disagrees with this file, follow this file.',
     '',
@@ -327,7 +327,7 @@ export const basePrompt = (notes: readonly NoteEntry[], decisionsDir: string): s
     '',
     '## How to ask',
     '',
-    `Never ask in chat (ADR-0010). Write a proposed ADR into ${decisionsDir} from the Question template: Given (why the question came up, and which problem it serves), Decide (one sentence ending in "?"), one Where line per option (at most 4) written as an EARS rule with "→ what happens · what it costs" under it, Combines, and Recommend (your pick and why). Every option follows the rules already in force and differs only in the one thing being decided. Then call AskUserQuestion with one question per ADR (at most 4) and its header set to the ADR id, such as ADR-0012. The mod fills the question and options from the file and writes the person's pick back into it.`,
+    `Never ask in chat (ADR-0010). Write a proposed ADR into ${decisionsDir} from the Question template: Given (why the question came up, and which problem it serves), Decide (one sentence ending in "?"), one Where line per option (at most 4) written as an EARS rule with "→ what happens · what it costs" under it, Combines, and Recommend (your pick and why). Every option follows the rules already in force and differs only in the one thing being decided. Then call AskUserQuestion with one question per ADR (at most 4) and its header set to the ADR id, such as ADR-0012. The dialog is filled from the file, and the person's pick is written back into it.`,
     '',
     'Only a picked option decides. If the person types in Other instead, the ADR stays proposed: read what they mean, talk it through or revise the ADR, and ask again. If they say a question is unclear, rewrite it. A question left unanswered stays proposed: ask it again later.',
     '',
