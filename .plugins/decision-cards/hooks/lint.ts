@@ -2,7 +2,6 @@
 // and a question's shape (ADR-0001). Each returns the problems found, in
 // plain words; none means it passes.
 
-import { isEars } from './compose'
 
 // The two rules these checks enforce, by id in the vault.
 export const QUESTION_RULE = 'ADR-0001'
@@ -121,4 +120,14 @@ export const checkQuestion = (adr: AdrShape, notes: readonly KnownNote[]): strin
   const unlinked = unlinkedTerms(prose, notes.filter(n => n.kind === 'term').map(n => n.name))
   if (unlinked.length) problems.push(linkProblem(unlinked))
   return problems
+}
+
+const EARS = /^(When|While|If|Where|The)\b.+\bshall\b.+/
+// Whether a sentence follows one of the EARS patterns.
+export const isEars = (s: string): boolean => {
+  const t = s.trim()
+  if (!EARS.test(t)) return false
+  if (/^If\b/.test(t)) return /,\s*then the\b/i.test(t)
+  if (/^(When|While|Where)\b/.test(t)) return /,\s*the\b/i.test(t)
+  return true
 }

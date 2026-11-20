@@ -5,10 +5,6 @@
 import type { NoteEntry } from '../types'
 
 const LINK = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g
-const HREF = 'file:///note/'
-
-export const TERM_TYPES = ['actor', 'entity', 'state', 'event', 'action', 'value'] as const
-
 export const stripFrontmatter = (text: string): { meta: Record<string, string>; body: string } => {
   const lines = text.replace(/\r\n/g, '\n').split('\n')
   const meta: Record<string, string> = {}
@@ -46,16 +42,6 @@ export const linksOf = (text: string): string[] => [
   ...new Set([...text.matchAll(LINK)].map(m => (m[1] ?? '').trim()).filter(Boolean)),
 ]
 
-// Body text as Markdown, each [[link]] a pressable link the browser follows.
-export const toMarkdown = (body: string): string =>
-  body.replace(LINK, (_, name: string, label?: string) => {
-    const shown = (label ?? name).trim()
-    return `[${shown}](${HREF}${encodeURIComponent(name.trim())})`
-  })
-
-export const noteFromHref = (href: string): string | null =>
-  href.startsWith(HREF) ? decodeURIComponent(href.slice(HREF.length)) : null
-
 const plainText = (s: string) => s.replace(LINK, (_, n: string, l?: string) => (l ?? n).trim())
 
 export const termNote = (name: string, file: string, text: string): NoteEntry => {
@@ -88,9 +74,7 @@ const outcomeOf = (body: string): string => {
   if (!decision) return ''
   if (decision === 'Other') {
     const own = body.match(/^Other\s+(.+)$/m)?.[1]?.trim()
-    if (own) return own
-    const req = body.match(/^Request\s+(.+)$/m)?.[1]?.trim()
-    return req ? `Requested, not yet a rule: ${req}` : ''
+    return own ?? ''
   }
   const rule = body.match(new RegExp(`^Where\\s+${decision}:\\s*(.+)$`, 'm'))?.[1]?.trim()
   return rule ? `${decision}: ${rule}` : decision
@@ -132,22 +116,8 @@ export const decisionNote = (name: string, file: string, text: string): NoteEntr
   }
 }
 
-export const backlinksOf = (name: string, notes: readonly NoteEntry[]): NoteEntry[] =>
-  notes.filter(n => n.name !== name && n.links.some(l => l.toLowerCase() === name.toLowerCase()))
-
 export const findNote = (name: string, notes: readonly NoteEntry[]): NoteEntry | undefined =>
   notes.find(n => n.name.toLowerCase() === name.toLowerCase() || n.title.toLowerCase() === name.toLowerCase())
-
-// Follows superseded_by to the newest decision (at most 20 hops, so a loop can't hang).
-export const latestOf = (note: NoteEntry, notes: readonly NoteEntry[]): NoteEntry => {
-  let at = note
-  for (let i = 0; i < 20 && at.supersededBy; i++) {
-    const next = findNote(at.supersededBy, notes)
-    if (!next || next === at) break
-    at = next
-  }
-  return at
-}
 
 // Superseded, retired, parked and withdrawn notes are kept but not in force.
 export const isCurrent = (n: NoteEntry) => !['superseded', 'retired', 'parked', 'withdrawn'].includes(n.status)
@@ -156,30 +126,6 @@ const byNumber = (a: NoteEntry, b: NoteEntry) => a.name.localeCompare(b.name, un
 
 // ---- edits
 
-// A term rewritten in place: the old definition is gone, the version goes up.
-export const updateTermText = (text: string, type: string, definition: string): string => {
-  const { meta } = stripFrontmatter(text)
-  const version = String((Number.parseInt(meta.version ?? '1', 10) || 1) + 1)
-  const withMeta = setFrontmatter(text, { type, version })
-  const clean = definition.replace(/\s*\n\s*/g, ' ').trim()
-  return /\*\*Definition:\*\*.*/.test(withMeta)
-    ? withMeta.replace(/\*\*Definition:\*\*.*/, `**Definition:** ${clean}`)
-    : `${withMeta.replace(/\s+$/, '')}\n**Definition:** ${clean}\n`
-}
-
-export const newTermText = (name: string, type: string, definition: string, notation: string): string =>
-  [
-    '---',
-    `notation: ${notation}`,
-    `type: ${type}`,
-    `aliases: []`,
-    'version: 1',
-    'status: approved',
-    '---',
-    `**Definition:** ${definition.replace(/\s*\n\s*/g, ' ').trim()}`,
-    '',
-  ].join('\n')
-
 export const nextAdrId = (notes: readonly NoteEntry[]): string => {
   const top = notes
     .filter(n => n.kind === 'decision')
@@ -187,44 +133,6 @@ export const nextAdrId = (notes: readonly NoteEntry[]): string => {
     .filter(Number.isFinite)
     .reduce((a, b) => Math.max(a, b), 0)
   return `ADR-${String(top + 1).padStart(4, '0')}`
-}
-
-// A proposed revision of a decided ADR: the same question and options, a note
-// on what it revises, and none of the old outcome.
-export const reviseAdrText = (oldText: string, oldId: string, newId: string): string => {
-  const { meta, body } = stripFrontmatter(oldText)
-  const kept = body
-    .split('\n')
-    .filter(l => !/^(Decision|Other|Request|Consequences)\s/.test(l))
-    .map(l => (/^Given\s/.test(l) ? l.replace(/^Given\s+/, `Given     Revises [[${oldId}]]. `) : l))
-    .join('\n')
-    .replace(/\s+$/, '')
-  return [
-    '---',
-    `id: ${newId}`,
-    'status: proposed',
-    ...(meta.scope ? [`scope: ${meta.scope}`] : []),
-    `supersedes: ${oldId}`,
-    '---',
-    kept,
-    '',
-  ].join('\n')
-}
-
-// A decided ADR with its rule reworded in place: the chosen option's line (or the
-// person's own rule) gets the new sentence, and the version goes up. The old
-// wording is gone; agents only see the new one.
-export const replaceRule = (text: string, rule: string): string => {
-  const { meta, body } = stripFrontmatter(text)
-  const decision = body.match(/^Decision\s+(\S+)/m)?.[1]
-  if (!decision) return text
-  const clean = rule.replace(/\s*\n\s*/g, ' ').trim()
-  const version = String((Number.parseInt(meta.version ?? '1', 10) || 1) + 1)
-  const swapped =
-    decision === 'Other'
-      ? text.replace(/^Other\s+.+$/m, `Other     ${clean}`)
-      : text.replace(new RegExp(`^Where\\s+${decision}:\\s*.+$`, 'm'), `Where ${decision}:  ${clean}`)
-  return setFrontmatter(swapped, { version })
 }
 
 export const supersedeText = (text: string, byId: string): string =>
@@ -244,8 +152,7 @@ export const docsDocument = (notes: readonly NoteEntry[]): string => {
   const byTitle = (a: NoteEntry, b: NoteEntry) => a.title.localeCompare(b.title)
   const terms = notes.filter(n => n.kind === 'term' && isCurrent(n)).sort(byTitle)
   const rules = notes.filter(n => n.kind === 'decision' && isCurrent(n) && n.status === 'accepted' && n.rule).sort(byNumber)
-  const requests = notes.filter(n => n.kind === 'decision' && isCurrent(n) && n.status === 'answered').sort(byNumber)
-  const open = notes.filter(n => n.kind === 'decision' && (n.status === 'proposed' || n.status === 'deferred')).sort(byNumber)
+  const open = notes.filter(n => n.kind === 'decision' && (n.status === 'proposed')).sort(byNumber)
   const one = (s: string) => s.replace(/\s+/g, ' ').trim()
   const usedIn = (t: NoteEntry) =>
     notes
@@ -262,7 +169,7 @@ export const docsDocument = (notes: readonly NoteEntry[]): string => {
     '',
     '1. Rules in force',
     '2. Glossary',
-    ...(open.length || requests.length ? ['3. Open questions'] : []),
+    ...(open.length ? ['3. Open questions'] : []),
     '',
     '## 1. Rules in force',
     '',
@@ -277,10 +184,9 @@ export const docsDocument = (notes: readonly NoteEntry[]): string => {
     const used = usedIn(t)
     out.push(`**${t.title === t.name ? `[[${t.name}]]` : `[[${t.name}|${t.title}]]`}** *(${t.subtitle})*: ${one(t.summary) || 'not defined yet.'}${used.length ? ` Used in ${used.join(', ')}.` : ''}`, '')
   }
-  if (open.length || requests.length) {
+  if (open.length) {
     out.push('## 3. Open questions', '')
     for (const d of open) out.push(`- [[${d.name}|${d.title}]] *(${d.status})*: ${one(d.summary)}`)
-    for (const d of requests) out.push(`- [[${d.name}|${d.title}]] *(waiting for a [[rule]])*: ${one(d.outcome)}`)
     out.push('')
   }
   return out.join('\n')
@@ -293,8 +199,8 @@ export const vaultIndex = (notes: readonly NoteEntry[]): string => {
   const byTitle = (a: NoteEntry, b: NoteEntry) => a.title.localeCompare(b.title)
   const terms = notes.filter(n => n.kind === 'term' && isCurrent(n)).sort(byTitle)
   const decisions = notes.filter(n => n.kind === 'decision').sort(byTitle)
-  const inForce = decisions.filter(n => isCurrent(n) && (n.status === 'accepted' || n.status === 'answered'))
-  const waiting = decisions.filter(n => n.status === 'proposed' || n.status === 'deferred')
+  const inForce = decisions.filter(n => isCurrent(n) && n.status === 'accepted')
+  const waiting = decisions.filter(n => n.status === 'proposed')
   const superseded = decisions.filter(n => n.status === 'superseded')
   const parked = decisions.filter(n => n.status === 'parked')
   const one = (s: string) => s.replace(/\s+/g, ' ').trim()
@@ -313,7 +219,7 @@ export const vaultIndex = (notes: readonly NoteEntry[]): string => {
     '---',
     '# Reference',
     '',
-    '> Written by the Decisions panel from the notes in this vault. Edit the notes; changes here are overwritten.',
+    '> Written by the decision-cards mod from the notes in this vault. Edit the notes; changes here are overwritten.',
     '',
     `1. [[#1 Glossary|Glossary]] · ${terms.length} [[term|terms]]`,
     `2. [[#2 Decision log|Decision log]] · ${inForce.length} in force`,
@@ -342,11 +248,11 @@ export const vaultIndex = (notes: readonly NoteEntry[]): string => {
 export const currentReference = (notes: readonly NoteEntry[], limit = 6000): string => {
   const terms = notes.filter(n => n.kind === 'term' && isCurrent(n)).sort((a, b) => a.title.localeCompare(b.title))
   const decided = notes
-    .filter(n => n.kind === 'decision' && isCurrent(n) && !n.record && (n.status === 'accepted' || n.status === 'answered'))
+    .filter(n => n.kind === 'decision' && isCurrent(n) && !n.record && n.status === 'accepted')
     .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }))
   const pending = notes
-    .filter(n => n.kind === 'decision' && (n.status === 'proposed' || n.status === 'deferred'))
-    .map(n => (n.status === 'deferred' ? `${n.title} (deferred)` : n.title))
+    .filter(n => n.kind === 'decision' && (n.status === 'proposed'))
+    .map(n => n.title)
   if (!terms.length && !decided.length) return ''
   const out = [
     'Project reference: the current terms and decisions of this project, read from its term notes and ADRs.',
@@ -360,7 +266,7 @@ export const currentReference = (notes: readonly NoteEntry[], limit = 6000): str
     ...(pending.length ? ['', `Waiting on the person: ${pending.join(', ')}. Do not act as if these were decided.`] : []),
     '',
     'How to link in chat: [[wiki links]] show as plain text in chat, so in replies link each defined term as a markdown link to its note in the Terms folder, such as [adr](<Terms folder>/adr.md); words with no note stay plain. Keep [[term]] in notes, specs and ADRs.',
-    'How to ask the person: never ask in chat or with a question tool. Write a proposed ADR into the Decisions folder with the Write tool, from the Question template (each option one EARS rule). Its decision card appears in the Decisions panel for the person. End your turn; their answer arrives as a note.',
+    'How to ask the person: never ask in chat. Write a proposed ADR into the Decisions folder with the Write tool, from the Question template (each option one EARS rule). Then call AskUserQuestion with one question per ADR, its header set to the ADR id (such as ADR-0012); the decision-cards mod fills the question and options from the file and records the answer in it.',
   ].join('\n')
   return out.length > limit ? out.slice(0, limit - 40) + '\n… (reference cut to fit)' : out
 }
@@ -377,8 +283,7 @@ export const basePrompt = (notes: readonly NoteEntry[], decisionsDir: string): s
   const one = (s: string) => plainText(s).replace(/\s+/g, ' ').trim()
   const terms = notes.filter(x => x.kind === 'term' && isCurrent(x)).sort(byTitle)
   const rules = notes.filter(x => x.kind === 'decision' && isCurrent(x) && x.status === 'accepted' && x.rule && !x.record).sort(byNumber)
-  const requests = notes.filter(x => x.kind === 'decision' && isCurrent(x) && x.status === 'answered' && !x.record).sort(byNumber)
-  const pending = notes.filter(x => x.kind === 'decision' && (x.status === 'proposed' || x.status === 'deferred')).sort(byNumber)
+  const pending = notes.filter(x => x.kind === 'decision' && (x.status === 'proposed')).sort(byNumber)
   return [
     '# Base prompt',
     '',
@@ -389,7 +294,6 @@ export const basePrompt = (notes: readonly NoteEntry[], decisionsDir: string): s
     '## Rules in force',
     '',
     ...rules.map(r => `- ${r.name}: ${one(r.rule)}`),
-    ...requests.map(r => `- ${r.name} (answered, waiting for a written rule): ${one(r.outcome)}`),
     '',
     '## How to reply',
     '',
@@ -406,7 +310,7 @@ export const basePrompt = (notes: readonly NoteEntry[], decisionsDir: string): s
     '',
     '## How to ask',
     '',
-    `Never ask in chat or with a question tool. Write a proposed ADR into ${decisionsDir} from the Question template: Given, Decide (one sentence ending in "?"), one Where line per option written as an EARS rule with its consequence, Combines, and Recommend. Then end your turn; the answer comes back as a note.`,
+    `Never ask in chat (ADR-0010). Write a proposed ADR into ${decisionsDir} from the Question template: Given, Decide (one sentence ending in "?"), one Where line per option (at most 4) written as an EARS rule with its consequence, Combines, and Recommend. Then call AskUserQuestion with one question per ADR (at most 4) and its header set to the ADR id, such as ADR-0012. The mod fills the question and options from the file and writes the answer back into it. A question left unanswered stays proposed: ask it again later.`,
     ...(pending.length ? ['', `Waiting on the person: ${pending.map(p => p.name).join(', ')}. Do not act as if these were decided.`] : []),
     '',
     '## Terms',

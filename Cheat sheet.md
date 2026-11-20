@@ -1,15 +1,15 @@
 # Prompting the agent-vault framework: cheat sheet
 
-As of 2026-11-19. Online copy: https://claude.ai/artifact/E13ccGAX3ufLPkkmt1UzM9
+As of 2026-11-20. Online copy: https://claude.ai/artifact/E13ccGAX3ufLPkkmt1UzM9
 
 ## How it works
 
-You say what you want. Agents follow the rules in force, and they ask you only through decision cards.
+You say what you want. Agents follow the rules in force, and they ask you only through the question dialog, built from a proposed ADR.
 
-1. The shared vault (`agent-vault`) holds Decisions (ADR-0001 to ADR-0008), Terms, Specs and Templates. Base.md, Docs.md and Index.md are generated from them.
+1. The shared vault (`agent-vault`) holds Decisions (ADR-0001 onward), Terms, Specs and Templates. Base.md, Docs.md and Index.md are generated from them.
 2. Every session under `Documents\Projects` loads the base prompt through the CLAUDE.md file in that folder.
-3. When an agent needs a decision from you, it writes a proposed ADR. The ADR shows up as a card in the Decisions panel.
-4. Your answer becomes a rule in force, and the base prompt picks it up at the next refresh.
+3. When an agent needs a decision from you, it writes a proposed ADR and asks it in the client's question dialog, which works on desktop and mobile (ADR-0010).
+4. The mod writes your answer into the ADR. It becomes a rule in force, and the base prompt picks it up at the next refresh.
 5. Each reply comes back in at most four labelled lines: Done, Open, Needs you, Check.
 
 ## Asking for work
@@ -23,10 +23,10 @@ Give the outcome and how you'll know it's done, and use the vault's own words. A
 | A standing behaviour | "Make this a rule: when X, the agent shall Y." | The agent writes a proposed ADR, and once you accept it, it reaches every session. |
 | To change a rule | "Revise ADR-0004 so that…" | The agent writes a revising ADR instead of quietly working around the rule. |
 | A one-off exception | "Just this once, …" | Nothing gets recorded, and the rule stays as it is. |
-| Options to weigh | "Propose a decision on…" | You get a card with each option as a rule and its cost. |
+| Options to weigh | "Propose a decision on…" | You get a question with each option as a rule and its cost. |
 | A long explanation | "Write it up as a doc" or "…as a note in the vault" | Chat replies are capped at 8 lines. |
 
-Agents never ask you questions in chat. When one needs you, it writes a card and ends its turn.
+Agents never ask you questions in chat. When one needs you, it writes an ADR and opens the question dialog.
 
 ## Reading a reply
 
@@ -41,11 +41,11 @@ Read Needs you first. It's the only line that waits on you.
 
 A missing line means there was nothing to say. Each defined term links to its note. If a reply breaks the shape, a ⚠ note says how, and the agent is told to fix it.
 
-## Answering a decision card
+## Answering a question
 
-Each option on a card is the exact rule that goes into force. Read the arrow line under it before you pick.
+Each option is the exact rule that goes into force. Its description gives the rule, then → what happens and what it costs. The header is the ADR id. The preview shows the Given and the definition of each term used.
 
-A card reads top to bottom:
+The ADR behind the dialog reads top to bottom:
 
 - **Given**: why the question came up, and which problem it serves.
 - **Decide**: one question ending in "?".
@@ -55,12 +55,12 @@ A card reads top to bottom:
 
 | To | Do | What happens |
 | --- | --- | --- |
-| Take an option | Pick it, then Accept | Its rule goes into force at the next refresh |
-| Set your own rule | Choose Other and write the rule | Your sentence becomes the rule |
-| Answer in plain words | Use Free text | It's recorded as a request until an agent writes it up as a rule |
-| Wait | Defer | Agents treat it as undecided |
+| Take an option | Pick it (the recommended one is first) | Its rule goes into force at the next refresh |
+| Answer in your own words | Type in Other | The ADR stays proposed; the agent reads your words and asks again |
+| Wait | Skip it or close the dialog | It stays proposed, and agents treat it as undecided |
+| Answer later | Run `/decisions`, then send any message | The agent asks what's waiting |
 
-If a card is hard to follow, the question is badly written. Say so in Free text, for example "unclear: what does option B cost?". The agent will rewrite the card.
+If a question is hard to follow, it's badly written. Say so in Other, for example "unclear: what does option B cost?". The agent will rewrite the ADR.
 
 ## Writing rules and specs
 
@@ -102,7 +102,7 @@ Edit the source notes. Generated files are rebuilt from them and overwrite any e
 
 | What | Where | Edit it? |
 | --- | --- | --- |
-| Decisions (ADR-0001…) | agent-vault/Decisions | Yes: answer cards, or edit the file |
+| Decisions (ADR-0001…) | agent-vault/Decisions | Yes: answer in the dialog, or edit the file |
 | Terms | agent-vault/Terms | Yes |
 | Specs | agent-vault/Specs | Yes |
 | Templates (Question, Response, Spec, Term) | agent-vault/Templates | Yes |
@@ -120,6 +120,6 @@ Three rules are records, not instructions: test pace (ADR-0006), workspace setup
 | Editing Base.md or CLAUDE.md | Your edit is overwritten at the next refresh | Change the decision behind it |
 | Vague asks ("clean it up", "make it better") | The agent guesses what done means | Say what done looks like, as something you can run or open |
 | A rule that only describes setup | It's kept out of the base prompt (ADR-0008) | Phrase it as something an agent does |
-| Expecting a chat question back | The agent writes a card and stops | Check the Decisions panel |
+| Expecting a chat question back | The agent asks in the question dialog | Answer there, or run `/decisions` later |
 | Reopening a settled point | Agents won't relitigate it on their own | Ask for a revising ADR by number |
 | Asking for a long write-up in chat | The 8-line cap cuts it short | Ask for a doc or a vault note |

@@ -3,10 +3,12 @@ generated: true
 ---
 # Reference
 
-> Written by the Decisions panel from the notes in this vault. Edit the notes; changes here are overwritten.
+> Written by the decision-cards mod from the notes in this vault. Edit the notes; changes here are overwritten.
 
 1. [[#1 Glossary|Glossary]] · 30 [[term|terms]]
-2. [[#2 Decision log|Decision log]] · 8 in force
+2. [[#2 Decision log|Decision log]] · 11 in force
+3. [[#3 Waiting on you|Waiting on you]] · 2
+4. [[#4 Superseded|Superseded]] · 0
 
 ## 1 Glossary
 
@@ -25,7 +27,7 @@ generated: true
 - **1.13** [[long-replies]] *(problem, v1)*: [[agent|Agent]] replies run far too long and are tedious to review.
 - **1.14** [[message]] *(entity, v1)*: A YAML record one [[agent]] writes to hand work to another: who, what [[job]], status, links and needs.
 - **1.15** [[person]] *(actor, v1)*: The human the [[agent|agents]] work for: the only one who decides, and the reader every [[response|reply]] is written for.
-- **1.16** [[question]] *(entity, v1)*: A request from an [[agent]] for a [[person]] to decide, written as a proposed [[adr]] and shown as a [[adr|decision]] card.
+- **1.16** [[question]] *(entity, v2)*: A request from an [[agent]] for a [[person]] to decide, written as a proposed [[adr]] and asked in the client's native question dialog, which records the answer in that [[adr]].
 - **1.17** [[requirement]] *(entity, v1)*: One [[rule]] in a [[spec]], with an ID such as REQ-003, that its [[gherkin|Gherkin]] [[scenario|scenarios]] check.
 - **1.18** [[response]] *(entity, v2)*: What an [[agent]] writes back to a [[person]]: up to four labelled lines (Done, Open, Needs you, Check), each included only when it has something to say, in at most 8 lines.
 - **1.19** [[result]] *(entity, v1)*: The pass or fail a [[verdict]] gives one [[requirement]].
@@ -49,8 +51,26 @@ generated: true
 - **2.4** [[ADR-0004|ADR-0004]] *accepted (A)*: What fixed shape should an [[agent]]'s [[response|reply]] to you take instead?
 - **2.5** [[ADR-0005|ADR-0005]] *accepted (A)*: Where should each project's own layer live?
 - **2.6** [[ADR-0006|ADR-0006]] *accepted (Other)*: When should the tests you've written run automatically?
-- **2.7** [[ADR-0007|ADR-0007]] *accepted (A)*: Which sessions should load the base prompt and the Decisions panel?
+- **2.7** [[ADR-0007|ADR-0007]] *accepted (A)*: Which sessions should load the base prompt and run the decision-cards mod?
 - **2.8** [[ADR-0008|ADR-0008]] *accepted (A)*: Should the base prompt leave out [[rule|rules]] an [[agent]] cannot act on?
+- **2.9** [[ADR-0009|ADR-0009]] *accepted (C)*: Should the base prompt leave out [[term|terms]] that no [[rule]] in force uses?
+- **2.10** [[ADR-0010|ADR-0010]] *accepted (A)*: Where should you answer an [[agent]]'s [[question|questions]]?
+- **2.11** [[ADR-0011|ADR-0011]] *accepted (B)*: Must a [[job]]'s change be checked by a [[verifier]] before it reaches you?
+
+## 3 Waiting on you
+
+- [[ADR-0012|ADR-0012]] *proposed*: Must an [[agent]] that hands a [[job]] to another [[agent]] write a [[message]]?
+- [[ADR-0013|ADR-0013]] *proposed*: What must a handoff [[message]] fix in advance?
+
+## 4 Superseded
+
+Nothing.
+
+## 5 Parked
+
+> Set aside until a real failure calls for them; not in force.
+
+Nothing.
 
 ## Templates
 

@@ -1,7 +1,7 @@
 {
   "name": "decision-cards",
-  "version": "0.6.0",
-  "description": "Shows proposed ADRs as decision cards, with a reference browser over a shared vault of terms and decisions",
+  "version": "0.7.0",
+  "description": "Asks proposed ADRs in the native question dialog and records the answer, checks questions and replies, and generates the base prompt from a shared vault of terms and decisions",
   "types": "./types/index.d.ts",
   "userConfig": {
     "adrDir": {

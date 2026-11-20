@@ -11,6 +11,9 @@ Where anything earlier in a conversation, or in memory, disagrees with this file
 - ADR-0003: When a spec line is written, the author shall use only EARS and Gherkin keywords, the fixed operators (is, equals, above, below, within, contains, not) and selectors, and shall link every other noun as a short term link.
 - ADR-0004: When an agent replies to a person, the agent shall use four labelled lines (Done, Open, Needs you, Check), each a link or one short clause, in at most 8 lines.
 - ADR-0005: Where a project has its own rules, terms, docs or jobs, the agent shall keep them in a vault folder inside that project's repository, layered over the shared vault, with the project's note winning where both define the same name.
+- ADR-0009: Where a term has a note, the decision-cards mod shall put it in the base prompt.
+- ADR-0010: When an agent asks a person to decide, the agent shall write the proposed adr and show it as the native question dialog, and the decision-cards mod shall write the answer back into that adr.
+- ADR-0011: When a person asks for a check, the verifier shall check the job's change against its spec and write a verdict, with evidence for each result and at most five findings.
 
 ## How to reply
 
@@ -27,7 +30,9 @@ Done and Open may repeat, one item per line. Link every instance of a defined te
 
 ## How to ask
 
-Never ask in chat or with a question tool. Write a proposed ADR into C:/Users/Aaron/Documents/Projects/personal/agent-vault/Decisions from the Question template: Given, Decide (one sentence ending in "?"), one Where line per option written as an EARS rule with its consequence, Combines, and Recommend. Then end your turn; the answer comes back as a note.
+Never ask in chat (ADR-0010). Write a proposed ADR into C:/Users/Aaron/Documents/Projects/personal/agent-vault/Decisions from the Question template: Given, Decide (one sentence ending in "?"), one Where line per option (at most 4) written as an EARS rule with its consequence, Combines, and Recommend. Then call AskUserQuestion with one question per ADR (at most 4) and its header set to the ADR id, such as ADR-0012. The mod fills the question and options from the file and writes the answer back into it. A question left unanswered stays proposed: ask it again later.
+
+Waiting on the person: ADR-0012, ADR-0013. Do not act as if these were decided.
 
 ## Terms
 
@@ -46,7 +51,7 @@ Never ask in chat or with a question tool. Write a proposed ADR into C:/Users/Aa
 - long-replies (problem): Agent replies run far too long and are tedious to review.
 - message (entity): A YAML record one agent writes to hand work to another: who, what job, status, links and needs.
 - person (actor): The human the agents work for: the only one who decides, and the reader every reply is written for.
-- question (entity): A request from an agent for a person to decide, written as a proposed adr and shown as a decision card.
+- question (entity): A request from an agent for a person to decide, written as a proposed adr and asked in the client's native question dialog, which records the answer in that adr.
 - requirement (entity): One rule in a spec, with an ID such as REQ-003, that its Gherkin scenarios check.
 - response (entity): What an agent writes back to a person: up to four labelled lines (Done, Open, Needs you, Check), each included only when it has something to say, in at most 8 lines.
 - result (entity): The pass or fail a verdict gives one requirement.

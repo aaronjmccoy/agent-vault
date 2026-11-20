@@ -15,4 +15,4 @@ Combines  exclusive
 Recommend A: it is the shape that was adopted in conversation.
 
 Decision  A
-Consequences  But marks anything a reader might wrongly assume from Then. "But [[ADR-n]] is proposed" means a [[adr|decision]] is waiting on the [[person]] and is shown as a [[question|decision card]]. The Details field was dropped.
+Consequences  But marks anything a reader might wrongly assume from Then. "But [[ADR-n]] is proposed" means a [[adr|decision]] is waiting on the [[person]] and is asked as a [[question]]. The Details field was dropped.

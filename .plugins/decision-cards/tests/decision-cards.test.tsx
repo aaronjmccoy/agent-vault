@@ -1,10 +1,9 @@
 import { expect, mock, test } from 'claude-code/testing'
 import type { TestBody } from 'claude-code/testing'
 
-import { assemble, cleanSuggestion, isEars, missingSlots } from '../hooks/compose'
 import { inWorkspace } from '../hooks/vault'
 import { checkQuestion, checkReply, unlinkedTerms } from '../hooks/lint'
-import { basePrompt, currentReference, decisionNote, docsDocument, reviseAdrText, supersedeText, termNote, updateTermText, vaultIndex } from '../hooks/notes'
+import { basePrompt, currentReference, decisionNote, docsDocument, supersedeText, termNote, vaultIndex } from '../hooks/notes'
 
 const ADR = `---
 id: ADR-0007
@@ -22,22 +21,6 @@ Combines  exclusive
 Recommend A: keeps tests from outgrowing specs.
 `
 
-// The Decisions panel: the card on top, the reference under it.
-const PANE = {
-  plugin: 'decision-cards',
-  component: 'Pane',
-  requestId: 'decisions',
-  props: {
-    title: 'Decisions',
-    isFocused: false,
-    bodyColumns: 150,
-    placement: 'dock',
-    scroll: { offset: 0, bodyRows: 40 },
-    view: {},
-  },
-} as const
-const ANSWER_PANE = PANE
-const NOTES_PANE = PANE
 
 // The engine hands hooks absolute paths; the fake disk keys by the project-relative tail.
 const rel = (path: string) => {
@@ -51,13 +34,6 @@ const rel = (path: string) => {
 }
 
 type On = Parameters<TestBody>[1]
-type Ui = Awaited<ReturnType<Parameters<TestBody>[0]['ui']['mount']>>
-
-// Opens a folded section (base prompt rules or terms) if it is closed.
-const unfold = async (ui: Pick<Ui, 'find' | 'press'>, key: string) => {
-  const b = await ui.find({ key: `fold-${key}` })
-  if (b && JSON.stringify(b).includes('▸')) await ui.press({ key: `fold-${key}` })
-}
 
 const fakeDisk = (on: On, files: Record<string, string>) => {
   let mtime = 1
@@ -94,141 +70,9 @@ const fakeDisk = (on: On, files: Record<string, string>) => {
   on('session.start', (_, e) => ({ cwd: e.cwd }))
 }
 
-test('a proposed ADR becomes a card, and Accept records the pick', async ($, on) => {
-  const files: Record<string, string> = {
-    'decisions/ADR-0007.md': ADR,
-    'terms/selector.md': '---\ntype: entity\n---\n**Definition:** An approved phrase a spec may use.\n',
-  }
-  fakeDisk(on, files)
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
 
-  for (const surface of ['terminal', 'desktop'] as const) {
-    const ui = await $.ui.mount({ ...PANE, surface })
-    expect(await ui.find({ type: 'Text', text: /ADR-0007/ })).toBeDefined()
-    expect(await ui.find({ type: 'Text', text: /An approved phrase a spec may use/ })).toBeDefined()
-    // `step` has no term note, so the card flags it.
-    expect(await ui.find({ type: 'Text', text: /not defined yet/i })).toBeDefined()
-    await ui.unmount()
-  }
-
-  const ui = await $.ui.mount({ ...PANE, surface: 'desktop' })
-  await ui.press({ key: 'pick-ADR-0007.md-B' })
-  await ui.press({ key: 'accept-ADR-0007.md' })
-  await ui.unmount()
-
-  expect(files['decisions/ADR-0007.md']).toContain('status: accepted')
-  expect(files['decisions/ADR-0007.md']).toContain('Decision  B')
-
-  const after = await $.ui.mount({ ...PANE, surface: 'desktop' })
-  expect(await after.find({ type: 'Text', text: /✓ accepted \(B\)/ })).toBeDefined()
-  expect(await after.find({ type: 'Text', text: /Rule in force/ })).toBeDefined()
-  await after.unmount()
-})
-
-test('a malformed ADR is drawn as an error card, not skipped', async ($, on) => {
-  fakeDisk(on, { 'decisions/ADR-0009.md': '---\nid: ADR-0009\nstatus: proposed\n---\nGiven  something\n' })
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-
-  const ui = await $.ui.mount({ ...PANE, surface: 'terminal' })
-  const line = await ui.find({ type: 'Text', text: /Missing: Decide/ })
-  expect(line?.text).toContain('Where X')
-  await ui.unmount()
-})
-
-test('the Other form assembles an EARS sentence from its slots', () => {
-  const draft = { pattern: 'If' as const, condition: 'a [[step]] fails.', system: 'ci', response: 'Shall block the merge.' }
-  expect(assemble(draft)).toBe('If a [[step]] fails, then the [[ci]] shall block the merge.')
-  expect(assemble({ ...draft, pattern: 'The', condition: '' })).toBe('The [[ci]] shall block the merge.')
-  expect(assemble({ pattern: 'When', condition: '', system: '', response: '' })).toBe(
-    'When <condition>, the <system> shall <response>.',
-  )
-  expect(missingSlots({ pattern: 'The', condition: '', system: 'ci', response: '' })).toEqual(['response'])
-})
-
-test('filling the Other form and accepting writes the rule into the ADR', async ($, on) => {
-  const files: Record<string, string> = {
-    'decisions/ADR-0007.md': ADR,
-    'terms/ci.md': '**Definition:** The automated checker.',
-    'terms/step.md': '**Definition:** Test code for one selector.',
-  }
-  fakeDisk(on, files)
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-
-  const answer = await $.ui.mount({ ...ANSWER_PANE, surface: 'desktop' })
-  const f = 'ADR-0007.md'
-  await answer.select({ key: `pattern-${f}`, value: 'If' })
-  await answer.input({ key: `cond-${f}`, text: 'a [[step]] fails', kind: 'change' })
-  await answer.select({ key: `system-${f}`, value: 'ci' })
-  await answer.input({ key: `resp-${f}`, text: 'block the merge', kind: 'change' })
-  expect(JSON.stringify(await answer.find({ key: `sentence-${f}` }))).toContain('shall block the merge')
-  await answer.unmount()
-  const ui = await $.ui.mount({ ...PANE, surface: 'desktop' })
-  expect(JSON.stringify(await ui.find({ key: `accept-${f}` }))).toContain('Accept my rule')
-  await ui.press({ key: `accept-${f}` })
-  await ui.unmount()
-
-  expect(files['decisions/ADR-0007.md']).toContain('Decision  Other')
-  expect(files['decisions/ADR-0007.md']).toContain('Other     If a [[step]] fails, then the [[ci]] shall block the merge.')
-})
-
-test('an unfinished Other rule is not accepted', async ($, on) => {
-  const files: Record<string, string> = { 'decisions/ADR-0007.md': ADR }
-  fakeDisk(on, files)
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-
-  const answer = await $.ui.mount({ ...ANSWER_PANE, surface: 'terminal' })
-  await answer.input({ key: 'resp-ADR-0007.md', text: 'block the merge', kind: 'change' })
-  expect(await answer.find({ type: 'Text', text: /Still needed: condition, system/ })).toBeDefined()
-  await answer.unmount()
-  const ui = await $.ui.mount({ ...PANE, surface: 'terminal' })
-  await ui.press({ key: 'accept-ADR-0007.md' })
-  await ui.unmount()
-  expect(files['decisions/ADR-0007.md']).toContain('status: proposed')
-})
-
-test('Notes shows rules first, keeps the record behind them, and follows links', async ($, on) => {
-  const accepted = ADR.replace('status: proposed', 'status: accepted') + '\nDecision  A\n'
-  const files: Record<string, string> = {
-    'decisions/ADR-0007.md': accepted,
-    'decisions/ADR-0008.md': ADR.replace('ADR-0007', 'ADR-0008'),
-    'terms/selector.md': '---\ntype: entity\n---\n**Definition:** An approved phrase a spec may use.',
-  }
-  fakeDisk(on, files)
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-
-  for (const surface of ['terminal', 'desktop'] as const) {
-    const ui = await $.ui.mount({ ...NOTES_PANE, surface })
-    await unfold(ui, 'base:rules')
-    // Rules: the rule in force, not its question.
-    expect(await ui.find({ type: 'Text', text: /Rules in force · 1/ })).toBeDefined()
-    expect(JSON.stringify(await ui.find({ key: 'rule-ADR-0007' }))).toContain('When a spec is approved, the linter shall reject it')
-    expect(await ui.find({ type: 'Text', text: /Waiting on you · 1/ })).toBeDefined()
-
-    // Opening a rule shows the rule; the record appears only when asked for.
-    await ui.press({ key: 'idx-ADR-0007' })
-    expect(await ui.find({ type: 'Text', text: /rule in force/ })).toBeDefined()
-    expect(await ui.find({ key: 'note-record' })).toBeUndefined()
-    await ui.press({ key: 'record-ADR-0007' })
-    expect(await ui.find({ key: 'note-record' })).toBeDefined()
-    await ui.press({ key: 'record-ADR-0007' })
-
-    // A term on the decision card opens its note below, numbered as in the glossary.
-    await ui.press({ key: 'term-selector' })
-    expect(await ui.find({ type: 'Text', text: /1\.1  selector/ })).toBeDefined()
-
-    await ui.press({ key: 'tab-terms' })
-    expect(await ui.find({ type: 'Text', text: /Glossary · 1/ })).toBeDefined()
-    await ui.press({ key: 'tab-docs' })
-    expect(await ui.find({ key: 'docs-body' })).toBeDefined()
-    await ui.press({ key: 'tab-rules' })
-    await ui.unmount()
-  }
-})
+const revisionOf = (old: string) =>
+  old.replace('id: ADR-0007', 'id: ADR-0009').replace('status: accepted', 'status: proposed\nsupersedes: ADR-0007').replace(/\n\nDecision  A\n$/, '\n')
 
 test('Docs reads as one document: rules in ADR number order, then the glossary, then open questions', () => {
   const accepted = ADR.replace('status: proposed', 'status: accepted') + '\nDecision  A\n'
@@ -244,54 +88,10 @@ test('Docs reads as one document: rules in ADR number order, then the glossary, 
   expect(docs).toContain('## 3. Open questions')
 })
 
-test('pending ADRs are tabs; the active one shows, and tabs switch it', async ($, on) => {
-  const second = ADR.replace('ADR-0007', 'ADR-0008').replace('Can a spec be approved', 'When should tests run')
-  const files: Record<string, string> = { 'decisions/ADR-0007.md': ADR, 'decisions/ADR-0008.md': second }
-  fakeDisk(on, files)
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-
-  const ui = await $.ui.mount({ ...PANE, surface: 'desktop' })
-  expect(await ui.find({ type: 'Text', text: /^Can a spec be approved/ })).toBeDefined()
-  await ui.press({ key: 'card-tab-ADR-0008.md' })
-  expect(await ui.find({ type: 'Text', text: /^When should tests run/ })).toBeDefined()
-  await ui.press({ key: 'card-tab-ADR-0007.md' })
-  expect(await ui.find({ type: 'Text', text: /^Can a spec be approved/ })).toBeDefined()
-  await ui.unmount()
-})
-
-test('the Free text tab sends plain words as a request', async ($, on) => {
-  const files: Record<string, string> = { 'decisions/ADR-0007.md': ADR }
-  fakeDisk(on, files)
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-
-  const answer = await $.ui.mount({ ...ANSWER_PANE, surface: 'desktop' })
-  await answer.press({ key: 'mode-free-ADR-0007.md' })
-  await answer.input({ key: 'free-ADR-0007.md', text: 'only run slow tests before a release', kind: 'change' })
-  await answer.unmount()
-  const ui = await $.ui.mount({ ...PANE, surface: 'desktop' })
-  await ui.press({ key: 'accept-ADR-0007.md' })
-  await ui.unmount()
-
-  expect(files['decisions/ADR-0007.md']).toContain('status: answered')
-  expect(files['decisions/ADR-0007.md']).toContain('Request   only run slow tests before a release')
-})
-
-test('editing a term replaces its definition and bumps its version', () => {
-  const before = '---\ntype: entity\nversion: 2\n---\n**Definition:** Old meaning.\n'
-  const after = updateTermText(before, 'actor', 'New meaning.')
-  expect(after).toContain('version: 3')
-  expect(after).toContain('type: actor')
-  expect(after).toContain('**Definition:** New meaning.')
-  expect(after).not.toContain('Old meaning')
-})
-
 test('a revision supersedes the old decision, and agents only see the newest', () => {
   const old = ADR.replace('status: proposed', 'status: accepted') + '\nDecision  A\n'
-  const revised = reviseAdrText(old, 'ADR-0007', 'ADR-0009')
+  const revised = revisionOf(old)
   expect(revised).toContain('supersedes: ADR-0007')
-  expect(revised).toContain('Revises [[ADR-0007]]')
   expect(revised).not.toContain('Decision  A')
 
   const retired = supersedeText(old, 'ADR-0009')
@@ -305,106 +105,6 @@ test('a revision supersedes the old decision, and agents only see the newest', (
   expect(ref).toContain('Decided: B:')
   expect(ref).not.toContain('ADR-0007:')
   expect(ref).toContain('selector (entity, v4): An approved phrase.')
-})
-
-test('the browser edits a term in place', async ($, on) => {
-  const files: Record<string, string> = {
-    'decisions/ADR-0007.md': ADR,
-    'terms/selector.md': '---\ntype: entity\nversion: 1\n---\n**Definition:** An approved phrase a spec may use.',
-  }
-  fakeDisk(on, files)
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-
-  const decision = await $.ui.mount({ ...PANE, surface: 'desktop' })
-  await decision.press({ key: 'term-selector' })
-  await decision.unmount()
-  const ui = await $.ui.mount({ ...NOTES_PANE, surface: 'desktop' })
-  await ui.press({ key: 'pencil-view-selector' })
-  await ui.input({ key: 'edit-def-selector', text: 'A phrase a spec may use, bound to a step.', kind: 'change' })
-  await ui.press({ key: 'edit-save-selector' })
-  await ui.unmount()
-
-  expect(files['terms/selector.md']).toContain('version: 2')
-  expect(files['terms/selector.md']).toContain('**Definition:** A phrase a spec may use, bound to a step.')
-})
-
-test('accepting a revision marks the old decision superseded', async ($, on) => {
-  const old = ADR.replace('status: proposed', 'status: accepted') + '\nDecision  A\n'
-  const files: Record<string, string> = {
-    'decisions/ADR-0007.md': old,
-    'decisions/ADR-0009.md': reviseAdrText(old, 'ADR-0007', 'ADR-0009'),
-  }
-  fakeDisk(on, files)
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-
-  const ui = await $.ui.mount({ ...PANE, surface: 'desktop' })
-  await ui.press({ key: 'pick-ADR-0009.md-B' })
-  await ui.press({ key: 'accept-ADR-0009.md' })
-  await ui.unmount()
-
-  expect(files['decisions/ADR-0009.md']).toContain('status: accepted')
-  expect(files['decisions/ADR-0007.md']).toContain('status: superseded')
-  expect(files['decisions/ADR-0007.md']).toContain('superseded_by: ADR-0009')
-})
-
-test('Defer keeps the card on screen as undecided; Reopen brings it back', async ($, on) => {
-  const files: Record<string, string> = { 'decisions/ADR-0007.md': ADR }
-  fakeDisk(on, files)
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-
-  const ui = await $.ui.mount({ ...PANE, surface: 'desktop' })
-  await ui.press({ key: 'defer-ADR-0007.md' })
-  expect(files['decisions/ADR-0007.md']).toContain('status: deferred')
-  expect(await ui.find({ type: 'Text', text: /deferred: still undecided/ })).toBeDefined()
-  await ui.unmount()
-
-  const notesPane = await $.ui.mount({ ...NOTES_PANE, surface: 'desktop' })
-  await notesPane.press({ key: 'idx-ADR-0007' })
-  await notesPane.press({ key: 'reopen-ADR-0007' })
-  await notesPane.unmount()
-  expect(files['decisions/ADR-0007.md']).toContain('status: proposed')
-  const again = await $.ui.mount({ ...PANE, surface: 'desktop' })
-  expect(await again.find({ type: 'Text', text: /needs your decision/ })).toBeDefined()
-  await again.unmount()
-})
-
-test('a pencil opens a rule for editing, and saving rewords it in place', async ($, on) => {
-  const accepted = ADR.replace('status: proposed', 'status: accepted') + '\nDecision  A\n'
-  const files: Record<string, string> = { 'decisions/ADR-0007.md': accepted }
-  fakeDisk(on, files)
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-
-  const ui = await $.ui.mount({ ...NOTES_PANE, surface: 'desktop' })
-  await unfold(ui, 'base:rules')
-  await ui.press({ key: 'pencil-rules-ADR-0007' })
-  await ui.input({ key: 'rule-def-ADR-0007', text: 'When a spec is approved, the linter shall reject it if any [[selector]] lacks a [[step]].', kind: 'change' })
-  await ui.press({ key: 'rule-save-ADR-0007' })
-  await ui.unmount()
-
-  const adr = files['decisions/ADR-0007.md'] ?? ''
-  expect(adr).toContain('Where A:  When a spec is approved, the linter shall reject it if any [[selector]] lacks a [[step]].')
-  expect(adr).toContain('version: 2')
-  expect(adr).not.toContain('has no [[step]].\n          → every')
-})
-
-test('a rule edit that is not an EARS sentence is refused', async ($, on) => {
-  const accepted = ADR.replace('status: proposed', 'status: accepted') + '\nDecision  A\n'
-  const files: Record<string, string> = { 'decisions/ADR-0007.md': accepted }
-  fakeDisk(on, files)
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-
-  const ui = await $.ui.mount({ ...NOTES_PANE, surface: 'desktop' })
-  await unfold(ui, 'base:rules')
-  await ui.press({ key: 'pencil-rules-ADR-0007' })
-  await ui.input({ key: 'rule-def-ADR-0007', text: 'just reject bad specs', kind: 'change' })
-  await ui.press({ key: 'rule-save-ADR-0007' })
-  await ui.unmount()
-  expect(files['decisions/ADR-0007.md']).toBe(accepted)
 })
 
 test('the vault index lists current terms, decisions in force, waiting and superseded ones', () => {
@@ -421,128 +121,59 @@ test('the vault index lists current terms, decisions in force, waiting and super
   expect(index).toContain('[[ADR-0007|ADR-0007]] → [[ADR-0011]]')
 })
 
-test('a suggestion is kept only when it is an EARS sentence, with links only to known terms', () => {
-  expect(isEars('When a change is committed, the ci shall run every step.')).toBe(true)
-  expect(isEars('If a step fails, then the ci shall block the merge.')).toBe(true)
-  expect(isEars('If a step fails, the ci shall block the merge.')).toBe(false)
-  expect(isEars('Run the slow tests before a release.')).toBe(false)
-  expect(cleanSuggestion('"When a [[release]] is prepared, the [[ci]] shall run every [[step]]"', ['ci', 'step'])).toBe(
-    'When a release is prepared, the [[ci]] shall run every [[step]].',
-  )
-  expect(cleanSuggestion('Sure! Here is a rule.', ['ci'])).toBe('')
-})
-
-test('Suggest rule rewrites the words in place, and Accept keeps the originals as the request', async ($, on) => {
-  const files: Record<string, string> = {
-    'decisions/ADR-0007.md': ADR,
-    'terms/ci.md': '**Definition:** The automated checker.',
-    'terms/step.md': '**Definition:** Test code for one selector.',
-  }
-  fakeDisk(on, files)
-  const asked: string[] = []
-  on('model.complete', (_, e) => {
-    asked.push(String(e.prompt))
-    return { value: { isAnswered: true, text: '{"rule": "When a release is prepared, the [[ci]] shall run every [[step]].", "unclear": []}', usage: {} } } as never
-  })
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-
-  const ui = await $.ui.mount({ ...PANE, surface: 'desktop' })
-  await ui.press({ key: 'mode-free-ADR-0007.md' })
-  await ui.input({ key: 'free-ADR-0007.md', text: 'only run the slow tests before a release', kind: 'change' })
-  expect(asked.length).toBe(0)
-  await ui.press({ key: 'suggest-ADR-0007.md' })
-  expect(asked[0]).toContain('only run the slow tests before a release')
-
-  // The field now holds the rule, and the button says so.
-  const field = await ui.find({ key: 'free-ADR-0007.md' })
-  expect(JSON.stringify(field)).toContain('When a release is prepared, the [[ci]] shall run every [[step]].')
-  expect(JSON.stringify(await ui.find({ key: 'accept-ADR-0007.md' }))).toContain('Accept rule: When a release is prepared')
-  expect(await ui.find({ key: 'undo-ADR-0007.md' })).toBeDefined()
-
-  await ui.press({ key: 'accept-ADR-0007.md' })
-  await ui.unmount()
-
-  const adr = files['decisions/ADR-0007.md'] ?? ''
-  expect(adr).toContain('status: accepted')
-  expect(adr).toContain('Other     When a release is prepared, the [[ci]] shall run every [[step]].')
-  expect(adr).toContain('Request   only run the slow tests before a release')
-})
-
-test('when no rule can be made, the vague phrases are highlighted with what is missing', async ($, on) => {
-  fakeDisk(on, { 'decisions/ADR-0007.md': ADR })
-  on('model.complete', () => ({
-    value: { isAnswered: true, text: '{"rule": null, "unclear": [{"phrase": "the slow tests", "why": "which tests count as slow?"}, {"phrase": "made up", "why": "x"}]}', usage: {} },
-  }) as never)
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-
-  const ui = await $.ui.mount({ ...PANE, surface: 'desktop' })
-  await ui.press({ key: 'mode-free-ADR-0007.md' })
-  await ui.input({ key: 'free-ADR-0007.md', text: 'only run the slow tests sometimes', kind: 'change' })
-  await ui.press({ key: 'suggest-ADR-0007.md' })
-  expect(await ui.find({ type: 'Text', text: /NEEDS MORE DETAIL/ })).toBeDefined()
-  expect(await ui.find({ type: 'Text', text: /“the slow tests”: which tests count as slow\?/ })).toBeDefined()
-  expect(await ui.find({ type: 'Text', text: /made up/ })).toBeUndefined()
-  // The words stay as typed (nothing was rewritten), shown with the vague part flagged.
-  expect(await ui.find({ type: 'Text', text: /^only run the slow tests sometimes$/ })).toBeDefined()
-  expect(await ui.find({ key: 'undo-ADR-0007.md' })).toBeUndefined()
-  await ui.unmount()
-})
-
-test('a term link can be inserted into the words, and the button names the option it would accept', async ($, on) => {
-  fakeDisk(on, { 'decisions/ADR-0007.md': ADR, 'terms/ci.md': '**Definition:** The automated checker.' })
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-
-  const ui = await $.ui.mount({ ...PANE, surface: 'desktop' })
-  // (Focus moves made by the person can't be raised from the test kit; picking an option is.)
-  await ui.press({ key: 'pick-ADR-0007.md-B' })
-  expect(JSON.stringify(await ui.find({ key: 'accept-ADR-0007.md' }))).toContain('Accept B: When a spec is approved, the linter shall warn')
-
-  await ui.press({ key: 'mode-free-ADR-0007.md' })
-  await ui.input({ key: 'free-ADR-0007.md', text: 'ask the', kind: 'change' })
-  await ui.select({ key: 'free-link-ADR-0007.md', value: 'ci' })
-  expect(JSON.stringify(await ui.find({ key: 'free-ADR-0007.md' }))).toContain('ask the [[ci]]')
-  expect(await ui.find({ type: 'Text', text: /READS AS/ })).toBeDefined()
-  expect(JSON.stringify(await ui.find({ key: 'accept-ADR-0007.md' }))).toContain('Send my words: “ask the ci')
-  await ui.unmount()
-})
-
-test('the question tool is refused with how to write a proposed ADR instead', async ($, on) => {
+test('a question with no proposed ADR behind it is refused, with how to write one', async ($, on) => {
   fakeDisk(on, { 'decisions/ADR-0007.md': ADR })
   on('tool.call', () => ({ result: {} }) as never)
   await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-
   const ran = await $.tool.call({
     tool: 'AskUserQuestion',
     questions: [{ question: 'Which one?', header: 'Pick', multiSelect: false, options: [{ label: 'A', description: 'a' }, { label: 'B', description: 'b' }] }],
   } as never)
   const said = JSON.stringify(ran)
-  expect(said).toContain('decision cards')
+  expect(said).toContain('Not asked')
   expect(said).toContain('ADR-0008.md')
   expect(said).toContain('Where A:  When <trigger>')
-  expect(said).toContain('appears in the Decisions panel')
-  expect(said).not.toContain('/decisions')
+  expect(said).toContain('header set to the ADR id')
 })
 
-test('accepting or deferring a card tells the agent in the conversation', async ($, on) => {
-  const second = ADR.replace('ADR-0007', 'ADR-0008')
-  const files: Record<string, string> = { 'decisions/ADR-0007.md': ADR, 'decisions/ADR-0008.md': second }
+test('the native dialog is filled from the ADR, and the pick is written back', async ($, on) => {
+  const files: Record<string, string> = {
+    'decisions/ADR-0007.md': ADR,
+    'terms/selector.md': '---\ntype: entity\n---\n**Definition:** An approved phrase.',
+  }
   fakeDisk(on, files)
-  const session = mock.session(on)
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
+  let shown: { question: string; header: string; options: { label: string; description: string; preview?: string }[] }[] = []
+  on('tool.call', (_, e) => {
+    shown = (e as unknown as { questions: typeof shown }).questions
+    return { result: { questions: shown, answers: { [shown[0]!.question]: 'Option B' } } } as never
+  })
+  await $.session.start({ cwd: '/', surface: 'mobile', isInteractive: true })
+  const ran = await $.tool.call({
+    tool: 'AskUserQuestion',
+    questions: [{ question: 'anything', header: 'ADR-0007', multiSelect: false, options: [{ label: 'x', description: 'x' }, { label: 'y', description: 'y' }] }],
+  } as never)
+  expect(shown[0]!.question).toContain('Can a spec be approved while one of its selectors has no step?')
+  expect(shown[0]!.options.map(o => o.label)).toEqual(['Option A (Recommended)', 'Option B'])
+  expect(shown[0]!.options[1]!.description).toContain('the linter shall warn')
+  expect(shown[0]!.options[0]!.preview).toContain('selector: An approved phrase.')
+  expect(files['decisions/ADR-0007.md']).toContain('status: accepted')
+  expect(files['decisions/ADR-0007.md']).toContain('Decision  B')
+  expect(JSON.stringify(ran)).toContain('ADR-0007 accepted: B')
+})
 
-  const ui = await $.ui.mount({ ...PANE, surface: 'desktop' })
-  await ui.press({ key: 'accept-ADR-0007.md' })
-  await ui.press({ key: 'defer-ADR-0008.md' })
-  await ui.unmount()
-
-  const notes = JSON.stringify(session.appended())
-  expect(notes).toContain('ADR-0007 accepted. Rule in force: When a spec is approved, the linter shall reject it')
-  expect(notes).toContain('ADR-0008 was deferred by the person')
+test('typed words and no answer both leave the ADR proposed, with no note from the mod', async ($, on) => {
+  const files: Record<string, string> = { 'decisions/ADR-0007.md': ADR, 'decisions/ADR-0008.md': ADR.replace('ADR-0007', 'ADR-0008').replace('Can a spec', 'May a spec') }
+  fakeDisk(on, files)
+  on('tool.call', (_, e) => {
+    const qs = (e as unknown as { questions: { question: string }[] }).questions
+    return { result: { questions: qs, answers: { [qs[0]!.question]: 'only on Fridays' } } } as never
+  })
+  await $.session.start({ cwd: '/', surface: 'mobile', isInteractive: true })
+  const q = (h: string) => ({ question: 'q', header: h, multiSelect: false, options: [{ label: 'x', description: 'x' }, { label: 'y', description: 'y' }] })
+  const ran = await $.tool.call({ tool: 'AskUserQuestion', questions: [q('ADR-0007'), q('ADR-0008')] } as never)
+  expect(files['decisions/ADR-0007.md']).toBe(ADR)
+  expect(files['decisions/ADR-0008.md']).toContain('status: proposed')
+  expect(JSON.stringify(ran)).not.toContain('[decision-cards]')
 })
 
 test('the vault folders and templates are created where missing', async ($, on) => {
@@ -557,163 +188,10 @@ test('the vault folders and templates are created where missing', async ($, on) 
   expect(written.some(k => k.endsWith('.obsidian/templates.json'))).toBe(true)
 })
 
-test('Docs sections start closed, open on click, and render their items as Markdown', async ($, on) => {
-  const accepted = ADR.replace('status: proposed', 'status: accepted') + '\nDecision  A\n'
-  const files: Record<string, string> = {
-    'decisions/ADR-0007.md': accepted,
-    'terms/selector.md': '---\ntype: entity\n---\n**Definition:** An approved phrase.',
-  }
-  fakeDisk(on, files)
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-
-  const ui = await $.ui.mount({ ...NOTES_PANE, surface: 'desktop' })
-  await ui.press({ key: 'tab-docs' })
-  expect(await ui.find({ key: 'docs-toggle-base:rules-doc' })).toBeDefined()
-  expect(await ui.find({ key: 'docs-rule-ADR-0007' })).toBeUndefined()
-
-  await ui.press({ key: 'docs-toggle-base:rules-doc' })
-  const rule = await ui.find({ key: 'docs-rule-ADR-0007' })
-  expect(JSON.stringify(rule)).toContain('**1.1** When a spec is approved')
-  expect(JSON.stringify(rule)).toContain('file:///note/ADR-0007')
-
-  await ui.press({ key: 'docs-toggle-base:rules-doc' })
-  expect(await ui.find({ key: 'docs-rule-ADR-0007' })).toBeUndefined()
-
-  await ui.press({ key: 'docs-expand-all' })
-  expect(await ui.find({ key: 'docs-term-selector' })).toBeDefined()
-  await ui.press({ key: 'docs-collapse-all' })
-  expect(await ui.find({ key: 'docs-term-selector' })).toBeUndefined()
-  await ui.unmount()
-})
-
-
-test('one Decisions panel holds the card and the reference, and keeps a decided card', async ($, on) => {
-  const files: Record<string, string> = { 'decisions/ADR-0007.md': ADR }
-  fakeDisk(on, files)
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-
-  for (const surface of ['terminal', 'desktop'] as const) {
-    const ui = await $.ui.mount({ ...PANE, surface })
-    expect(await ui.find({ key: 'accept-ADR-0007.md' })).toBeDefined()
-    expect(await ui.find({ key: 'mode-free-ADR-0007.md' })).toBeDefined()
-    expect(await ui.find({ key: 'tab-rules' })).toBeDefined()
-    await ui.unmount()
-  }
-
-  const ui = await $.ui.mount({ ...PANE, surface: 'desktop' })
-  await ui.press({ key: 'accept-ADR-0007.md' })
-  expect(await ui.find({ type: 'Text', text: /✓ accepted \(A\)/ })).toBeDefined()
-  expect(await ui.find({ key: 'tab-rules' })).toBeDefined()
-  await ui.unmount()
-})
-
-test('Talk with me more sends the prompt to the agent and asks it to revise the ADR', async ($, on) => {
-  fakeDisk(on, { 'decisions/ADR-0007.md': ADR })
-  const sent: string[] = []
-  on('prompt.submit', (_, e) => {
-    sent.push(e.text)
-    return { text: e.text }
-  })
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-
-  const ui = await $.ui.mount({ ...PANE, surface: 'desktop' })
-  expect(await ui.find({ key: 'talk-text-ADR-0007.md' })).toBeUndefined()
-  await ui.press({ key: 'talk-ADR-0007.md' })
-  await ui.input({ key: 'talk-text-ADR-0007.md', text: 'where is this stored, and what can read it?', kind: 'change' })
-  await ui.press({ key: 'talk-send-ADR-0007.md' })
-  expect(await ui.find({ key: 'talk-text-ADR-0007.md' })).toBeUndefined()
-  await ui.unmount()
-
-  expect(sent.length).toBe(1)
-  expect(sent[0]).toContain('Before I decide ADR-0007')
-  expect(sent[0]).toContain('where is this stored, and what can read it?')
-  expect(sent[0]).toContain('keep status: proposed')
-})
-
-test('after typing free text, clicking an option moves the button to that option and keeps it there', async ($, on) => {
-  fakeDisk(on, { 'decisions/ADR-0007.md': ADR })
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-
-  const ui = await $.ui.mount({ ...PANE, surface: 'desktop' })
-  await ui.press({ key: 'mode-free-ADR-0007.md' })
-  await ui.input({ key: 'free-ADR-0007.md', text: 'something in my own words', kind: 'change' })
-  expect(JSON.stringify(await ui.find({ key: 'accept-ADR-0007.md' }))).toContain('Send my words')
-
-  // Clicking the body of option B (not only its label) selects it.
-  await ui.press({ key: 'pick-ADR-0007.md-B' })
-  expect(JSON.stringify(await ui.find({ key: 'accept-ADR-0007.md' }))).toContain('Accept B:')
-
-  // The field sending the same text again (as on losing focus) does not take it back.
-  await ui.input({ key: 'free-ADR-0007.md', text: 'something in my own words', kind: 'change' })
-  await ui.input({ key: 'free-ADR-0007.md', text: 'something in my own words', kind: 'submit' })
-  expect(JSON.stringify(await ui.find({ key: 'accept-ADR-0007.md' }))).toContain('Accept B:')
-
-  // Real typing does.
-  await ui.input({ key: 'free-ADR-0007.md', text: 'something else entirely', kind: 'change' })
-  expect(JSON.stringify(await ui.find({ key: 'accept-ADR-0007.md' }))).toContain('Send my words')
-  await ui.unmount()
-})
-
-test('every click on an option moves the selection, not only the first', async ($, on) => {
-  fakeDisk(on, { 'decisions/ADR-0007.md': ADR })
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-
-  const ui = await $.ui.mount({ ...PANE, surface: 'desktop' })
-  const label = async () => JSON.stringify(await ui.find({ key: 'accept-ADR-0007.md' }))
-  await ui.press({ key: 'pick-ADR-0007.md-B' })
-  expect(await label()).toContain('Accept B:')
-  await ui.press({ key: 'pick-ADR-0007.md-A' })
-  expect(await label()).toContain('Accept A:')
-  await ui.press({ key: 'pick-ADR-0007.md-B' })
-  expect(await label()).toContain('Accept B:')
-  await ui.unmount()
-})
-
-test('clicking a blue link anywhere on the card opens that note in Reference', async ($, on) => {
-  fakeDisk(on, {
-    'decisions/ADR-0007.md': ADR,
-    'terms/selector.md': '---\ntype: entity\n---\n**Definition:** An approved phrase.',
-  })
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-
-  const ui = await $.ui.mount({ ...PANE, surface: 'desktop' })
-  const given = await ui.find({ key: 'given-ADR-0007.md' })
-  expect(JSON.stringify(given)).toContain('file:///note/selector')
-  await ui.press({ key: 'given-ADR-0007.md', link: { href: 'file:///note/selector' } } as never)
-  expect(await ui.find({ type: 'Text', text: /1\.1  selector/ })).toBeDefined()
-  await ui.unmount()
-})
-
-test('option text is wrapped across buttons, never cut off', async ($, on) => {
-  const long = ADR.replace('the linter shall reject it if any [[selector]] has no [[step]].', 'the linter shall reject it if any [[selector]] has no [[step]], and it shall say which selector is missing, which spec it belongs to, and what to write next.')
-  fakeDisk(on, { 'decisions/ADR-0007.md': long })
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-  const ui = await $.ui.mount({ ...PANE, props: { ...PANE.props, bodyColumns: 60 }, surface: 'desktop' })
-  const lines: string[] = []
-  for (let i = 0; i < 12; i++) {
-    const b = await ui.find({ key: `pickbody-ADR-0007.md-A-${i}` })
-    if (!b) break
-    lines.push(String((b as { text?: string }).text ?? ''))
-  }
-  expect(lines.length).toBeGreaterThan(1)
-  expect(lines.join(' ')).toContain('and what to write next.')
-  expect(lines.some(l => l.includes('…'))).toBe(false)
-  await ui.press({ key: `pickbody-ADR-0007.md-A-${lines.length - 1}` })
-  expect(JSON.stringify(await ui.find({ key: 'accept-ADR-0007.md' }))).toContain('Accept A:')
-  await ui.unmount()
-})
-
 test('the reply check follows the template: optional lines, fixed opening words, in order, at most 8 lines', () => {
   const good = [
     'Done       Added the reply checker',
-    'Done       Fixed the panel crash',
+    'Done       Fixed the dialog crash',
     'Open       [[ADR-0018]] is not done',
     'Needs you  Decide [[ADR-0020]]',
     'Check      Run `claude plugin test` → 36 pass',
@@ -721,7 +199,7 @@ test('the reply check follows the template: optional lines, fixed opening words,
   expect(checkReply(good)).toEqual([])
   expect(checkReply('Done Added one thing')).toEqual([])
   expect(checkReply('```\nDone       Added it\n```')).toEqual([])
-  expect(checkReply('| Done | Changed the template |\n| Check | Open the panel → the card shows |')).toEqual([])
+  expect(checkReply('| Done | Changed the template |\n| Check | Open Docs.md → the rule shows |')).toEqual([])
   expect(checkReply('Here is what I did. It went well.').join(' ')).toContain('no labelled lines')
   expect(checkReply('Done I wrote the checker').join(' ')).toContain('Done line must be')
   expect(checkReply('Open the checker is unverified').join(' ')).toContain('Open line must be')
@@ -793,24 +271,6 @@ test('a reply that breaks the reply rule is flagged under it, and the agent is t
   expect(JSON.stringify(session.appended())).toContain('Your last reply broke ADR-0004')
 })
 
-test('a finished tab closes with its ×, and parked decisions are out of what agents read', async ($, on) => {
-  const parked = ADR.replace('ADR-0007', 'ADR-0013').replace('status: proposed', 'status: parked') + '\nDecision  A\n'
-  const files: Record<string, string> = { 'decisions/ADR-0007.md': ADR, 'decisions/ADR-0013.md': parked }
-  fakeDisk(on, files)
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-
-  const ui = await $.ui.mount({ ...PANE, surface: 'desktop' })
-  await ui.press({ key: 'accept-ADR-0007.md' })
-  expect(await ui.find({ key: 'close-tab-ADR-0007.md' })).toBeDefined()
-  await ui.press({ key: 'close-tab-ADR-0007.md' })
-  expect(await ui.find({ key: 'card-tab-ADR-0007.md' })).toBeUndefined()
-  await ui.unmount()
-
-  const ref = currentReference([decisionNote('ADR-0013', 'Decisions/ADR-0013.md', parked)])
-  expect(ref).not.toContain('ADR-0013')
-})
-
 test('every instance of a defined term must be linked, in questions and replies', () => {
   const names = ['spec', 'step', 'long-replies', 'adr']
   expect(unlinkedTerms('Each [[spec]] has a [[step]].', names)).toEqual([])
@@ -860,80 +320,6 @@ test('the generated Docs and Index link every defined term they mention', () => 
   expect(unlinkedTerms(prose(vaultIndex(all)), names)).toEqual([])
 })
 
-const GLOSSARY: Record<string, string> = {
-  'terms/agent.md': '---\ntype: actor\n---\n**Definition:** An AI doing work.',
-  'terms/selector.md': '---\ntype: entity\n---\n**Definition:** An approved phrase.',
-  'terms/step.md': '---\ntype: entity\n---\n**Definition:** Test code for a selector.',
-  'terms/test-sprawl.md': '---\ntype: problem\n---\n**Definition:** Tests grow too much.',
-}
-
-test('the glossary filters by search, by first letter and by type', async ($, on) => {
-  fakeDisk(on, { 'decisions/ADR-0007.md': ADR, ...GLOSSARY })
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-
-  const ui = await $.ui.mount({ ...NOTES_PANE, surface: 'desktop' })
-  await ui.press({ key: 'tab-terms' })
-  expect(await ui.find({ type: 'Text', text: /Glossary · 4$/ })).toBeDefined()
-
-  await ui.press({ key: 'letter-S' })
-  expect(await ui.find({ type: 'Text', text: /Glossary · 2 of 4/ })).toBeDefined()
-  expect(await ui.find({ key: 'idx-agent' })).toBeUndefined()
-  await ui.press({ key: 'letter-all' })
-
-  await ui.select({ key: 'term-type', value: 'problem' })
-  expect(await ui.find({ type: 'Text', text: /Glossary · 1 of 4/ })).toBeDefined()
-  expect(await ui.find({ key: 'idx-test-sprawl' })).toBeDefined()
-  await ui.select({ key: 'term-type', value: '' })
-
-  await ui.input({ key: 'term-search', text: 'phrase', kind: 'change' })
-  expect(await ui.find({ type: 'Text', text: /Glossary · 1 of 4/ })).toBeDefined()
-  expect(await ui.find({ key: 'idx-selector' })).toBeDefined()
-  await ui.unmount()
-})
-
-test('docs search lists matching rules and terms instead of the sections', async ($, on) => {
-  const accepted = ADR.replace('status: proposed', 'status: accepted') + '\nDecision  A\n'
-  fakeDisk(on, { 'decisions/ADR-0007.md': accepted, ...GLOSSARY })
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-
-  const ui = await $.ui.mount({ ...NOTES_PANE, surface: 'desktop' })
-  await ui.press({ key: 'tab-docs' })
-  await ui.input({ key: 'docs-search', text: 'linter', kind: 'change' })
-  expect(await ui.find({ type: 'Text', text: /1 match for “linter”/ })).toBeDefined()
-  expect(JSON.stringify(await ui.find({ key: 'docs-hit-ADR-0007' }))).toContain('the linter shall reject it')
-  expect(await ui.find({ key: 'docs-toggle-base:rules-doc' })).toBeUndefined()
-  await ui.input({ key: 'docs-search', text: '', kind: 'change' })
-  expect(await ui.find({ key: 'docs-toggle-base:rules-doc' })).toBeDefined()
-  await ui.unmount()
-})
-
-test('back and forward step through the notes opened in Reference', async ($, on) => {
-  fakeDisk(on, { 'decisions/ADR-0007.md': ADR, ...GLOSSARY })
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-
-  const ui = await $.ui.mount({ ...NOTES_PANE, surface: 'desktop' })
-  expect(await ui.find({ key: 'nav-back' })).toBeUndefined()
-  await ui.press({ key: 'tab-terms' })
-  await unfold(ui, 'base:terms')
-  await ui.press({ key: 'idx-agent' })
-  expect(await ui.find({ type: 'Text', text: /1\.1  agent/ })).toBeDefined()
-  await ui.press({ key: 'notes-back' })
-  await ui.press({ key: 'idx-selector' })
-  expect(await ui.find({ type: 'Text', text: /1\.2  selector/ })).toBeDefined()
-
-  await ui.press({ key: 'nav-back' })
-  await ui.press({ key: 'nav-back' })
-  expect(await ui.find({ type: 'Text', text: /1\.1  agent/ })).toBeDefined()
-  await ui.press({ key: 'nav-forward' })
-  await ui.press({ key: 'nav-forward' })
-  expect(await ui.find({ type: 'Text', text: /1\.2  selector/ })).toBeDefined()
-  expect(await ui.find({ key: 'nav-forward' })).toBeUndefined()
-  await ui.unmount()
-})
-
 test('the base prompt carries the rules in force, the reply and question shapes, and the terms', () => {
   const accepted = decisionNote('ADR-0007', 'd/ADR-0007.md', ADR.replace('status: proposed', 'status: accepted') + '\nDecision  A\n')
   const waiting = decisionNote('ADR-0009', 'd/ADR-0009.md', ADR.replace('ADR-0007', 'ADR-0009'))
@@ -960,6 +346,14 @@ test('a rule marked prompt: record stays out of the base prompt and the referenc
   expect(text).toContain('- ADR-0002:')
   expect(text).not.toContain('ADR-0001')
   expect(currentReference([kept, setup])).not.toContain('ADR-0001')
+})
+
+test('the mod runs only in sessions under the workspace folder', () => {
+  expect(inWorkspace(String.raw`C:\Users\A\Documents\Projects\personal\x`, 'C:/Users/A/Documents/Projects')).toBe(true)
+  expect(inWorkspace('C:/Users/A/Documents/Projects', 'C:/Users/A/Documents/Projects/')).toBe(true)
+  expect(inWorkspace('C:/Users/A/Documents/ProjectsOld/x', 'C:/Users/A/Documents/Projects')).toBe(false)
+  expect(inWorkspace('C:/Temp/scratch', 'C:/Users/A/Documents/Projects')).toBe(false)
+  expect(inWorkspace('C:/Temp/scratch', '')).toBe(true)
 })
 
 test("a project's vault folder is layered over the shared vault, the project's note winning", async ($, on) => {
@@ -999,36 +393,28 @@ test("a project's vault folder is layered over the shared vault, the project's n
   on('clock.every', () => ({ value: undefined }))
   on('clock.after', () => ({ value: undefined }))
   on('session.start', (_, e) => ({ cwd: e.cwd }))
+  on('prompt.compose', () => ({ sections: [] }) as never)
   await $.session.start({ cwd: '/proj', surface: 'desktop', isInteractive: true })
   await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-
-  const ui = await $.ui.mount({ ...NOTES_PANE, surface: 'desktop' })
-  await ui.press({ key: 'tab-terms' })
-  expect(await ui.find({ type: 'Text', text: /Glossary · 2$/ })).toBeDefined()
-  await ui.press({ key: 'idx-selector' })
-  expect(await ui.find({ type: 'Markdown', text: /The project meaning\./ })).toBeDefined()
-  expect(await ui.find({ type: 'Markdown', text: /The shared meaning\./ })).toBeUndefined()
-  await ui.unmount()
+  const composed = JSON.stringify(await $.prompt.compose({ model: 'claude-opus-5-5', promptModel: 'claude-opus-5-5', surfaces: ['mobile'], tools: [], outputStyle: null, traits: [], sections: [] } as never))
+  expect(composed).toContain('The project meaning.')
+  expect(composed).not.toContain('The shared meaning.')
 })
 
-test('the mod runs only in sessions under the workspace folder', () => {
-  expect(inWorkspace(String.raw`C:\Users\A\Documents\Projects\personal\x`, 'C:/Users/A/Documents/Projects')).toBe(true)
-  expect(inWorkspace('C:/Users/A/Documents/Projects', 'C:/Users/A/Documents/Projects/')).toBe(true)
-  expect(inWorkspace('C:/Users/A/Documents/ProjectsOld/x', 'C:/Users/A/Documents/Projects')).toBe(false)
-  expect(inWorkspace('C:/Temp/scratch', 'C:/Users/A/Documents/Projects')).toBe(false)
-  expect(inWorkspace('C:/Temp/scratch', '')).toBe(true)
-})
-
-test('rules list in ADR number order, inside a folded Base prompt section', async ($, on) => {
-  const accepted = (id: string) => ADR.replace('ADR-0007', id).replace('status: proposed', 'status: accepted').replace('scope: testing', `scope: ${id === 'ADR-0010' ? 'alpha' : 'zeta'}`) + '\nDecision  A\n'
-  fakeDisk(on, { 'decisions/ADR-0010.md': accepted('ADR-0010'), 'decisions/ADR-0002.md': accepted('ADR-0002') })
-  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
-  await $.command.run({ command: 'decisions', args: '' } as Parameters<typeof $.command.run>[0])
-  const ui = await $.ui.mount({ ...NOTES_PANE, surface: 'desktop' })
-  expect(JSON.stringify(await ui.find({ key: 'fold-base:rules' }))).toContain('▸ Base prompt rules')
-  expect(await ui.find({ key: 'rule-ADR-0002' })).toBeUndefined()
-  await ui.press({ key: 'fold-base:rules' })
-  const order = (await ui.findAll({ type: 'Button', text: /^ADR-00/ })).map(b => JSON.stringify(b).match(/ADR-00\d\d/)?.[0])
-  expect(order.slice(0, 2)).toEqual(['ADR-0002', 'ADR-0010'])
-  await ui.unmount()
+test('picking a revision in the dialog marks the old decision superseded', async ($, on) => {
+  const old = ADR.replace('status: proposed', 'status: accepted') + '\nDecision  A\n'
+  const files: Record<string, string> = {
+    'decisions/ADR-0007.md': old,
+    'decisions/ADR-0009.md': revisionOf(old),
+  }
+  fakeDisk(on, files)
+  on('tool.call', (_, e) => {
+    const qs = (e as unknown as { questions: { question: string }[] }).questions
+    return { result: { questions: qs, answers: { [qs[0]!.question]: 'Option B' } } } as never
+  })
+  await $.session.start({ cwd: '/', surface: 'mobile', isInteractive: true })
+  await $.tool.call({ tool: 'AskUserQuestion', questions: [{ question: 'q', header: 'ADR-0009', multiSelect: false, options: [{ label: 'x', description: 'x' }, { label: 'y', description: 'y' }] }] } as never)
+  expect(files['decisions/ADR-0009.md']).toContain('status: accepted')
+  expect(files['decisions/ADR-0007.md']).toContain('status: superseded')
+  expect(files['decisions/ADR-0007.md']).toContain('superseded_by: ADR-0009')
 })
