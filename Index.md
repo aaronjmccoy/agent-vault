@@ -5,7 +5,7 @@ generated: true
 
 > Generated from the notes in this vault. Edit the notes; changes here are overwritten.
 
-1. [[#1 Glossary|Glossary]] · 32 [[term|terms]]
+1. [[#1 Glossary|Glossary]] · 31 [[term|terms]]
 2. [[#2 Decision log|Decision log]] · 14 in force
 
 ## 1 Glossary
@@ -21,27 +21,26 @@ generated: true
 - **1.9** [[finding]] *(entity, v2)*: One problem a [[verdict]] reports, tied to the [[requirement]] it breaks and written in the [[spec]]'s vocabulary.
 - **1.10** [[gherkin]] *(entity, v4)*: The Given, When, Then language used for [[scenario|scenarios]] in a [[spec]].
 - **1.11** [[hard-to-judge]] *(problem, v2)*: The [[person]] cannot tell quickly whether an [[agent]]'s output is good.
-- **1.12** [[job]] *(entity, v2)*: One piece of work an [[agent]] carries from a [[person]]'s request to a [[verdict]]: its [[spec]], its [[message]]s, and any [[adr]]s it raised.
+- **1.12** [[job]] *(entity, v3)*: One piece of work an [[agent]] carries from a [[person]]'s request to a [[verdict]]: its [[spec]], and any [[adr]]s it raised.
 - **1.13** [[link]] *(entity, v1)*: A reference from text to a [[term]]'s note, written as [[term]] in notes, [[spec|specs]] and [[adr|ADRs]], and as a markdown link to the note's file in chat replies, where wiki links show as plain text; every instance of a defined word gets one.
 - **1.14** [[long-prompt]] *(problem, v1)*: The base prompt runs so long that [[agent|agents]] spend their attention reading what they cannot act on.
 - **1.15** [[long-replies]] *(problem, v2)*: [[agent|Agent]] replies run far too long and are tedious to review.
-- **1.16** [[message]] *(entity, v2)*: A YAML record one [[agent]] writes to hand work to another: who, what [[job]], status, links and needs.
-- **1.17** [[person]] *(actor, v2)*: The human the [[agent|agents]] work for: the only one who decides, and the reader every [[response|reply]] is written for.
-- **1.18** [[question]] *(entity, v2)*: A request from an [[agent]] for a [[person]] to decide, written as a proposed [[adr]] and asked in the client's native question dialog, which records the answer in that [[adr]].
-- **1.19** [[requirement]] *(entity, v2)*: One [[rule]] in a [[spec]], with an ID such as REQ-003, that its [[gherkin|Gherkin]] [[scenario|scenarios]] check.
-- **1.20** [[response]] *(entity, v4)*: What an [[agent]] writes back to a [[person]]: a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each at most two sentences and included only when it has something to say, in at most 8 rows, with nothing outside the table.
-- **1.21** [[result]] *(entity, v3)*: The pass or fail a [[verdict]] gives one [[scenario]]; a [[requirement]] passes only when all its [[scenario|scenarios]] pass.
-- **1.22** [[rule]] *(entity, v2)*: One sentence a [[adr|decision]] put in force, written in [[ears|EARS]]; [[agent|agents]] follow the newest one.
-- **1.23** [[rules-not-landing]] *(problem, v2)*: Instructions get recited back, but their effects never show up in what [[agent|agents]] do.
-- **1.24** [[scenario]] *(entity, v2)*: One concrete case under a [[requirement]], written in [[gherkin|Gherkin]] as Given, When and Then, and run as a test.
-- **1.25** [[selector]] *(entity, v2)*: A fixed phrase a [[skill]] defines, together with its [[test-step|test step]], that a [[spec]] line may use, such as "is assigned 20".
-- **1.26** [[skill]] *(entity, v2)*: A packaged procedure an [[agent]] loads when it is relevant, which can add its own [[selector]]s.
-- **1.27** [[spec]] *(entity, v2)*: A short file listing what a change must do: each [[ears|EARS]] [[rule]] states a [[requirement]], and its [[gherkin|Gherkin]] [[scenario|scenarios]] are the executable tests that check it, run through [[test-step|test step]] code.
-- **1.28** [[term]] *(entity, v1)*: A note defining one word of the project vocabulary, which [[spec|specs]] and [[adr|decisions]] link to.
-- **1.29** [[test-sprawl]] *(problem, v2)*: Tests and QA grow far beyond what the work needs.
-- **1.30** [[test-step]] *(entity, v3)*: The test code that makes one [[selector]] actually run, so a [[scenario]] line using it can be executed.
-- **1.31** [[verdict]] *(entity, v3)*: A YAML record, saved next to its [[spec]], giving a [[result]] for each [[scenario]], with [[evidence]] and up to five [[finding|findings]].
-- **1.32** [[verifier]] *(actor, v2)*: The [[agent]] that checks a [[job]]'s change against its [[spec]] and writes the [[verdict]]; it never wrote the change.
+- **1.16** [[person]] *(actor, v2)*: The human the [[agent|agents]] work for: the only one who decides, and the reader every [[response|reply]] is written for.
+- **1.17** [[question]] *(entity, v2)*: A request from an [[agent]] for a [[person]] to decide, written as a proposed [[adr]] and asked in the client's native question dialog, which records the answer in that [[adr]].
+- **1.18** [[requirement]] *(entity, v2)*: One [[rule]] in a [[spec]], with an ID such as REQ-003, that its [[gherkin|Gherkin]] [[scenario|scenarios]] check.
+- **1.19** [[response]] *(entity, v4)*: What an [[agent]] writes back to a [[person]]: a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each at most two sentences and included only when it has something to say, in at most 8 rows, with nothing outside the table.
+- **1.20** [[result]] *(entity, v3)*: The pass or fail a [[verdict]] gives one [[scenario]]; a [[requirement]] passes only when all its [[scenario|scenarios]] pass.
+- **1.21** [[rule]] *(entity, v2)*: One sentence a [[adr|decision]] put in force, written in [[ears|EARS]]; [[agent|agents]] follow the newest one.
+- **1.22** [[rules-not-landing]] *(problem, v2)*: Instructions get recited back, but their effects never show up in what [[agent|agents]] do.
+- **1.23** [[scenario]] *(entity, v2)*: One concrete case under a [[requirement]], written in [[gherkin|Gherkin]] as Given, When and Then, and run as a test.
+- **1.24** [[selector]] *(entity, v2)*: A fixed phrase a [[skill]] defines, together with its [[test-step|test step]], that a [[spec]] line may use, such as "is assigned 20".
+- **1.25** [[skill]] *(entity, v2)*: A packaged procedure an [[agent]] loads when it is relevant, which can add its own [[selector]]s.
+- **1.26** [[spec]] *(entity, v2)*: A short file listing what a change must do: each [[ears|EARS]] [[rule]] states a [[requirement]], and its [[gherkin|Gherkin]] [[scenario|scenarios]] are the executable tests that check it, run through [[test-step|test step]] code.
+- **1.27** [[term]] *(entity, v1)*: A note defining one word of the project vocabulary, which [[spec|specs]] and [[adr|decisions]] link to.
+- **1.28** [[test-sprawl]] *(problem, v2)*: Tests and QA grow far beyond what the work needs.
+- **1.29** [[test-step]] *(entity, v3)*: The test code that makes one [[selector]] actually run, so a [[scenario]] line using it can be executed.
+- **1.30** [[verdict]] *(entity, v3)*: A YAML record, saved next to its [[spec]], giving a [[result]] for each [[scenario]], with [[evidence]] and up to five [[finding|findings]].
+- **1.31** [[verifier]] *(actor, v2)*: The [[agent]] that checks a [[job]]'s change against its [[spec]] and writes the [[verdict]]; it never wrote the change.
 
 ## 2 Decision log
 

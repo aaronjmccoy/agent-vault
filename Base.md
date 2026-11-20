@@ -94,11 +94,10 @@ Each term is listed with its type: actor (someone or something that acts), entit
 - finding (entity): One problem a verdict reports, tied to the requirement it breaks and written in the spec's vocabulary.
 - gherkin (entity): The Given, When, Then language used for scenarios in a spec.
 - hard-to-judge (problem): The person cannot tell quickly whether an agent's output is good.
-- job (entity): One piece of work an agent carries from a person's request to a verdict: its spec, its messages, and any adrs it raised.
+- job (entity): One piece of work an agent carries from a person's request to a verdict: its spec, and any adrs it raised.
 - link (entity): A reference from text to a term's note, written as term in notes, specs and ADRs, and as a markdown link to the note's file in chat replies, where wiki links show as plain text; every instance of a defined word gets one.
 - long-prompt (problem): The base prompt runs so long that agents spend their attention reading what they cannot act on.
 - long-replies (problem): Agent replies run far too long and are tedious to review.
-- message (entity): A YAML record one agent writes to hand work to another: who, what job, status, links and needs.
 - person (actor): The human the agents work for: the only one who decides, and the reader every reply is written for.
 - question (entity): A request from an agent for a person to decide, written as a proposed adr and asked in the client's native question dialog, which records the answer in that adr.
 - requirement (entity): One rule in a spec, with an ID such as REQ-003, that its Gherkin scenarios check.

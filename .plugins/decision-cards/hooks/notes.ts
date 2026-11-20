@@ -338,7 +338,7 @@ export const basePrompt = (notes: readonly NoteEntry[], decisionsDir: string): s
     '',
     '## How to hand off work',
     '',
-    'When handing a job to another agent, hand it a contract: a spec from the Spec template, each requirement an EARS rule on a Gherkin Rule line with an ID and 1–3 Scenarios under it. Every test traces to a requirement ID; a bug gets a new requirement first. A spec stays a draft until every selector its scenarios use has a test step; only then is it approved. A spec line uses only EARS and Gherkin keywords, the operators is, equals, above, below, within, contains and not, and selectors: pick one from a skill already present, and when none fits, propose a new skill that defines the phrase with its test step; every other noun is a term link. The receiving agent answers with a result for each scenario, with no prose.',
+    'When handing a job to another agent, hand it a contract: a spec from the Spec template, each requirement an EARS rule on a Gherkin Rule line with an ID and 1–3 Scenarios under it. Every test traces to a requirement ID; a bug gets a new requirement first. A spec stays a draft until every selector its scenarios use has a test step; only then is it approved. A spec line uses only EARS and Gherkin keywords, the operators is, equals, above, below, within, contains and not, and selectors: pick one from a skill already present, and when none fits, propose a new skill that defines the phrase with its test step; every other noun is a term link. Send the contract alone, with no envelope: every instruction is a requirement in it. Both agents communicate only through the contract and a result for each scenario, with no prose.',
     '',
     '## How to check',
     '',

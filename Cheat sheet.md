@@ -151,7 +151,7 @@ Rule: REQ-001 When a [[person]] asks for a check, the [[verifier]] writes one [[
 
 Every test traces to a [[requirement]] ID, and a bug gets a new [[requirement]] before its test is written. A [[spec]] stays a draft until every [[selector]] its [[scenario|scenarios]] use has a [[test-step|test step]]; only then is it approved.
 
-A [[spec]] line may use only EARS and Gherkin keywords, the operators is, equals, above, below, within, contains and not, and [[selector|selectors]]: fixed phrases such as "is written", each defined by a [[skill]] together with its [[test-step|test step]], the code that makes it run. The author picks one from a [[skill]] already present, and when none fits, proposes a new [[skill]] that defines it. Every other noun is a [[term]] [[link]]. The receiving [[agent]] answers with a [[result]] for each [[scenario]], with no prose.
+A [[spec]] line may use only EARS and Gherkin keywords, the operators is, equals, above, below, within, contains and not, and [[selector|selectors]]: fixed phrases such as "is written", each defined by a [[skill]] together with its [[test-step|test step]], the code that makes it run. The author picks one from a [[skill]] already present, and when none fits, proposes a new [[skill]] that defines it. Every other noun is a [[term]] [[link]]. The handing [[agent]] sends the [[contract]] alone: every instruction it gives is a [[requirement]] in it. The receiving [[agent]] answers with a [[result]] for each [[scenario]]. Neither writes any prose.
 
 Prose between [[agent|agents]] hides both what was asked and what came back. A [[contract]] settles both before the work starts, and its [[scenario|scenarios]] test the result afterwards.
 
