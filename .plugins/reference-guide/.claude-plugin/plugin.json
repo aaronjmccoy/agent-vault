@@ -1,0 +1,20 @@
+{
+  "name": "reference-guide",
+  "version": "0.1.0",
+  "description": "A panel over the agent-vault base system: its rules, terms and docs, with in-place editing. Open it with /ref-guide.",
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "vaultDir": {
+      "type": "string",
+      "title": "Vault folder",
+      "description": "The agent-vault folder; AGENT_VAULT overrides it",
+      "default": ""
+    },
+    "projectVault": {
+      "type": "string",
+      "title": "Project vault folder",
+      "description": "A folder inside each project whose Decisions and Terms are layered over the vault",
+      "default": "vault"
+    }
+  }
+}

@@ -1,7 +1,7 @@
 {
   "name": "decision-cards",
   "version": "0.7.0",
-  "description": "Asks proposed ADRs in the native question dialog and records the answer, checks questions and replies, generates the base prompt from a shared vault of terms and decisions, and opens a reference guide with /ref-guide",
+  "description": "Asks proposed ADRs in the native question dialog and records the answer, checks questions and replies, and generates the base prompt from a shared vault of terms and decisions",
   "types": "./types/index.d.ts",
   "userConfig": {
     "adrDir": {

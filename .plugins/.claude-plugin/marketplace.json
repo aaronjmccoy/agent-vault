@@ -2,6 +2,7 @@
   "name": "agent-vault",
   "owner": { "name": "agent-vault" },
   "plugins": [
-    { "name": "decision-cards", "source": "./decision-cards", "description": "Native-dialog questions from proposed ADRs, the reply and question checks, and the generated base prompt for agents in the workspace" }
+    { "name": "decision-cards", "source": "./decision-cards", "description": "Native-dialog questions from proposed ADRs, the reply and question checks, and the generated base prompt for agents in the workspace" },
+    { "name": "reference-guide", "source": "./reference-guide", "description": "A panel over the base system's rules, terms and docs, with in-place editing (/ref-guide)" }
   ]
 }
