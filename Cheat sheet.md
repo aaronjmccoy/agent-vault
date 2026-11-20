@@ -23,7 +23,7 @@ The formats are built from three established standards. Each does one job.
 
 | Standard | Its job here | Why it fits |
 | --- | --- | --- |
-| [[ears\|EARS]] (Easy Approach to Requirements Syntax) | Writing one [[rule]] | It forces every sentence into a trigger, an actor and a response ("When X, the agent shall Y"). A [[rule]] in that shape can only be read one way, and anyone can see whether it was followed. |
+| [[ears\|EARS]] (Easy Approach to Requirements Syntax) | Writing one [[rule]] | It forces every sentence into a trigger, an actor and a response ("When X, the agent does Y"). A [[rule]] in that shape can only be read one way, and anyone can see whether it was followed. |
 | [[adr\|ADR]] (Architecture Decision Record) | Recording one decision | It keeps the question, the options, the choice and the reasons together in one short file. A year later you can still see why a [[rule]] exists, and a [[question]] is simply an ADR that hasn't been decided yet. |
 | [[gherkin\|Gherkin]] (Given, When, Then) | Checking that work meets a [[rule]] | It turns a [[rule]] into concrete examples that run as tests. "Done" stops being a matter of opinion: either the [[scenario\|scenarios]] pass or they don't. |
 
@@ -89,7 +89,7 @@ A [[rule]] is one EARS sentence that names who acts, when, and what they do. It 
 | If \<unwanted condition>, \<actor> \<responds>. | Handling a failure |
 | Where \<context or feature>, \<actor> \<responds>. | Something that applies only in some places |
 
-For example: "When an agent replies to a person, the agent shall use four labelled lines (Done, Open, Needs you, Check), each a link or one short clause, in at most 8 lines."
+For example: "When writing a reply, the agent uses four labelled lines (Done, Open, Needs you, Check), each a link or one short clause, in at most 8 lines." Rules are written in the present tense, as what happens, not what will happen.
 
 Because each [[rule]] has a single actor, trigger and response, you can see in the [[agent]]'s next action whether it was followed. [[rule|Rules]] written as general advice tend to get repeated back to you but not acted on.
 
@@ -126,7 +126,7 @@ When an [[agent]] needs you to decide, it writes a proposed [[adr|ADR]] in the D
 | Header | The ADR's id | ADR-0011 | The chip above the question |
 | Given | Why the question came up, and which problem it serves | Most people ask an agent to "check your work" and expect it to know what that means. | The preview beside each option, with every term's definition |
 | Decide | One question ending in "?" | What must happen when a person asks for a check? | The question |
-| Where A, B… | One EARS [[rule]] per option, then → what happens · what it costs | A: the agent first lists what it will test and confirms it with you, then checks. → you see what "checked" covers · one more step | One option each: the [[rule]] and its cost |
+| Where A, B… | One EARS [[rule]] per option, then → what happens · what it costs | A: When asked for a check, the agent lists what it will test and confirms it with you before checking. → you see what a check covers before it runs · one extra confirmation. B: When asked for a check, the verifier checks against the spec without asking you first. → faster · you only see what was tested afterwards. | One option each: the [[rule]] and its cost |
 | Recommend | The [[agent]]'s pick and its reason | A: a check starts by agreeing what will be tested. | The first option, marked "(Recommended)" |
 | (none) | | | Other: a free-text box under the options |
 
@@ -139,7 +139,7 @@ When one [[agent]] passes a [[job]] to another, it hands over a [[contract]]: a 
 ```gherkin
 Feature: [[verdict]]
 
-Rule: REQ-001 When a [[person]] asks for a check, the [[verifier]] shall write one [[verdict]].
+Rule: REQ-001 When a [[person]] asks for a check, the [[verifier]] writes one [[verdict]].
   Scenario: a requested check gets a verdict
     Given a [[job]] whose change is ready
     When the [[person]] asks for a check
@@ -172,7 +172,7 @@ Say what outcome you want and how you'll know it's done, using the vault's own w
 | A task done | "Add X. It's done when `npm test` passes and the page shows Y." | The done-when becomes the Check row |
 | Exact meaning | Defined words: [[spec]], [[rule]], [[contract]], [[verdict]], [[job]] | No guessing, because each word has one note |
 | A checked result | "Check your work." | A table of what will be tested, to confirm, then a [[verdict]] |
-| A standing behaviour | "Make this a rule: when X, the agent shall Y." | A proposed [[adr\|ADR]] in the dialog; once you pick it, every [[agent]] follows it |
+| A standing behaviour | "Make this a rule: when X, the agent does Y." | A proposed [[adr\|ADR]] in the dialog; once you pick it, every [[agent]] follows it |
 | To change a rule | "Revise ADR-0004 so that…" | A revising [[adr\|ADR]], not a quiet workaround |
 | A one-off exception | "Just this once, …" | Nothing is recorded, and the [[rule]] stays as it is |
 | Options to weigh | "Propose a decision on…" | A [[question]] with each option written as a [[rule]] with its cost |
