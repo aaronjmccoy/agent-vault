@@ -133,7 +133,7 @@ When an [[agent]] needs you to decide, it writes a proposed [[adr|ADR]] in the D
 | Recommend | The [[agent]]'s pick and its reason | A: a check starts by agreeing what will be tested. | The first option, marked "(Recommended)" |
 | (none) | | | Other: a free-text box under the options |
 
-An [[agent]] asks only what it can't look up and has no sensible default for, and defines any new word as a [[term]] first, so the dialog can show its meaning. Every option follows the [[rule|rules]] already in force, and options differ only in the course of action they suggest. Each is the exact [[rule]] that goes into force, so you choose the wording itself, not a direction an [[agent]] will interpret later. The dialog works on desktop and on mobile. Only picking an option decides anything. Words typed into Other leave the [[question]] open: the [[agent]] reads them and asks again. [[agent|Agents]] never ask in chat, where a decision would scroll away unrecorded.
+An [[agent]] asks only what it can't look up and has no sensible default for, and defines any new word as a [[term]] first, so the dialog can show its meaning. Every option follows the [[rule|rules]] already in force, and options differ only in the course of action they suggest. Each is the exact [[rule]] that goes into force, so you choose the wording itself, not a direction an [[agent]] will interpret later. The dialog works on desktop and on mobile. Only picking an option decides anything. Words typed into Other leave the [[question]] open: the [[agent]] reads them and asks again. Up to four [[question|questions]] can share one dialog, and any left unanswered come back at the start of the [[agent]]'s next turn. [[agent|Agents]] never ask in chat, where a decision would scroll away unrecorded.
 
 ### 4.3 Handoffs: contracts in Gherkin
 
@@ -182,7 +182,7 @@ Say what outcome you want and how you'll know it's done, using the vault's own w
 | A one-off exception | "Just this once, …" | Nothing is recorded, and the [[rule]] stays as it is |
 | Options to weigh | "Propose a decision on…" | A [[question]] with each option written as a [[rule]] with its cost |
 | A long explanation | "Write it up as a doc" or "…as a note in the vault" | A document, since replies stop at 8 rows |
-| To answer waiting questions | Run `/decisions`, then send any message | The [[agent]] asks them in the dialog |
+| To answer waiting questions | Nothing: just carry on | The [[agent]] asks them again at the start of its next turn; `/decisions` lists what is waiting |
 
 Pitfalls to avoid:
 

@@ -508,7 +508,7 @@ export const register: Register = (on, options) => {
   on('session.start', async ($, e, next) => {
     await $.command.register({
       name: 'decisions',
-      description: 'Ask the decisions waiting for you in the question dialog',
+      description: 'List the decisions waiting for you; the agent asks them at the start of its next turn',
     })
     config.projectRoot = await repoRootOf($, e.cwd)
     // Env settings win over the options: AGENT_VAULT is the vault folder, AGENT_WORKSPACES
@@ -545,10 +545,7 @@ export const register: Register = (on, options) => {
     await refresh($).catch(() => {})
     const ids = (await read($, pending)).map(c => c.id || c.file)
     if (!ids.length) return { text: 'Nothing is waiting for you.' }
-    return {
-      text: `${ids.join(', ')} ${ids.length > 1 ? 'are' : 'is'} waiting. Send any message and the agent asks ${ids.length > 1 ? 'them' : 'it'} in the question dialog.`,
-      context: [`[decision-cards] The person wants to answer ${ids.join(', ')}. On your next turn, first call AskUserQuestion with one question per ADR (at most 4 per call), its header set to the ADR id.`],
-    }
+    return { text: `${ids.join(', ')} ${ids.length > 1 ? 'are' : 'is'} waiting. The agent asks ${ids.length > 1 ? 'them' : 'it'} again at the start of its next turn.` }
   })
 
   // Agents ask through the native question dialog (ADR-0007), one question per

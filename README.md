@@ -48,7 +48,7 @@ Start with the [Cheat sheet](Cheat%20sheet.md). It walks through the whole loop 
 
 | Module | What it does |
 | --- | --- |
-| decision-cards | Writes the base prompt into a CLAUDE.md at each workspace, and into Base.md, Docs.md and Index.md. Asks proposed ADRs in the native question dialog and records your pick. Checks each reply and question against the rules. |
+| decision-cards | Writes the base prompt into a CLAUDE.md at each workspace, and into Base.md, Docs.md and Index.md. Asks proposed ADRs in the native question dialog and records your pick; `/decisions` lists any still waiting. Checks each reply and question against the rules. |
 | reference-guide | `/ref-guide` opens a panel for browsing and editing the rules, terms and docs. See [its README](.plugins/reference-guide/README.md). |
 
 Agents other than Claude Code (Codex, for example) read their own instruction file, such as AGENTS.md. Point that file at [Base.md](Base.md) until this is automated.
