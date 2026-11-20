@@ -47,14 +47,14 @@ generated: true
 - **2.1** [[ADR-0001|ADR-0001]] *accepted (A)*: What shape must an [[agent]]'s [[question]] to a [[person]] take?
 - **2.2** [[ADR-0002|ADR-0002]] *accepted (A)*: How is a [[spec]] written, so that every [[requirement]] is checked by a test?
 - **2.3** [[ADR-0003|ADR-0003]] *accepted (A)*: What may appear in a [[spec]] line, and how is each [[term]] addressed?
-- **2.4** [[ADR-0004|ADR-0004]] *accepted (A)*: Should the [[response|reply]] [[rule]] describe the table that replies now use?
+- **2.4** [[ADR-0004|ADR-0004]] *accepted (A)*: What shape does an [[agent]]'s [[response|reply]] to a [[person]] take?
 - **2.5** [[ADR-0005|ADR-0005]] *accepted (A)*: Where should each project's own layer live?
 - **2.6** [[ADR-0006|ADR-0006]] *accepted (C)*: Should the base prompt leave out [[term|terms]] that no [[rule]] in force uses?
 - **2.7** [[ADR-0007|ADR-0007]] *accepted (A)*: Where should you answer an [[agent]]'s [[question|questions]]?
 - **2.8** [[ADR-0008|ADR-0008]] *accepted (A)*: What must happen when a [[person]] asks for a check?
 - **2.9** [[ADR-0009|ADR-0009]] *accepted (A)*: How must an [[agent]] hand a [[job]] to another [[agent]]?
 - **2.10** [[ADR-0010|ADR-0010]] *accepted (A)*: What happens to the numbering when an [[adr]] that amends another is decided?
-- **2.11** [[ADR-0011|ADR-0011]] *accepted (Other)*: When should the tests you've written run automatically?
+- **2.11** [[ADR-0011|ADR-0011]] *accepted (D)*: When do the tests you've written run automatically?
 - **2.12** [[ADR-0012|ADR-0012]] *accepted (A)*: Which sessions should load the base prompt?
 - **2.13** [[ADR-0013|ADR-0013]] *accepted (A)*: Should the base prompt leave out [[rule|rules]] an [[agent]] cannot act on?
 
