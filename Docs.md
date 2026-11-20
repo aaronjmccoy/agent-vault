@@ -13,7 +13,7 @@ How this system works, written from its 13 [[rule|rules]] in force and 31 define
 
 *Why:* What shape does each [[question]] an [[agent]] puts to you take? *Decided in [[ADR-0001|ADR-0001]] · Agents › Communication.*
 
-**1.2** When writing a [[spec]], the author writes each [[ears|EARS]] [[requirement]] with an ID and puts its 1–3 [[gherkin|Gherkin]] [[scenario|Scenarios]] under it, in the same file.
+**1.2** When writing a [[spec]], the author puts each [[ears|EARS]] [[requirement]] in a [[gherkin|Gherkin]] Rule line, with an ID and 1–3 [[scenario|Scenarios]] under it.
 
 *Why:* How is a [[spec]] written, so that you can see each [[requirement]] pass or fail in a test? *Decided in [[ADR-0002|ADR-0002]] · Agents › Specs.*
 
@@ -29,7 +29,7 @@ How this system works, written from its 13 [[rule|rules]] in force and 31 define
 
 *Why:* Where should each project's own layer live? *Decided in [[ADR-0005|ADR-0005]] · Agents › Process.*
 
-**1.6** Where a [[term]] is used by no [[rule]] in force, the vault keeps its note in Terms, and the base prompt lists it.
+**1.6** Where a [[term]] has a note, the base prompt includes it.
 
 *Why:* What happens to a [[term]] that no [[rule]] in force uses, in the base prompt you read and in the vault? *Decided in [[ADR-0006|ADR-0006]] · Agents › Vocabulary.*
 
@@ -37,11 +37,11 @@ How this system works, written from its 13 [[rule|rules]] in force and 31 define
 
 *Why:* Where do you answer an [[agent]]'s [[question|questions]]? *Decided in [[ADR-0007|ADR-0007]] · Agents › Communication.*
 
-**1.8** When a [[person]] asks for a check, the [[agent]] first lists every [[requirement]] and [[scenario]] it will test, as a compact table, and confirms them with the [[person]], and the [[verifier]] then checks the [[job]]'s change against them and writes a [[verdict]], with [[evidence]] for each [[result]] and at most five [[finding|findings]].
+**1.8** When a [[person]] asks for a check, the [[agent]] first lists the [[requirement|requirements]] and [[scenario|scenarios]] it will test as a compact table and confirms them with the [[person]], and the [[verifier]] then checks the [[job]]'s change against them and writes a [[verdict]], with [[evidence]] for each [[result]] and at most five [[finding|findings]].
 
 *Why:* What must happen when a [[person]] asks for a check? *Decided in [[ADR-0008|ADR-0008]] · Agents › Verification.*
 
-**1.9** When handing a [[job]] to another [[agent]], the [[agent]] hands it as a [[contract]], and the receiving [[agent]] answers with a [[result]] for each of its [[scenario|scenarios]], with no prose.
+**1.9** When handing a [[job]] to another [[agent]], the [[agent]] hands it as a [[contract]], and both [[agent|agents]] communicate only through that [[contract]] and a [[result]] for each of its [[scenario|scenarios]], with no prose.
 
 *Why:* In what form does an [[agent]] hand a [[job]] to another [[agent]], which decides what you can check of the handoff? *Decided in [[ADR-0009|ADR-0009]] · Agents › Handoff.*
 
@@ -49,11 +49,11 @@ How this system works, written from its 13 [[rule|rules]] in force and 31 define
 
 *Why:* What happens to the Decisions list you read when an [[adr]] that amends another is decided? *Decided in [[ADR-0010|ADR-0010]] · Agents › Process.*
 
-**1.11** Where a project has tests, [[ci]] runs them at the pace that project sets, and the project also sets the pace at which to [[autocommit]].
+**1.11** Where a project sets a test pace, [[ci]] runs that project's tests at that pace, and the project also sets the pace at which to [[autocommit]].
 
 *Why:* When do the tests you've written run automatically? *Decided in [[ADR-0011|ADR-0011]] · Agents › Testing · a record, not in the base prompt.*
 
-**1.12** When a Claude Code session starts, the [[agent]] loads the base prompt through the CLAUDE.md at the root of the workspace listed in AGENT_WORKSPACES that holds the session's folder.
+**1.12** Where an [[agent]] works in any folder under a workspace listed in AGENT_WORKSPACES, the [[agent]] loads the base prompt through the CLAUDE.md at that workspace's root.
 
 *Why:* Which sessions should load the base prompt? *Decided in [[ADR-0012|ADR-0012]] · Agents › Process · a record, not in the base prompt.*
 
