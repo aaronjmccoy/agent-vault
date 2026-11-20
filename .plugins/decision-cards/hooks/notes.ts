@@ -319,3 +319,47 @@ export const basePrompt = (notes: readonly NoteEntry[], decisionsDir: string): s
     '',
   ].join('\n')
 }
+
+// ---- editing from the reference guide
+
+export const TERM_TYPES = ['actor', 'entity', 'state', 'event', 'action', 'value'] as const
+
+// A term rewritten in place: the old definition is gone, the version goes up.
+export const updateTermText = (text: string, type: string, definition: string): string => {
+  const { meta } = stripFrontmatter(text)
+  const version = String((Number.parseInt(meta.version ?? '1', 10) || 1) + 1)
+  const withMeta = setFrontmatter(text, { type, version })
+  const clean = definition.replace(/\s*\n\s*/g, ' ').trim()
+  return /\*\*Definition:\*\*.*/.test(withMeta)
+    ? withMeta.replace(/\*\*Definition:\*\*.*/, `**Definition:** ${clean}`)
+    : `${withMeta.replace(/\s+$/, '')}\n**Definition:** ${clean}\n`
+}
+
+export const newTermText = (name: string, type: string, definition: string, notation: string): string =>
+  [
+    '---',
+    `notation: ${notation}`,
+    `type: ${type}`,
+    `aliases: []`,
+    'version: 1',
+    'status: approved',
+    '---',
+    `**Definition:** ${definition.replace(/\s*\n\s*/g, ' ').trim()}`,
+    '',
+  ].join('\n')
+
+// A decided ADR with its rule reworded in place: the chosen option's line (or the
+// person's own rule) gets the new sentence, and the version goes up. The old
+// wording is gone; agents only see the new one.
+export const replaceRule = (text: string, rule: string): string => {
+  const { meta, body } = stripFrontmatter(text)
+  const decision = body.match(/^Decision\s+(\S+)/m)?.[1]
+  if (!decision) return text
+  const clean = rule.replace(/\s*\n\s*/g, ' ').trim()
+  const version = String((Number.parseInt(meta.version ?? '1', 10) || 1) + 1)
+  const swapped =
+    decision === 'Other'
+      ? text.replace(/^Other\s+.+$/m, `Other     ${clean}`)
+      : text.replace(new RegExp(`^Where\\s+${decision}:\\s*.+$`, 'm'), `Where ${decision}:  ${clean}`)
+  return setFrontmatter(swapped, { version })
+}

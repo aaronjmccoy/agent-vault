@@ -419,7 +419,7 @@ test('picking a revision in the dialog marks the old decision superseded', async
   expect(files['decisions/ADR-0007.md']).toContain('superseded_by: ADR-0009')
 })
 
-test('/ref-guide opens the reference guide panel with the rules and the glossary', async ($, on) => {
+test('/ref-guide opens the reference guide: Rules, Terms and Docs tabs, with in-panel editing and a link to each file', async ($, on) => {
   const accepted = ADR.replace('status: proposed', 'status: accepted') + '\nDecision  A\n'
   fakeDisk(on, { 'decisions/ADR-0007.md': accepted, 'terms/selector.md': '---\ntype: entity\n---\n**Definition:** An approved phrase.' })
   await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
@@ -432,8 +432,23 @@ test('/ref-guide opens the reference guide panel with the rules and the glossary
     surface: 'desktop',
     props: { title: 'Reference guide', isFocused: false, bodyColumns: 100, placement: 'dock', scroll: { offset: 0, bodyRows: 40 }, view: {} },
   } as never)
-  expect(await ui.find({ type: 'Markdown', text: /Rules in force/ })).toBeDefined()
-  expect(await ui.find({ type: 'Markdown', text: /\*\*selector\*\*/ })).toBeDefined()
-  expect(await ui.find({ type: 'Markdown', text: /\[\[/ })).toBeUndefined()
+  expect(await ui.find({ key: 'tab-rules' })).toBeDefined()
+  expect(await ui.find({ key: 'tab-terms' })).toBeDefined()
+  expect(await ui.find({ key: 'tab-docs' })).toBeDefined()
+  expect(await ui.find({ type: 'Text', text: /Rules in force · 1/ })).toBeDefined()
+  await ui.press({ key: 'tab-terms' })
+  expect(await ui.find({ type: 'Text', text: /Glossary · 1/ })).toBeDefined()
+  await ui.press({ key: 'fold-base:terms' })
+  await ui.press({ key: 'idx-selector' })
+  expect(await ui.find({ type: 'Markdown', text: /An approved phrase\./ })).toBeDefined()
+  await ui.press({ key: 'notes-back' })
+  await ui.press({ key: 'tab-docs' })
+  expect(await ui.find({ type: 'Markdown', text: /# Docs/ })).toBeDefined()
+  await ui.press({ key: 'tab-terms' })
+  await ui.press({ key: 'idx-selector' })
+  expect(JSON.stringify(await ui.find({ key: 'file-view-selector' }))).toContain('Open the file')
+  await ui.press({ key: 'pencil-view-selector' })
+  await ui.input({ key: 'edit-def-selector', text: 'A phrase a spec may use.', kind: 'change' })
+  await ui.press({ key: 'edit-save-selector' })
   await ui.unmount()
 })

@@ -16,6 +16,8 @@ export type Pending = {
   lint: string[]
 }
 
+export type TermEdit = { type: string; definition: string }
+
 export type NoteEntry = {
   name: string
   kind: 'term' | 'decision'
@@ -43,6 +45,18 @@ declare module 'claude-code' {
       pending: Shaped<Pending[]>
       vocab: Shaped<string[]>
       notes: Shaped<NoteEntry[]>
+      noteTab: Shaped<'rules' | 'terms' | 'docs'>
+      selected: Shaped<string>
+      showRecord: Shaped<string>
+      docsOpen: Shaped<string[]>
+      termQuery: Shaped<string>
+      termLetter: Shaped<string>
+      termType: Shaped<string>
+      docsQuery: Shaped<string>
+      navHistory: Shaped<{ stack: string[]; at: number }>
+      editing: Shaped<string>
+      termEdits: Shaped<Record<string, TermEdit>>
+      ruleEdits: Shaped<Record<string, string>>
     }
   }
 }
