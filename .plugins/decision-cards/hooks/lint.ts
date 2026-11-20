@@ -81,6 +81,9 @@ export const checkReply = (text: string, terms: readonly string[] = []): string[
   }
   for (const p of parts) {
     if (p.label && !FRAMES[p.label].test(p.rest)) problems.push(`${p.label} line must be "${FRAMES[p.label].shape}"`)
+    // ADR-0004: a row is at most two sentences (links and file names do not end one).
+    const ends = p.rest.replace(/\[[^\]]*\]\([^)]*\)/g, 'link').replace(/`[^`]*`/g, 'code').match(/[.!?](?=\s+[A-Z(*]|\s*\|?\s*$)/g) ?? []
+    if (p.label && ends.length > 2) problems.push(`${p.label} row runs ${ends.length} sentences; the limit is 2`)
   }
   if (lines.length > REPLY_MAX_LINES) problems.push(`${lines.length} lines; the limit is ${REPLY_MAX_LINES}`)
   const missing = unlinkedTerms(text, terms)

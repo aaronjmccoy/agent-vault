@@ -1,0 +1,22 @@
+---
+id: Draft-0033
+status: superseded
+superseded_by: ADR-0004
+scope: agents/communication
+amends: "[[Draft-0017]]"
+---
+Given     [[response|Replies]] that run long are tedious to review, which is [[long-replies]], and a [[response|reply]] whose state is buried in prose is [[hard-to-judge]]. [[response|Replies]] appear in chat, where tables render and [[link|links]] work.
+Decide    What shape does each [[response|reply]] you read from an [[agent]] take?
+
+Where A:  When writing a [[response|reply]], the [[agent]] uses a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each a [[link]] or one short clause, in at most 8 rows.
+          → you read what changed, what is left and what waits on you at a glance, and every [[link]] works · a new shape to learn
+Where B:  When writing a [[response|reply]], the [[agent]] uses up to four labelled lines (Done, Open, Needs you, Check) in a code block, each a [[link]] or one short clause, in at most 8 lines.
+          → the labels line up as plain text · [[link|links]] in a code block do not work
+Combines  exclusive
+Recommend A: the same labels, and the [[link|links]] work.
+
+Decision  A
+
+Consequences
+- When a [[response|reply]] uses a defined word, the [[agent]] writes it as a markdown [[link]] to that word's [[term]] note, every time it appears.
+- When writing a [[response|reply]], the [[agent]] never puts it in a code block, so its [[link|links]] work.

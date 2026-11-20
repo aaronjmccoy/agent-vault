@@ -21,7 +21,7 @@ How this system works, written from its 14 [[rule|rules]] in force and 31 define
 
 *Why:* Which words may a [[spec]] line use, and so which of them can you look up as a [[term]]? *Decided in [[ADR-0003|ADR-0003]] · Agents › Vocabulary.*
 
-**1.4** When writing a [[response|reply]], the [[agent]] uses a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each a [[link]] or one short clause, in at most 8 rows.
+**1.4** When writing a [[response|reply]], the [[agent]] uses a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each at most two sentences, in at most 8 rows.
 
 *Why:* What shape does each [[response|reply]] you read from an [[agent]] take? *Decided in [[ADR-0004|ADR-0004]] · Agents › Communication.*
 
@@ -99,11 +99,11 @@ How this system works, written from its 14 [[rule|rules]] in force and 31 define
 
 **[[person]]** *(actor)*: The human the [[agent|agents]] work for: the only one who decides, and the reader every [[response|reply]] is written for. Used in [[ADR-0001|ADR-0001]], [[ADR-0006|ADR-0006]], [[ADR-0007|ADR-0007]], [[ADR-0008|ADR-0008]].
 
-**[[question]]** *(entity)*: A request from an [[agent]] for a [[person]] to decide, written as a proposed [[adr]] and asked in the client's native question dialog, which records the answer in that [[adr]]. Used in [[ADR-0001|ADR-0001]], [[ADR-0007|ADR-0007]].
+**[[question]]** *(entity)*: A request from an [[agent]] for a [[person]] to decide, written as a proposed [[adr]] and asked in the client's native question dialog, which records the answer in that [[adr]]. Used in [[ADR-0001|ADR-0001]], [[ADR-0004|ADR-0004]], [[ADR-0007|ADR-0007]].
 
 **[[requirement]]** *(entity)*: One [[rule]] in a [[spec]], with an ID such as REQ-003, that its [[gherkin|Gherkin]] [[scenario|scenarios]] check. Used in [[ADR-0002|ADR-0002]], [[ADR-0008|ADR-0008]].
 
-**[[response]]** *(entity)*: What an [[agent]] writes back to a [[person]]: a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each included only when it has something to say, in at most 8 rows. Used in [[ADR-0003|ADR-0003]], [[ADR-0004|ADR-0004]], [[ADR-0007|ADR-0007]], [[ADR-0011|ADR-0011]].
+**[[response]]** *(entity)*: What an [[agent]] writes back to a [[person]]: a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each at most two sentences and included only when it has something to say, in at most 8 rows, with nothing outside the table. Used in [[ADR-0003|ADR-0003]], [[ADR-0004|ADR-0004]], [[ADR-0007|ADR-0007]], [[ADR-0011|ADR-0011]].
 
 **[[result]]** *(entity)*: The pass or fail a [[verdict]] gives one [[requirement]]. Used in [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]].
 

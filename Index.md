@@ -28,7 +28,7 @@ generated: true
 - **1.16** [[person]] *(actor, v2)*: The human the [[agent|agents]] work for: the only one who decides, and the reader every [[response|reply]] is written for.
 - **1.17** [[question]] *(entity, v2)*: A request from an [[agent]] for a [[person]] to decide, written as a proposed [[adr]] and asked in the client's native question dialog, which records the answer in that [[adr]].
 - **1.18** [[requirement]] *(entity, v2)*: One [[rule]] in a [[spec]], with an ID such as REQ-003, that its [[gherkin|Gherkin]] [[scenario|scenarios]] check.
-- **1.19** [[response]] *(entity, v3)*: What an [[agent]] writes back to a [[person]]: a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each included only when it has something to say, in at most 8 rows.
+- **1.19** [[response]] *(entity, v4)*: What an [[agent]] writes back to a [[person]]: a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each at most two sentences and included only when it has something to say, in at most 8 rows, with nothing outside the table.
 - **1.20** [[result]] *(entity, v2)*: The pass or fail a [[verdict]] gives one [[requirement]].
 - **1.21** [[rule]] *(entity, v2)*: One sentence a [[adr|decision]] put in force, written in [[ears|EARS]]; [[agent|agents]] follow the newest one.
 - **1.22** [[rules-not-landing]] *(problem, v2)*: Instructions get recited back, but their effects never show up in what [[agent|agents]] do.

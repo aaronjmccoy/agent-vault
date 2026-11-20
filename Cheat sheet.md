@@ -89,7 +89,7 @@ A [[rule]] is one EARS sentence that names who acts, when, and what they do. It 
 | If \<unwanted condition>, \<actor> \<responds>. | Handling a failure |
 | Where \<context or feature>, \<actor> \<responds>. | Something that applies only in some places |
 
-For example: "When writing a reply, the agent uses a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each a link or one short clause, in at most 8 rows." Rules are written in the present tense, as what happens, not what will happen.
+For example: "When writing a reply, the agent uses a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each at most two sentences, in at most 8 rows." Rules are written in the present tense, as what happens, not what will happen.
 
 Because each [[rule]] has a single actor, trigger and response, you can see in the [[agent]]'s next action whether it was followed. [[rule|Rules]] written as general advice tend to get repeated back to you but not acted on.
 
@@ -106,16 +106,18 @@ Each stage of the loop where an [[agent]] produces something has one format, bui
 
 ### 4.1 Replies: the response table
 
-Every reply is a two-column table with up to four labelled rows, at most 8 rows in all. A row appears only when it has something to say.
+Every reply is a two-column table and nothing else: no text before or after it, and never in a code block, so its links work. It has up to four labelled rows, at most 8 rows in all, and a row appears only when it has something to say.
 
 | | |
 | --- | --- |
 | **Done** | Added, Changed, Fixed, Removed or Found … |
 | **Open** | … is not started, not done or blocked |
-| **Needs you** | Decide ADR-nnnn, Approve …, or Do … |
+| **Needs you** | Decide (a [[question]] already open in the dialog), Approve …, or Do … |
 | **Check** | Run `command` or Open link → what you should see |
 
-Long replies are tedious to review. This shape tells you what changed, what's left, what's waiting on you, and how to check it yourself, in a few lines. Read **Needs you** first: it's the only row that asks something of you. It is a table rather than a code block, so its links work. A reply that breaks the shape gets a ⚠ note saying how, and the [[agent]] is told to fix it.
+Each row opens with its listed words and is at most two sentences; longer detail goes in a linked note. Done and Open may repeat, one item per row, while Needs you and Check appear at most once. Read **Needs you** first: it's the only row that asks something of you, and it never asks for a decision itself, because decisions are asked in the dialog.
+
+Long replies are tedious to review. This shape tells you what changed, what's left, what's waiting on you, and how to check it yourself, in a few lines. A reply that breaks the shape is held back and recomposed before you see it; only if the second attempt still fails is it shown, with a ⚠ note saying what is wrong.
 
 ### 4.2 Questions: a proposed ADR, asked in the dialog
 

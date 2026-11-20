@@ -326,7 +326,7 @@ test('the base prompt carries the rules in force, the reply and question shapes,
   const term = termNote('selector', 't/selector.md', '---\ntype: entity\n---\n**Definition:** An approved [[phrase]].\n')
   const text = basePrompt([accepted, waiting, term], 'C:/vault/Decisions')
   expect(text).toContain('- ADR-0007: When a spec is approved, the linter rejects it if any selector has no step.')
-  expect(text).toContain('| **Needs you** | <Decide ADR-nnnn')
+  expect(text).toContain('| **Needs you** | <Decide <the question open in the dialog>')
   expect(text).toContain('Write a proposed ADR into C:/vault/Decisions')
   expect(text).toContain('Waiting on the person: ADR-0009.')
   expect(text).toContain('- selector (entity): An approved phrase.')
