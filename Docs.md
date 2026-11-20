@@ -9,7 +9,7 @@ How this system works, written from its 13 [[rule|rules]] in force and 31 define
 
 ## 1. Rules in force
 
-**1.1** When asking a [[person]] to decide, the [[agent]] writes the [[question]] as an [[adr]] with status proposed, in the lines Given, Decide, Where (one per option), Combines and Recommend.
+**1.1** When asking a [[person]] to decide, the [[agent]] writes the [[question]] as a proposed [[adr]] from the Question template: a Given, one Decide question, up to four Where options that each state an [[ears|EARS]] [[rule]] with what happens and what it costs, Combines, and Recommend.
 
 *Why:* What shape does each [[question]] an [[agent]] puts to you take? *Decided in [[ADR-0001|ADR-0001]] · Agents › Communication.*
 
@@ -35,7 +35,7 @@ How this system works, written from its 13 [[rule|rules]] in force and 31 define
 
 **1.7** When asking a [[person]] to decide, the [[agent]] writes the proposed [[adr]] and shows it as the native [[question]] dialog, and the dialog writes the [[person]]'s pick back into that [[adr]].
 
-*Why:* Where should you answer an [[agent]]'s [[question|questions]]? *Decided in [[ADR-0007|ADR-0007]] · Agents › Communication.*
+*Why:* Where do you answer an [[agent]]'s [[question|questions]]? *Decided in [[ADR-0007|ADR-0007]] · Agents › Communication.*
 
 **1.8** When a [[person]] asks for a check, the [[agent]] first lists the [[requirement|requirements]] and [[scenario|scenarios]] it will test as a compact table and confirms them with the [[person]], and the [[verifier]] then checks the [[job]]'s change against them and writes a [[verdict]], with [[evidence]] for each [[result]] and at most five [[finding|findings]].
 
@@ -53,7 +53,7 @@ How this system works, written from its 13 [[rule|rules]] in force and 31 define
 
 *Why:* When do the tests you've written run automatically? *Decided in [[ADR-0011|ADR-0011]] · Agents › Testing · a record, not in the base prompt.*
 
-**1.12** Where an [[agent]] works in any folder under Documents\Projects, the [[agent]] loads Base.md, through a CLAUDE.md in Documents\Projects.
+**1.12** Where an [[agent]] works in any folder under a workspace listed in AGENT_WORKSPACES, the [[agent]] loads the base prompt through the CLAUDE.md at that workspace's root.
 
 *Why:* Which sessions should load the base prompt? *Decided in [[ADR-0012|ADR-0012]] · Agents › Process · a record, not in the base prompt.*
 
@@ -99,7 +99,7 @@ How this system works, written from its 13 [[rule|rules]] in force and 31 define
 
 **[[requirement]]** *(entity)*: One [[rule]] in a [[spec]], with an ID such as REQ-003, that its [[gherkin|Gherkin]] [[scenario|scenarios]] check. Used in [[ADR-0002|ADR-0002]], [[ADR-0008|ADR-0008]].
 
-**[[response]]** *(entity)*: What an [[agent]] writes back to a [[person]]: a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each included only when it has something to say, in at most 8 rows. Used in [[ADR-0004|ADR-0004]].
+**[[response]]** *(entity)*: What an [[agent]] writes back to a [[person]]: a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each included only when it has something to say, in at most 8 rows. Used in [[ADR-0004|ADR-0004]], [[ADR-0007|ADR-0007]], [[ADR-0009|ADR-0009]].
 
 **[[result]]** *(entity)*: The pass or fail a [[verdict]] gives one [[requirement]]. Used in [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]].
 
@@ -115,7 +115,7 @@ How this system works, written from its 13 [[rule|rules]] in force and 31 define
 
 **[[spec]]** *(entity)*: A short file listing what a change must do: each [[ears|EARS]] [[rule]] states a [[requirement]], and its [[gherkin|Gherkin]] [[scenario|scenarios]] are the executable tests that check it, run through [[test-step|test step]] code. Used in [[ADR-0002|ADR-0002]], [[ADR-0003|ADR-0003]], [[ADR-0009|ADR-0009]], [[ADR-0011|ADR-0011]].
 
-**[[term]]** *(entity)*: A note defining one word of the project vocabulary, which [[spec|specs]] and [[adr|decisions]] link to. Used in [[ADR-0001|ADR-0001]], [[ADR-0003|ADR-0003]], [[ADR-0005|ADR-0005]], [[ADR-0006|ADR-0006]].
+**[[term]]** *(entity)*: A note defining one word of the project vocabulary, which [[spec|specs]] and [[adr|decisions]] link to. Used in [[ADR-0001|ADR-0001]], [[ADR-0003|ADR-0003]], [[ADR-0004|ADR-0004]], [[ADR-0005|ADR-0005]], [[ADR-0006|ADR-0006]].
 
 **[[test-sprawl]]** *(problem)*: Tests and QA grow far beyond what the work needs. Used in [[ADR-0002|ADR-0002]].
 

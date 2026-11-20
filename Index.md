@@ -50,7 +50,7 @@ generated: true
 - **2.4** [[ADR-0004|ADR-0004]] *accepted (A)*: What shape does each [[response|reply]] you read from an [[agent]] take?
 - **2.5** [[ADR-0005|ADR-0005]] *accepted (A)*: Where should each project's own layer live?
 - **2.6** [[ADR-0006|ADR-0006]] *accepted (C)*: What happens to a [[term]] that no [[rule]] in force uses, in the base prompt you read and in the vault?
-- **2.7** [[ADR-0007|ADR-0007]] *accepted (A)*: Where should you answer an [[agent]]'s [[question|questions]]?
+- **2.7** [[ADR-0007|ADR-0007]] *accepted (A)*: Where do you answer an [[agent]]'s [[question|questions]]?
 - **2.8** [[ADR-0008|ADR-0008]] *accepted (A)*: What must happen when a [[person]] asks for a check?
 - **2.9** [[ADR-0009|ADR-0009]] *accepted (A)*: In what form does an [[agent]] hand a [[job]] to another [[agent]], which decides what you can check of the handoff?
 - **2.10** [[ADR-0010|ADR-0010]] *accepted (A)*: What happens to the Decisions list you read when an [[adr]] that amends another is decided?

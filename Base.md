@@ -6,7 +6,7 @@ Where anything earlier in a conversation, or in memory, disagrees with this file
 
 ## Rules in force
 
-- ADR-0001: When asking a person to decide, the agent writes the question as an adr with status proposed, in the lines Given, Decide, Where (one per option), Combines and Recommend.
+- ADR-0001: When asking a person to decide, the agent writes the question as a proposed adr from the Question template: a Given, one Decide question, up to four Where options that each state an EARS rule with what happens and what it costs, Combines, and Recommend.
 - ADR-0002: When writing a spec, the author puts each EARS requirement in a Gherkin Rule line, with an ID and 1–3 Scenarios under it.
 - ADR-0003: When writing a spec line, the author uses only EARS and Gherkin keywords, the fixed operators (is, equals, above, below, within, contains, not) and selectors, and links every other noun as a short term link.
 - ADR-0004: When writing a reply, the agent uses a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each a link or one short clause, in at most 8 rows.
