@@ -2,10 +2,10 @@
 id: Draft-0013
 status: withdrawn
 scope: testing
-supersedes: ADR-0006
-withdrawn_because: the person already said enough about test pacing; ADR-0006 now records their own words
+supersedes: ADR-0011
+withdrawn_because: the person already said enough about test pacing; ADR-0011 now records their own words
 ---
-Given     Revises [[ADR-0006]]. Your words were "Each project will specify a pace by which to [[autocommit]]." Suggest [[rule]] turned that into tests running at that pace, which may not be what you meant. It serves [[test-sprawl]].
+Given     Revises [[ADR-0011]]. Your words were "Each project will specify a pace by which to [[autocommit]]." Suggest [[rule]] turned that into tests running at that pace, which may not be what you meant. It serves [[test-sprawl]].
 Decide    Should a project's [[autocommit]] pace also decide when its tests run?
 
 Where A:  Where a project sets an [[autocommit]] pace, the [[ci]] shall run the [[test-step|test steps]] of every [[spec]] a commit touches, at each [[autocommit]].

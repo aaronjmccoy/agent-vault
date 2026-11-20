@@ -281,13 +281,13 @@ async function indexNotes($: EngineInterface): Promise<void> {
       lastBase = text
     }
   }
-  // ADR-0007: the workspace CLAUDE.md carries the base prompt itself, since an
+  // ADR-0012: the workspace CLAUDE.md carries the base prompt itself, since an
   // @import of a file outside a session's project is not expanded.
   for (const file of shared.length ? config.claudeFiles : []) {
     const text = [
       '# Workspace base prompt',
       '',
-      `Every agent working under this folder follows the guidelines below (ADR-0007). This file is generated from the shared vault (${vaultRootOf(config.adrDir)}); change a decision there, not this file.`,
+      `Every agent working under this folder follows the guidelines below (ADR-0012). This file is generated from the shared vault (${vaultRootOf(config.adrDir)}); change a decision there, not this file.`,
       '',
       basePrompt(shared, config.adrDir).replace(/^# Base prompt\n+/, '').replace(/^## /gm, '### '),
     ].join('\n')
@@ -378,7 +378,7 @@ async function ensureVault($: EngineInterface): Promise<void> {
 // What an agent is told when it tries to ask with the built-in question tool.
 export const askInstead = (nextId: string, adrDir: string, termsDir: string): string =>
   [
-    `Questions to the person are proposed ADRs (${QUESTION_RULE}), asked through this dialog (ADR-0010).`,
+    `Questions to the person are proposed ADRs (${QUESTION_RULE}), asked through this dialog (ADR-0007).`,
     `First write a proposed ADR to ${adrDir}/${nextId}.md, in this shape:`,
     '---',
     `id: ${nextId}`,
@@ -414,7 +414,7 @@ export const adrFileOf = (input: unknown): string => {
   return /^ADR-\d+\.md$/i.test(name) ? name : ''
 }
 
-// One native dialog question built from a proposed ADR (ADR-0010): the Decide line
+// One native dialog question built from a proposed ADR (ADR-0007): the Decide line
 // is the question, each Where line an option, the recommended one first. Term
 // definitions go in the preview, since the dialog has no hover.
 type Dialog = {
@@ -524,7 +524,7 @@ export const register: Register = (on, options) => {
     }
   })
 
-  // Agents ask through the native question dialog (ADR-0010), one question per
+  // Agents ask through the native question dialog (ADR-0007), one question per
   // proposed ADR, its header the ADR id. The mod fills each question from the file,
   // so every dialog has the same shape, and writes the answer back into the ADR.
   // If the guard itself fails, the question goes through rather than being lost.
@@ -574,7 +574,7 @@ export const register: Register = (on, options) => {
       const result = await next(e)
       if (result.deny !== undefined || result.isError) return result
       const id = parsed.id || file.slice(0, -3)
-      return { ...result, context: [...(result.context ?? []), `[decision-cards] ${id} is written. Now ask it: call AskUserQuestion with a question whose header is ${id} (ADR-0010), then act on the answer.`] }
+      return { ...result, context: [...(result.context ?? []), `[decision-cards] ${id} is written. Now ask it: call AskUserQuestion with a question whose header is ${id} (ADR-0007), then act on the answer.`] }
     }
     return { deny: `${file} breaks ${QUESTION_RULE}, so it was not written: ${problems.join('; ')}. Fix these and write it again.` }
   }).catch(($, e, next) => next(e))

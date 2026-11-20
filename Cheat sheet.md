@@ -42,7 +42,7 @@ Every word with a special meaning has a [[term]] note in the Terms folder: one f
 type: entity
 aliases: [work contract]
 version: 1
-decided_by: "[[ADR-0012]]"
+decided_by: "[[ADR-0009]]"
 ---
 **Definition:** The spec one agent hands another as the whole of a job: its
 Gherkin scenarios say what must be done and how it is checked, with no prose
@@ -121,9 +121,9 @@ Long replies are tedious to review. This shape tells you what changed, what's le
 
 When an [[agent]] needs you to decide, it writes a proposed [[adr|ADR]] in the Decisions folder and opens the question dialog built from it. Each line of the ADR has a place in the dialog:
 
-| ADR line | What it holds | Example (ADR-0011) | In the dialog |
+| ADR line | What it holds | Example (ADR-0008) | In the dialog |
 | --- | --- | --- | --- |
-| Header | The ADR's id | ADR-0011 | The chip above the question |
+| Header | The ADR's id | ADR-0008 | The chip above the question |
 | Given | Why the question came up, and which problem it serves | Most people ask an agent to "check your work" and expect it to know what that means. | The preview beside each option, with every term's definition |
 | Decide | One question ending in "?" | What must happen when a person asks for a check? | The question |
 | Where A, B… | One EARS [[rule]] per option, then → what happens · what it costs | A: When asked for a check, the agent lists everything it will test, then confirms with you before checking. → you agree what a check covers. B: When asked for a check, the agent lists only what the change touches, then confirms with you before checking. → a shorter list to confirm · indirect effects go unchecked. | One option each: the [[rule]] and its cost |

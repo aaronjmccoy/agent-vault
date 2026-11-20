@@ -55,4 +55,4 @@ Agents other than Claude Code (Codex, for example) read their own instruction fi
 
 ## Change a rule
 
-Ask an agent to "revise ADR-nnnn so that…". It writes a proposed ADR and asks it in the question dialog. When you pick an option, the rule is in force everywhere at each agent's next session. An ADR that amends another takes its place, and the list is renumbered so it stays in order with no gaps (ADR-0013).
+Ask an agent to "revise ADR-nnnn so that…". It writes a proposed ADR and asks it in the question dialog. When you pick an option, the rule is in force everywhere at each agent's next session. An ADR that amends another takes its place, and the list is renumbered so it stays in order with no gaps (ADR-0010).

@@ -2,7 +2,7 @@
 id: Draft-0015
 status: superseded
 scope: agents/process
-superseded_by: ADR-0007
+superseded_by: ADR-0012
 ---
 Given     The [[rule|rules]] in force reach only this session: the decision-cards mod is a development mod loaded here alone, so your fork had no checks and no [[rule|rules]]. That is [[rules-not-landing]] in every other session you start.
 Decide    How should the [[rule|rules]] reach every Claude Code session you start?

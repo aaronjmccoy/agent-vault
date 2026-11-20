@@ -1,7 +1,7 @@
 ---
 id: Draft-0016
 status: superseded
-superseded_by: ADR-0011
+superseded_by: ADR-0008
 scope: agents/verification
 ---
 Given     A [[verifier]], a [[verdict]], its [[result|results]], [[evidence]] and [[finding|findings]] are defined, but no [[rule]] says when they are used. Today the Check line is the only way you judge work, which leaves [[hard-to-judge]] partly open.

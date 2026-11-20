@@ -110,7 +110,7 @@ export const decisionNote = (name: string, file: string, text: string): NoteEntr
     outcome: outcomeOf(body),
     scope: meta.scope ?? '',
     rule: ruleOf(body),
-    // ADR-0008: a rule that only records setup, or leaves the choice to each project,
+    // ADR-0013: a rule that only records setup, or leaves the choice to each project,
     // stays in force and in Docs but is kept out of what agents read.
     record: (meta.prompt ?? '').toLowerCase() === 'record',
   }
@@ -266,7 +266,7 @@ export const currentReference = (notes: readonly NoteEntry[], limit = 6000): str
     ...(pending.length ? ['', `Waiting on the person: ${pending.join(', ')}. Do not act as if these were decided.`] : []),
     '',
     'How to link in chat: [[wiki links]] show as plain text in chat, so in replies link each defined term as a markdown link to its note in the Terms folder, such as [adr](<Terms folder>/adr.md); words with no note stay plain. Keep [[term]] in notes, specs and ADRs.',
-    'How to ask the person: never ask in chat. Write a proposed ADR into the Decisions folder with the Write tool, from the Question template (each option one EARS rule). Then call AskUserQuestion with one question per ADR, its header set to the ADR id (such as ADR-0012); the decision-cards mod fills the question and options from the file and records the answer in it.',
+    'How to ask the person: never ask in chat. Write a proposed ADR into the Decisions folder with the Write tool, from the Question template (each option one EARS rule). Then call AskUserQuestion with one question per ADR, its header set to the ADR id (such as ADR-0009); the decision-cards mod fills the question and options from the file and records the answer in it.',
   ].join('\n')
   return out.length > limit ? out.slice(0, limit - 40) + '\n… (reference cut to fit)' : out
 }
@@ -310,7 +310,7 @@ export const basePrompt = (notes: readonly NoteEntry[], decisionsDir: string): s
     '',
     '## How to ask',
     '',
-    `Never ask in chat (ADR-0010). Write a proposed ADR into ${decisionsDir} from the Question template: Given, Decide (one sentence ending in "?"), one Where line per option (at most 4) written as an EARS rule with its consequence, Combines, and Recommend. Then call AskUserQuestion with one question per ADR (at most 4) and its header set to the ADR id, such as ADR-0012. The mod fills the question and options from the file and writes the answer back into it. A question left unanswered stays proposed: ask it again later.`,
+    `Never ask in chat (ADR-0007). Write a proposed ADR into ${decisionsDir} from the Question template: Given, Decide (one sentence ending in "?"), one Where line per option (at most 4) written as an EARS rule with its consequence, Combines, and Recommend. Then call AskUserQuestion with one question per ADR (at most 4) and its header set to the ADR id, such as ADR-0009. The mod fills the question and options from the file and writes the answer back into it. A question left unanswered stays proposed: ask it again later.`,
     ...(pending.length ? ['', `Waiting on the person: ${pending.map(p => p.name).join(', ')}. Do not act as if these were decided.`] : []),
     '',
     '## Terms',

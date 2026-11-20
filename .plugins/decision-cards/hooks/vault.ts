@@ -63,7 +63,7 @@ export const TEMPLATES: Readonly<Record<string, string>> = {
 // The vault root is the folder that holds the Decisions folder.
 export const vaultRootOf = (adrDir: string): string => adrDir.replace(/[\\/]+$/, '').replace(/[\\/][^\\/]+$/, '')
 
-// ADR-0007: the mod runs only in sessions whose folder is under the workspace root
+// ADR-0012: the mod runs only in sessions whose folder is under the workspace root
 // (every session when no root is set).
 export const inWorkspace = (cwd: string, workspaceRoot: string): boolean => {
   if (!workspaceRoot.trim()) return true

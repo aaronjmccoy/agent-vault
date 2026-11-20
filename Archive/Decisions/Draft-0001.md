@@ -15,4 +15,4 @@ Combines  exclusive
 Recommend A: keeps tests from outgrowing [[spec|specs]].
 
 Decision  A
-Consequences  Every [[selector]] gets a [[test-step|test step]] written before its [[spec]] is approved. When [[test-step|test steps]] run is a separate [[adr|decision]]: [[ADR-0006]].
+Consequences  Every [[selector]] gets a [[test-step|test step]] written before its [[spec]] is approved. When [[test-step|test steps]] run is a separate [[adr|decision]]: [[ADR-0011]].
