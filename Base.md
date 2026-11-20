@@ -11,9 +11,6 @@ Where anything earlier in a conversation, or in memory, disagrees with this file
 - ADR-0003: When a spec line is written, the author shall use only EARS and Gherkin keywords, the fixed operators (is, equals, above, below, within, contains, not) and selectors, and shall link every other noun as a short term link.
 - ADR-0004: When an agent replies to a person, the agent shall use four labelled lines (Done, Open, Needs you, Check), each a link or one short clause, in at most 8 lines.
 - ADR-0005: Where a project has its own rules, terms, docs or jobs, the agent shall keep them in a vault folder inside that project's repository, layered over the shared vault, with the project's note winning where both define the same name.
-- ADR-0006: The ci shall run a project's tests automatically at the pace that project specifies.
-- ADR-0007: Where an agent works in any folder under Documents\Projects, the agent shall load Base.md, through a CLAUDE.md in Documents\Projects, and the decision-cards mod shall run in that session.
-- ADR-0008: Where a rule only records setup or leaves the choice to each project, the decision-cards mod shall keep it out of the base prompt and list it in Docs only.
 - ADR-0009: Where a term has a note, the decision-cards mod shall put it in the base prompt.
 - ADR-0010: When an agent asks a person to decide, the agent shall write the proposed adr and show it as the native question dialog, and the decision-cards mod shall write the answer back into that adr.
 - ADR-0011: When a person asks for a check, the agent shall first list the requirements and scenarios it will test as a compact table and confirm them with the person, and the verifier shall then check the job's change against them and write a verdict, with evidence for each result and at most five findings.
@@ -22,20 +19,20 @@ Where anything earlier in a conversation, or in memory, disagrees with this file
 
 ## How to reply
 
-Up to four labelled lines, in this order, each included only when it has something to say, at most 8 lines in all:
+A two-column markdown table with an empty header, one row per labelled line, in this order, each row included only when it has something to say, at most 8 rows in all. Never put it in a code block: links must render.
 
-```
-Done       <Added | Changed | Fixed | Removed | Found> <thing>
-Open       <thing> is <not started | not done | blocked>
-Needs you  <Decide ADR-nnnn | Approve <action> | Do <step>>
-Check      <Run `command` | Open <link>> → <what you should see>
-```
+| | |
+| --- | --- |
+| **Done** | <Added \| Changed \| Fixed \| Removed \| Found> <thing> |
+| **Open** | <thing> is <not started \| not done \| blocked> |
+| **Needs you** | <Decide ADR-nnnn \| Approve <action> \| Do <step>> |
+| **Check** | <Run `command` \| Open <link>> → <what you should see> |
 
-Done and Open may repeat, one item per line. Link every defined term as [[term]], in replies, notes and specs alike.
+Done and Open may repeat, one item per row. Link every instance of a defined term. In chat replies, where [[wiki links]] show as plain text, use a markdown link to that term's own note, for example [adr](C:/Users/Aaron/Documents/Projects/personal/agent-vault/Terms/adr.md). Link only words that have a note under Terms; others stay plain. In notes, specs and ADRs, use [[term]].
 
 ## How to ask
 
-Never ask in chat or with a question tool. Write a proposed ADR into C:/Users/Aaron/Documents/Projects/personal/agent-vault/Decisions from the Question template: Given, Decide (one sentence ending in "?"), one Where line per option written as an EARS rule with its consequence, Combines, and Recommend. Then end your turn; the answer comes back as a note.
+Never ask in chat (ADR-0010). Write a proposed ADR into C:/Users/Aaron/Documents/Projects/personal/agent-vault/Decisions from the Question template: Given, Decide (one sentence ending in "?"), one Where line per option (at most 4) written as an EARS rule with its consequence, Combines, and Recommend. Then call AskUserQuestion with one question per ADR (at most 4) and its header set to the ADR id, such as ADR-0012. The mod fills the question and options from the file and writes the answer back into it. A question left unanswered stays proposed: ask it again later.
 
 ## Terms
 
@@ -64,9 +61,9 @@ Never ask in chat or with a question tool. Write a proposed ADR into C:/Users/Aa
 - scenario (entity): One concrete case under a requirement, written in Gherkin as Given, When and Then, and run as a test.
 - selector (entity): An approved phrase a spec may use, such as "is assigned 20".
 - skill (entity): A packaged procedure an agent loads when it is relevant, which can add its own selectors.
-- spec (entity): A short file listing what a change must do: each EARS rule states a requirement, and its Gherkin scenarios are the executable tests that check it, run through step code.
-- step (entity): The test code that makes one selector actually run.
+- spec (entity): A short file listing what a change must do: each EARS rule states a requirement, and its Gherkin scenarios are the executable tests that check it, run through test step code.
 - term (entity): A note defining one word of the project vocabulary, which specs and decisions link to.
 - test-sprawl (problem): Tests and QA grow far beyond what the work needs.
+- test-step (entity): The test code that makes one selector actually run, so a scenario line using it can be executed.
 - verdict (entity): A YAML record giving pass or fail for each requirement, with evidence and up to five findings.
 - verifier (actor): The agent that checks a job's change against its spec and writes the verdict; it never wrote the change.

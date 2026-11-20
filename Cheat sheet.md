@@ -2,18 +2,18 @@
 
 As of 2026-11-20. Online copy: https://claude.ai/artifact/E13ccGAX3ufLPkkmt1UzM9
 
-You and your [[agent|agents]] talk in a few fixed formats, one for each step of the work. You ask for work in plain words. An [[agent]] replies in a short table, asks you to decide through the question dialog, and hands work to other [[agent|agents]] as Gherkin [[contract|contracts]]. Every decision you make becomes a [[rule]] that all [[agent|agents]], in every project, read from one shared base prompt.
+You and your [[agent|agents]] talk in a few fixed formats, one for each stage of the work. You ask for work in plain words. An [[agent]] replies in a short table, asks you to decide through the question dialog, and hands work to other [[agent|agents]] as Gherkin [[contract|contracts]]. Every decision you make becomes a [[rule]] that all [[agent|agents]], in every project, read from one shared base prompt.
 
 ## 1. The loop
 
-All the work follows one cycle:
+All the work follows one cycle of six stages:
 
 1. **You ask** for work in plain words, saying what done looks like.
 2. **The [[agent]] works**, then **replies** in the [[response]] table.
 3. When it needs a choice from you, it writes a proposed [[adr|ADR]] and **asks** it in the question dialog.
 4. **You pick** an option. Your pick is written into the [[adr|ADR]], and its [[rule]] is in force.
 5. The base prompt is rebuilt, so **every [[agent]]** follows the new [[rule]] from its next session.
-6. When an [[agent]] passes part of the work to another [[agent]], it hands over a [[contract]], and the result comes back against it.
+6. When an [[agent]] passes part of the work to another [[agent]], it **hands over a [[contract]]**, and the result comes back against it.
 
 You decide once, and the decision reaches every [[agent]] without you repeating it. Nothing depends on an [[agent]] remembering an earlier conversation, because the [[rule|rules]] live in files, not in chat history.
 
@@ -25,15 +25,15 @@ The formats are built from three established standards. Each does one job.
 | --- | --- | --- |
 | [[ears\|EARS]] (Easy Approach to Requirements Syntax) | Writing one [[rule]] | It forces every sentence into a trigger, an actor and a response ("When X, the agent shall Y"). A [[rule]] in that shape can only be read one way, and anyone can see whether it was followed. |
 | [[adr\|ADR]] (Architecture Decision Record) | Recording one decision | It keeps the question, the options, the choice and the reasons together in one short file. A year later you can still see why a [[rule]] exists, and a [[question]] is simply an ADR that hasn't been decided yet. |
-| [[gherkin\|Gherkin]] (Given, When, Then) | Checking that work meets a [[rule]] | It turns a [[rule]] into concrete examples that run as tests. "Done" stops being a matter of opinion: either the [[scenario|scenarios]] pass or they don't. |
+| [[gherkin\|Gherkin]] (Given, When, Then) | Checking that work meets a [[rule]] | It turns a [[rule]] into concrete examples that run as tests. "Done" stops being a matter of opinion: either the [[scenario\|scenarios]] pass or they don't. |
 
-They nest. Each option in an [[adr|ADR]] is one EARS [[rule]]. A [[spec]] is a list of EARS [[rule|rules]], each with Gherkin [[scenario|scenarios]] under it. So the same sentence you pick in a [[question]] is the sentence that gets tested.
+They nest. Each option in an [[adr|ADR]] is one EARS [[rule]]. A [[spec]] is a list of EARS [[rule|rules]], each with Gherkin [[scenario|scenarios]] under it.
 
-## 3. Each step's format
+## 3. The grammar: terms, links and rules
 
-Each step has one format. A fixed format lets you judge an [[agent]]'s output at a glance, and lets the output be checked automatically before you see it.
+Every format in section 4 is built from three parts. [[term|Terms]] fix what words mean, [[link|links]] point each word back to its meaning, and [[rule|rules]] are sentences made from those words.
 
-### 3.1 Words: terms and links
+### 3.1 Terms
 
 Every word with a special meaning has a [[term]] note in the Terms folder: one file per word, holding a one-sentence definition and a few details. Here is the note for [[contract]]:
 
@@ -49,41 +49,62 @@ Gherkin scenarios say what must be done and how it is checked, with no prose
 beside them.
 ```
 
-The type says what kind of word it is: an actor that does things, an entity that exists, an action, and so on. Aliases are other spellings that mean the same thing. The version goes up by one whenever the definition is changed, and [[agent|agents]] always use the newest version. The decided_by line names the [[adr|ADR]] that introduced the word.
+The type says what kind of word it is:
 
-Wherever a defined word appears, it is written as a [[link]] to its note. In notes, [[spec|specs]] and [[adr|ADRs]] that's `[[contract]]`. In chat, where those links don't work, it's a normal link to the file, such as `[contract](Terms/contract.md)`.
+| Type | Meaning | Example |
+| --- | --- | --- |
+| actor | Someone or something that acts | [[agent]], [[person]], [[verifier]] |
+| entity | A thing that exists and can be pointed at | [[spec]], [[adr]], [[rule]] |
+| action | Something done | [[autocommit]] |
+| problem | A recurring trouble the framework exists to fix | [[hard-to-judge]], [[long-replies]] |
+| state | A condition that holds for a while | none yet |
+| event | Something that happens at a moment | none yet |
+| value | A quantity or setting | none yet |
 
-Defining a word once, and linking it every time, means you and every [[agent]] read the same meaning. Undefined jargon is how a [[question]] ends up asking about something you never agreed to.
+Aliases are other words that mean the same thing. The decided_by line names the [[adr|ADR]] that introduced the word.
 
-### 3.2 Rules: EARS sentences
+Each [[term]] and each [[rule]] has its own version number, which goes up by one with every edit, and [[agent|agents]] always use the newest. The vault is a git repository, so each commit is also a snapshot of every note at once. To refer to the whole set as it stood at one moment, cite the commit.
 
-A [[rule]] is one EARS sentence that names who acts, when, and what they shall do. For example, ADR-0004's [[rule]]: "When an agent replies to a person, the agent shall use four labelled lines (Done, Open, Needs you, Check), each a link or one short clause, in at most 8 lines."
+Defining a word once means you and every [[agent]] read the same meaning. Undefined jargon is how a [[question]] ends up asking about something you never agreed to.
+
+### 3.2 Links
+
+Wherever a defined word appears, it is a [[link]] to its [[term]] note, so you can always check what it means. How the [[link]] looks depends on where you read it:
+
+| Where you read it | How a link is written | Example |
+| --- | --- | --- |
+| Notes, specs and ADRs in the vault (Obsidian) | A wiki link | `[[contract]]` |
+| An agent's reply in chat | A markdown link to the note's file, because wiki links don't work in chat | `[contract](Terms/contract.md)` |
+
+Every instance gets a [[link]], not only the first, so a word is never ambiguous wherever you start reading.
+
+### 3.3 Rules
+
+A [[rule]] is one EARS sentence that names who acts, when, and what they do. It follows one of four patterns:
 
 | Pattern | Use it for |
 | --- | --- |
-| When \<trigger>, the \<actor> shall \<response>. | Something that happens on an event |
-| While \<state>, the \<actor> shall \<response>. | Something that holds while a state lasts |
-| If \<unwanted condition>, then the \<actor> shall \<response>. | Handling a failure |
-| Where \<context or feature>, the \<actor> shall \<response>. | Something that applies only in some places |
+| When \<trigger>, \<actor> \<responds>. | Something that happens on an event |
+| While \<state>, \<actor> \<responds>. | Something that holds while a state lasts |
+| If \<unwanted condition>, \<actor> \<responds>. | Handling a failure |
+| Where \<context or feature>, \<actor> \<responds>. | Something that applies only in some places |
+
+For example: "When an agent replies to a person, the agent shall use four labelled lines (Done, Open, Needs you, Check), each a link or one short clause, in at most 8 lines."
 
 Because each [[rule]] has a single actor, trigger and response, you can see in the [[agent]]'s next action whether it was followed. [[rule|Rules]] written as general advice tend to get repeated back to you but not acted on.
 
-### 3.3 Questions: a proposed ADR, asked in the dialog
+## 4. The format at each stage
 
-When an [[agent]] needs you to decide, it writes a proposed [[adr|ADR]] in the Decisions folder and opens the question dialog built from it. Each line of the ADR has a place in the dialog:
+Each stage of the loop where an [[agent]] produces something has one format, built from that grammar. A fixed format lets you judge the output at a glance, and lets it be checked automatically before you see it.
 
-| ADR line | What it holds | Example (ADR-0011) | In the dialog |
-| --- | --- | --- | --- |
-| Header | The ADR's id | ADR-0011 | The chip above the question |
-| Given | Why the question came up, and which problem it serves | Most people ask an agent to "check your work" and expect it to know what that means. | The preview beside each option, with every term's definition |
-| Decide | One question ending in "?" | What must happen when a person asks for a check? | The question |
-| Where A, B… | One EARS [[rule]] per option, then → what happens · what it costs | A: the agent first lists what it will test and confirms it with you, then checks. → you see what "checked" covers · one more step | One option each: the [[rule]] and its cost |
-| Recommend | The [[agent]]'s pick and its reason | A: a check starts by agreeing what will be tested. | The first option, marked "(Recommended)" |
-| Other | | | A free-text box under the options |
+| Stage | What the agent produces | Format |
+| --- | --- | --- |
+| 2. Reply | A report on the work | The [[response]] table (4.1) |
+| 3. Ask | A decision for you to make | A proposed [[adr\|ADR]], asked in the dialog (4.2) |
+| 6. Hand over | Work for another [[agent]] | A [[contract]] (4.3) |
+| When you ask for a check | A check of the work | A list of what will be tested, then a [[verdict]] (4.4) |
 
-Every option is the exact [[rule]] that goes into force, so you choose the wording itself, not a direction an [[agent]] will interpret later. The dialog works on desktop and on mobile (ADR-0010). Only picking an option decides anything. Words typed into Other leave the [[question]] open: the [[agent]] reads them and asks again. [[agent|Agents]] never ask in chat, where a decision would scroll away unrecorded.
-
-### 3.4 Responses: the response table
+### 4.1 Replies: the response table
 
 Every reply is a two-column table with up to four labelled rows, at most 8 rows in all. A row appears only when it has something to say.
 
@@ -96,7 +117,22 @@ Every reply is a two-column table with up to four labelled rows, at most 8 rows 
 
 Long replies are tedious to review. This shape tells you what changed, what's left, what's waiting on you, and how to check it yourself, in a few lines. Read **Needs you** first: it's the only row that asks something of you. It is a table rather than a code block, so its links work. A reply that breaks the shape gets a ⚠ note saying how, and the [[agent]] is told to fix it.
 
-### 3.5 Handoffs: contracts in Gherkin
+### 4.2 Questions: a proposed ADR, asked in the dialog
+
+When an [[agent]] needs you to decide, it writes a proposed [[adr|ADR]] in the Decisions folder and opens the question dialog built from it. Each line of the ADR has a place in the dialog:
+
+| ADR line | What it holds | Example (ADR-0011) | In the dialog |
+| --- | --- | --- | --- |
+| Header | The ADR's id | ADR-0011 | The chip above the question |
+| Given | Why the question came up, and which problem it serves | Most people ask an agent to "check your work" and expect it to know what that means. | The preview beside each option, with every term's definition |
+| Decide | One question ending in "?" | What must happen when a person asks for a check? | The question |
+| Where A, B… | One EARS [[rule]] per option, then → what happens · what it costs | A: the agent first lists what it will test and confirms it with you, then checks. → you see what "checked" covers · one more step | One option each: the [[rule]] and its cost |
+| Recommend | The [[agent]]'s pick and its reason | A: a check starts by agreeing what will be tested. | The first option, marked "(Recommended)" |
+| (none) | | | Other: a free-text box under the options |
+
+Every option is the exact [[rule]] that goes into force, so you choose the wording itself, not a direction an [[agent]] will interpret later. The dialog works on desktop and on mobile. Only picking an option decides anything. Words typed into Other leave the [[question]] open: the [[agent]] reads them and asks again. [[agent|Agents]] never ask in chat, where a decision would scroll away unrecorded.
+
+### 4.3 Handoffs: contracts in Gherkin
 
 When one [[agent]] passes a [[job]] to another, it hands over a [[contract]]: a [[spec]] in which each [[requirement]] is an EARS [[rule]] on a Gherkin Rule line, with 1 to 3 [[scenario|scenarios]] under it.
 
@@ -110,13 +146,13 @@ Rule: REQ-001 When a [[person]] asks for a check, the [[verifier]] shall write o
     Then one [[verdict]] is written
 ```
 
-The receiving [[agent]] answers with a [[result]] for each [[scenario]], with no prose (ADR-0012). A [[spec]] line may use only EARS and Gherkin keywords, the operators is, equals, above, below, within, contains and not, and approved [[selector|selectors]]. Every other noun is a [[term]] [[link]] (ADR-0002, ADR-0003).
+A [[spec]] line may use only EARS and Gherkin keywords, the operators is, equals, above, below, within, contains and not, and approved [[selector|selectors]]: fixed phrases such as "is written". Each [[selector]] has a [[test-step|test step]], the code that makes it run, so every [[scenario]] can be executed. Every other noun is a [[term]] [[link]]. The receiving [[agent]] answers with a [[result]] for each [[scenario]], with no prose.
 
 Prose between [[agent|agents]] hides both what was asked and what came back. A [[contract]] settles both before the work starts, and its [[scenario|scenarios]] test the result afterwards.
 
-### 3.6 Checks: agree what will be tested, then check
+### 4.4 Checks: agree what will be tested, then check
 
-Most people simply ask an [[agent]] to "check your work". Before checking anything, the [[agent]] lists what it will test, in a compact table, and asks you to confirm (ADR-0011):
+Most people simply ask an [[agent]] to "check your work". Before checking anything, the [[agent]] lists what it will test, in a compact table, and asks you to confirm:
 
 | ID | Requirement | How it's tested |
 | --- | --- | --- |
@@ -127,7 +163,7 @@ Once you confirm, a [[verifier]] that didn't make the change runs those checks a
 
 Agreeing on the list first means a pass covers what you expected it to cover, and you can add anything that's missing before the check runs.
 
-## 4. Asking for work
+## 5. Asking for work
 
 Say what outcome you want and how you'll know it's done, using the vault's own words. [[agent|Agents]] act on what they can check.
 
@@ -150,63 +186,49 @@ Pitfalls to avoid:
 | Vague asks ("clean it up") | The [[agent]] guesses what done means | Say what done looks like, as something you can run or open |
 | Typing a rule into Other | It isn't in force until it's asked again as an option | Pick an option, or ask for a revised [[question]] |
 | Reopening a settled point | [[agent\|Agents]] won't reopen it on their own | Ask for a revising [[adr\|ADR]] by number |
-| A rule that only describes setup | It's kept out of the base prompt (ADR-0008) | Phrase it as something an [[agent]] does |
+| A rule that only describes setup | It's kept out of the base prompt | Phrase it as something an [[agent]] does |
 | Editing Base.md or CLAUDE.md | Your edit is overwritten at the next rebuild | Change the decision behind it |
 
-## 5. One prompt for every agent and project
+## 6. One prompt for every agent and project
 
-The [[rule|rules]] reach every [[agent]] through one generated base prompt. You never copy it by hand.
+Every [[agent]] reads the same base prompt, generated from this vault. Setting it up takes two env settings.
 
-### 5.1 Configure the paths
+### 6.1 Setup
 
-Two env settings, set in your shell or in the `env` block of `~/.claude/settings.json`, say where things are:
+Set these in your shell, or in the `env` block of `~/.claude/settings.json`:
 
-| Setting | What it is | Example |
+| Setting | Value | Example |
 | --- | --- | --- |
 | `AGENT_VAULT` | The folder holding this vault | `C:/Users/you/Documents/Projects/personal/agent-vault` |
-| `AGENT_WORKSPACES` | One or more folders that hold your projects, separated by `;` | `C:/Users/you/Documents/Projects;D:/clients` |
+| `AGENT_WORKSPACES` | The folders that hold your projects, separated by `;` | `C:/Users/you/Documents/Projects;D:/clients` |
 
-### 5.2 Where the prompt comes from
+From then on, each workspace folder gets a CLAUDE.md holding the base prompt. The vault itself gets Base.md (the same prompt, to read), Docs.md (the [[rule|rules]] and [[term|terms]] as one document) and Index.md (a map of every note). All four are generated: don't edit them.
 
-The vault is the single source. Its Decisions and Terms are turned into these files:
+### 6.2 Which agents read it
 
-| File | What it is | Who reads it |
-| --- | --- | --- |
-| Base.md | The base prompt: the [[rule\|rules]] in force, the [[response]] and [[question]] formats, and the [[term\|terms]] | You, as the readable copy |
-| `CLAUDE.md` in each workspace | The same base prompt | Every Claude Code session in a folder under that workspace |
-| Docs.md | The [[rule\|rules]] and [[term\|terms]] as one numbered document | You |
-| Index.md | A map of every note | You, in Obsidian |
+| Agent | Reads the prompt? |
+| --- | --- |
+| A Claude Code session in any folder under a workspace | Yes. Claude Code reads every CLAUDE.md from the session's folder up, so it finds the workspace's. |
+| A session or subagent that session starts | Yes, for the same reason. Its work arrives as a [[contract]]. |
+| Another agent tool, such as Codex | Only if its own instruction file (AGENTS.md for Codex) points at Base.md. Add that line yourself for now. |
+| A session outside every workspace | No. Add its folder to `AGENT_WORKSPACES`. |
 
-Three [[rule|rules]] are records rather than instructions (ADR-0006 to ADR-0008). They appear in Docs.md but not in the base prompt.
+### 6.3 Rules for one project
 
-### 5.3 How each kind of agent gets it
-
-| Agent | How it reads the prompt | What you do |
-| --- | --- | --- |
-| A Claude Code session in a project under a configured workspace | Claude Code loads the CLAUDE.md files in the session's folder and every folder above it, so it finds the workspace's file (ADR-0007). | Keep the project under a configured workspace |
-| A session or subagent started by that session | It works in the same folder, so it reads the same CLAUDE.md. The work itself arrives as a [[contract]] (ADR-0012). | Nothing |
-| A project under a configured workspace that has its own rules | Its own `vault/Decisions` and `vault/Terms` are layered over the shared vault, and its note wins where both define the same name (ADR-0005). | Add notes to the project's `vault/` folder (example below) |
-| A different agent tool (Codex, for example) | It reads its own instruction file, such as AGENTS.md, not CLAUDE.md | Point that file at Base.md. This isn't automated yet |
-| A session outside every configured workspace | It doesn't load the base prompt | Add its folder to `AGENT_WORKSPACES` |
-
-### 5.4 Example: a project's own vault
-
-A shop app under the `Documents/Projects` workspace defines a word the shared vault doesn't have, and gives its own meaning to one that it does:
+A project under a workspace can add its own [[term|terms]] and [[rule|rules]] in a `vault` folder at its root. Where a project's note and a shared note have the same name, the project's wins, in that project only.
 
 ```
-Documents/Projects/              ← a configured workspace (its CLAUDE.md holds the base prompt)
+Documents/Projects/              ← a workspace
 └── shop-app/                    ← a project
     ├── src/
     └── vault/
         └── Terms/
             ├── sku.md           ← new here: "A stock-keeping unit: one sellable variant of a product."
-            └── job.md           ← replaces the shared "job" in this project only
+            └── job.md           ← replaces the shared "job", in shop-app only
 ```
 
-Sessions in `shop-app` read every shared [[term]] and [[rule]], plus `sku`, and use the project's meaning of [[job]]. Sessions in other projects never see either. A `vault/Decisions` folder works the same way for [[rule|rules]] that apply to this project only.
+### 6.4 Changing a rule
 
-### 5.5 Keeping it current
+Change a [[rule]] by deciding an [[adr|ADR]], never by editing the generated files. They are rebuilt within seconds, and each session picks up the change when it next starts.
 
-Change a [[rule]] by deciding an [[adr|ADR]], never by editing the generated files. They are rebuilt within seconds, and each session picks them up at its next start.
-
-When an [[adr|ADR]] that amends another is decided, the amended one moves to the Archive and the new one takes its place. The [[adr|ADRs]] in force are then renumbered so they run in order with no gaps, and every [[link]] to them is updated (ADR-0013). The Decisions folder always reads as one finished list.
+When an [[adr|ADR]] that amends another is decided, the old one moves to the Archive and the new one takes its number, so the Decisions folder always reads as one numbered list with no gaps.

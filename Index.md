@@ -3,12 +3,10 @@ generated: true
 ---
 # Reference
 
-> Written by the Decisions panel from the notes in this vault. Edit the notes; changes here are overwritten.
+> Written by the decision-cards mod from the notes in this vault. Edit the notes; changes here are overwritten.
 
 1. [[#1 Glossary|Glossary]] · 31 [[term|terms]]
 2. [[#2 Decision log|Decision log]] · 13 in force
-3. [[#3 Waiting on you|Waiting on you]] · 0
-4. [[#4 Superseded|Superseded]] · 0
 
 ## 1 Glossary
 
@@ -37,10 +35,10 @@ generated: true
 - **1.23** [[scenario]] *(entity, v1)*: One concrete case under a [[requirement]], written in [[gherkin|Gherkin]] as Given, When and Then, and run as a test.
 - **1.24** [[selector]] *(entity, v1)*: An approved phrase a [[spec]] may use, such as "is assigned 20".
 - **1.25** [[skill]] *(entity, v1)*: A packaged procedure an [[agent]] loads when it is relevant, which can add its own [[selector]]s.
-- **1.26** [[spec]] *(entity, v2)*: A short file listing what a change must do: each [[ears|EARS]] [[rule]] states a [[requirement]], and its [[gherkin|Gherkin]] [[scenario|scenarios]] are the executable tests that check it, run through [[step]] code.
-- **1.27** [[step]] *(entity, v1)*: The test code that makes one [[selector]] actually run.
-- **1.28** [[term]] *(entity, v1)*: A note defining one word of the project vocabulary, which [[spec|specs]] and [[adr|decisions]] link to.
-- **1.29** [[test-sprawl]] *(problem, v1)*: Tests and QA grow far beyond what the work needs.
+- **1.26** [[spec]] *(entity, v2)*: A short file listing what a change must do: each [[ears|EARS]] [[rule]] states a [[requirement]], and its [[gherkin|Gherkin]] [[scenario|scenarios]] are the executable tests that check it, run through [[test-step|test step]] code.
+- **1.27** [[term]] *(entity, v1)*: A note defining one word of the project vocabulary, which [[spec|specs]] and [[adr|decisions]] link to.
+- **1.28** [[test-sprawl]] *(problem, v1)*: Tests and QA grow far beyond what the work needs.
+- **1.29** [[test-step]] *(entity, v2)*: The test code that makes one [[selector]] actually run, so a [[scenario]] line using it can be executed.
 - **1.30** [[verdict]] *(entity, v1)*: A YAML record giving pass or fail for each [[requirement]], with [[evidence]] and up to five [[finding|findings]].
 - **1.31** [[verifier]] *(actor, v1)*: The [[agent]] that checks a [[job]]'s change against its [[spec]] and writes the [[verdict]]; it never wrote the change.
 
@@ -59,20 +57,6 @@ generated: true
 - **2.11** [[ADR-0011|ADR-0011]] *accepted (A)*: What must happen when a [[person]] asks for a check?
 - **2.12** [[ADR-0012|ADR-0012]] *accepted (A)*: How must an [[agent]] hand a [[job]] to another [[agent]]?
 - **2.13** [[ADR-0013|ADR-0013]] *accepted (A)*: What happens to the numbering when an [[adr]] that amends another is decided?
-
-## 3 Waiting on you
-
-Nothing.
-
-## 4 Superseded
-
-Nothing.
-
-## 5 Parked
-
-> Set aside until a real failure calls for them; not in force.
-
-Nothing.
 
 ## Templates
 
