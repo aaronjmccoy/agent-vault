@@ -502,9 +502,7 @@ export const register: Register = (on, options) => {
   config.indexFile = String(options.indexFile ?? '')
   config.docsFile = String(options.docsFile ?? '')
   config.baseFile = String(options.baseFile ?? '')
-  config.claudeFiles = String(options.claudeFile ?? '').trim() ? [String(options.claudeFile)] : []
   config.projectVault = String(options.projectVault ?? 'vault')
-  config.workspaceRoots = String(options.workspaceRoot ?? '').trim() ? [String(options.workspaceRoot)] : []
   on('session.start', async ($, e, next) => {
     config.projectRoot = await repoRootOf($, e.cwd)
     // Env settings win over the options: AGENT_VAULT is the vault folder, AGENT_WORKSPACES
@@ -524,7 +522,13 @@ export const register: Register = (on, options) => {
       .filter(Boolean)
     if (roots.length) {
       config.workspaceRoots = roots
-      config.claudeFiles = roots.map(root => `${root}/CLAUDE.md`)
+      // ADR-0013: each workspace gets the base prompt in a CLAUDE.md and an AGENTS.md,
+      // so Claude Code, Codex and other tools that read AGENTS.md all load it.
+      config.claudeFiles = roots.flatMap(root => [`${root}/CLAUDE.md`, `${root}/AGENTS.md`])
+    } else {
+      // ADR-0013: with no workspaces set, no folder gets the base prompt.
+      config.workspaceRoots = []
+      config.claudeFiles = []
     }
     config.active = !config.workspaceRoots.length || config.workspaceRoots.some(root => inWorkspace(e.cwd, root))
     if (!config.active) return next(e)
@@ -532,6 +536,8 @@ export const register: Register = (on, options) => {
     await ensureVault($).catch(() => {})
     // The first read finishes before the session goes on, so the prompt and checks start current.
     await refresh($).catch(() => {})
+    if (!roots.length)
+      await tellAgent($, '[decision-cards] AGENT_WORKSPACES is not set, so no workspace gets the base prompt (ADR-0013). In your first reply this session, ask the person in the Needs you row to Do the step of setting AGENT_WORKSPACES to the folders that hold their projects, separated by ";".')
     $.clock.every(POLL_MS, () => {
       void refresh($).catch(() => {})
     })

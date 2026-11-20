@@ -416,7 +416,7 @@ test('picking a revision in the dialog marks the old decision superseded', async
   expect(files['decisions/ADR-0007.md']).toContain('superseded_by: ADR-0009')
 })
 
-test('AGENT_VAULT and AGENT_WORKSPACES set the vault and the workspaces, each workspace getting its CLAUDE.md', async ($, on) => {
+test('AGENT_VAULT and AGENT_WORKSPACES set the vault and the workspaces, each workspace getting its CLAUDE.md and AGENTS.md', async ($, on) => {
   const accepted = ADR.replace('status: proposed', 'status: accepted') + '\nDecision  A\n'
   const files: Record<string, string> = { 'decisions/ADR-0007.md': accepted }
   fakeDisk(on, files)
@@ -425,6 +425,7 @@ test('AGENT_VAULT and AGENT_WORKSPACES set the vault and the workspaces, each wo
   const written = Object.keys(files)
   expect(written).toContain('C:/work/CLAUDE.md')
   expect(written).toContain('D:/clients/CLAUDE.md')
+  expect(written).toContain('C:/work/AGENTS.md')
   expect(written).toContain('C:/shared-vault/Base.md')
 })
 
@@ -538,4 +539,15 @@ test("a session in a subfolder reads the repository's layer, and a project decis
   expect(composed).toContain('SHOP-0001')
   expect(composed).toContain('the shared linter rejects it')
   expect(composed).not.toContain('ADR-0007:')
+})
+
+test('with AGENT_WORKSPACES unset, no workspace gets the base prompt and the agent is told to ask for it', async ($, on) => {
+  const accepted = ADR.replace('status: proposed', 'status: accepted') + '\nDecision  A\n'
+  const files: Record<string, string> = { 'decisions/ADR-0007.md': accepted }
+  fakeDisk(on, files)
+  const session = mock.session(on)
+  on('env.get', () => ({ value: undefined }) as never)
+  await $.session.start({ cwd: 'C:/work/acme', surface: 'desktop', isInteractive: true })
+  expect(Object.keys(files).some(f => /CLAUDE\.md|AGENTS\.md/.test(f))).toBe(false)
+  expect(JSON.stringify(session.appended())).toContain('AGENT_WORKSPACES is not set')
 })

@@ -43,13 +43,13 @@ Start with the [Cheat sheet](Cheat%20sheet.md). It walks through the whole loop 
    /plugin install decision-cards@agent-vault
    ```
 
-4. Start a session in any project under one of your workspaces. Its CLAUDE.md now carries the base prompt.
+4. Start a session in any project under one of your workspaces. Its CLAUDE.md and AGENTS.md now carry the base prompt.
 
 | Module | What it does |
 | --- | --- |
-| decision-cards | Writes the base prompt into a CLAUDE.md at each workspace, and into Base.md, Docs.md and Index.md. Asks proposed ADRs in the native question dialog and records your pick. Checks each reply and question against the rules. |
+| decision-cards | Writes the base prompt into a CLAUDE.md and an AGENTS.md at each workspace, and into Base.md, Docs.md and Index.md. Asks proposed ADRs in the native question dialog and records your pick. Checks each reply and question against the rules. |
 
-Agents other than Claude Code (Codex, for example) read their own instruction file, such as AGENTS.md. Point that file at [Base.md](Base.md) until this is automated.
+Codex and other tools that read AGENTS.md get the base prompt from the same workspace file. A tool with a different instruction file needs a line pointing at [Base.md](Base.md).
 
 ## Change a rule
 

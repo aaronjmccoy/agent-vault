@@ -103,7 +103,7 @@ How this system works, written from its 14 [[rule|rules]] in force and 31 define
 
 **[[requirement]]** *(entity)*: One [[rule]] in a [[spec]], with an ID such as REQ-003, that its [[gherkin|Gherkin]] [[scenario|scenarios]] check. Used in [[ADR-0002|ADR-0002]], [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]].
 
-**[[response]]** *(entity)*: What an [[agent]] writes back to a [[person]]: a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each at most two sentences and included only when it has something to say, in at most 8 rows, with nothing outside the table. Used in [[ADR-0003|ADR-0003]], [[ADR-0004|ADR-0004]], [[ADR-0007|ADR-0007]], [[ADR-0008|ADR-0008]], [[ADR-0011|ADR-0011]].
+**[[response]]** *(entity)*: What an [[agent]] writes back to a [[person]]: a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each at most two sentences and included only when it has something to say, in at most 8 rows, with nothing outside the table. Used in [[ADR-0003|ADR-0003]], [[ADR-0004|ADR-0004]], [[ADR-0007|ADR-0007]], [[ADR-0008|ADR-0008]], [[ADR-0011|ADR-0011]], [[ADR-0013|ADR-0013]].
 
 **[[result]]** *(entity)*: The pass or fail a [[verdict]] gives one [[scenario]]; a [[requirement]] passes only when all its [[scenario|scenarios]] pass. Used in [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]].
 

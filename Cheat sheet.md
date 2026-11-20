@@ -209,7 +209,7 @@ Set these in your shell, or in the `env` block of `~/.claude/settings.json`:
 | `AGENT_VAULT` | The folder holding this vault | `C:/Users/you/Documents/Projects/personal/agent-vault` |
 | `AGENT_WORKSPACES` | The folders that hold your projects, separated by `;` | `C:/Users/you/Documents/Projects;D:/clients` |
 
-From then on, each workspace folder gets a CLAUDE.md holding the base prompt. The vault itself gets Base.md (the same prompt, to read), Docs.md (the [[rule|rules]] and [[term|terms]] as one document) and Index.md (a map of every note). All four are generated: don't edit them.
+From then on, each workspace folder gets a CLAUDE.md and an `AGENTS.md`, both holding the base prompt. Until `AGENT_WORKSPACES` is set, no folder gets them, and the [[agent]]'s first [[response|reply]] in a session asks you to set it. The vault itself gets Base.md (the same prompt, to read), Docs.md (the [[rule|rules]] and [[term|terms]] as one document) and Index.md (a map of every note). All of these are generated: don't edit them.
 
 ### 6.2 Which agents read it
 
@@ -217,7 +217,7 @@ From then on, each workspace folder gets a CLAUDE.md holding the base prompt. Th
 | --- | --- |
 | A Claude Code session in any folder under a workspace | Yes. Claude Code reads every CLAUDE.md from the session's folder up, so it finds the workspace's. |
 | A session or subagent that session starts | Yes, for the same reason. Its work arrives as a [[contract]]. |
-| Another agent tool, such as Codex | Only if its own instruction file (AGENTS.md for Codex) points at Base.md. Add that line yourself for now. |
+| Another agent tool, such as Codex | Yes, if it reads `AGENTS.md` from the session's folder up, as Codex does. A tool with another instruction file needs a line pointing at Base.md. |
 | A session outside every workspace | No. Add its folder to `AGENT_WORKSPACES`. |
 
 ### 6.3 Rules for one project
