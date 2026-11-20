@@ -1,6 +1,6 @@
 # Docs
 
-How this system works, written from its 14 [[rule|rules]] in force and 31 defined [[term|terms]]. Each [[rule]] says who acts, when, and what they do. Follow a link for a [[term]]'s definition or the [[adr|decision]] behind a [[rule]].
+How this system works, written from its 14 [[rule|rules]] in force and 32 defined [[term|terms]]. Each [[rule]] says who acts, when, and what they do. Follow a link for a [[term]]'s definition or the [[adr|decision]] behind a [[rule]].
 
 ## Contents
 
@@ -93,7 +93,9 @@ How this system works, written from its 14 [[rule|rules]] in force and 31 define
 
 **[[link]]** *(entity)*: A reference from text to a [[term]]'s note, written as [[term]] in notes, [[spec|specs]] and [[adr|ADRs]], and as a markdown link to the note's file in chat replies, where wiki links show as plain text; every instance of a defined word gets one. Used in [[ADR-0003|ADR-0003]], [[ADR-0004|ADR-0004]], [[ADR-0009|ADR-0009]], [[ADR-0010|ADR-0010]], [[ADR-0011|ADR-0011]].
 
-**[[long-replies]]** *(problem)*: [[agent|Agent]] replies run far too long and are tedious to review. Used in [[ADR-0004|ADR-0004]], [[ADR-0006|ADR-0006]], [[ADR-0014|ADR-0014]].
+**[[long-prompt]]** *(problem)*: The base prompt runs so long that [[agent|agents]] spend their attention reading what they cannot act on. Used in [[ADR-0006|ADR-0006]], [[ADR-0014|ADR-0014]].
+
+**[[long-replies]]** *(problem)*: [[agent|Agent]] replies run far too long and are tedious to review. Used in [[ADR-0004|ADR-0004]], [[ADR-0006|ADR-0006]].
 
 **[[message]]** *(entity)*: A YAML record one [[agent]] writes to hand work to another: who, what [[job]], status, links and needs. Used in [[ADR-0006|ADR-0006]].
 

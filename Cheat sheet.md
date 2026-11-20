@@ -56,7 +56,7 @@ The notation is a stable id that survives renaming, and the status says whether 
 | actor | Someone or something that acts | [[agent]], [[person]], [[verifier]] |
 | entity | A thing that exists and can be pointed at | [[spec]], [[adr]], [[rule]] |
 | action | Something done | [[autocommit]] |
-| problem | A recurring trouble the framework exists to fix | [[hard-to-judge]], [[long-replies]] |
+| problem | A recurring trouble the framework exists to fix | [[hard-to-judge]], [[long-replies]], [[long-prompt]] |
 | state | A condition that holds for a while | none yet |
 | event | Something that happens at a moment | none yet |
 | value | A quantity or setting | none yet |
@@ -65,7 +65,7 @@ Aliases are other words that mean the same thing. The decided_by line names the 
 
 Each [[term]] note has its own version number, which goes up by one with every edit, and [[agent|agents]] always use the newest. The vault is a git repository, so each commit is also a snapshot of every note at once. To refer to the whole set as it stood at one moment, cite the commit.
 
-Defining a word once means you and every [[agent]] read the same meaning. Undefined jargon is how a [[question]] ends up asking about something you never agreed to.
+Every [[term]] with a note is in the base prompt, whether or not a [[rule]] uses it yet, so any defined word you use is understood. Defining a word once means you and every [[agent]] read the same meaning. Undefined jargon is how a [[question]] ends up asking about something you never agreed to.
 
 ### 3.2 Links
 

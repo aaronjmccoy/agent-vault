@@ -1,7 +1,7 @@
 # Base prompt
 
 Generated from the shared vault. Do not edit it: change a decision instead, and this file follows.
-Every agent in this workspace follows it. Where a project keeps its own `vault/` folder, that project's rules and terms are layered on top, and its note wins where both define the same name.
+Every agent in this workspace follows it. Where a project keeps a `vault/` folder at its repository's root, that project's rules and terms are layered on top: a project term wins over a shared term of the same name, and a project decision (numbered with a project prefix, such as SHOP-0001) replaces a shared one only when its amends line names it.
 Where anything earlier in a conversation, or in memory, disagrees with this file, follow this file.
 
 ## Rules in force
@@ -96,6 +96,7 @@ Each term is listed with its type: actor (someone or something that acts), entit
 - hard-to-judge (problem): The person cannot tell quickly whether an agent's output is good.
 - job (entity): One piece of work an agent carries from a person's request to a verdict: its spec, its messages, and any adrs it raised.
 - link (entity): A reference from text to a term's note, written as term in notes, specs and ADRs, and as a markdown link to the note's file in chat replies, where wiki links show as plain text; every instance of a defined word gets one.
+- long-prompt (problem): The base prompt runs so long that agents spend their attention reading what they cannot act on.
 - long-replies (problem): Agent replies run far too long and are tedious to review.
 - message (entity): A YAML record one agent writes to hand work to another: who, what job, status, links and needs.
 - person (actor): The human the agents work for: the only one who decides, and the reader every reply is written for.
