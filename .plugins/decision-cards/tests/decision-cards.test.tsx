@@ -331,19 +331,17 @@ test('the base prompt carries the rules in force, the reply and question shapes,
   expect(text).not.toContain('[[phrase]]')
 })
 
-test('a rule marked prompt: record stays out of the base prompt and the reference, but stays in force', () => {
+test('every rule in force is in the base prompt and the reference (ADR-0014)', () => {
   const kept = decisionNote('ADR-0002', 'd/ADR-0002.md', ADR.replace('ADR-0007', 'ADR-0002').replace('status: proposed', 'status: accepted') + '\nDecision  A\n')
   const setup = decisionNote(
     'ADR-0001',
     'd/ADR-0001.md',
     ADR.replace('ADR-0007', 'ADR-0001').replace('status: proposed', 'status: accepted\nprompt: record') + '\nDecision  B\n',
   )
-  expect(setup.record).toBe(true)
-  expect(setup.rule).not.toBe('')
   const text = basePrompt([kept, setup], 'C:/vault/Decisions')
   expect(text).toContain('- ADR-0002:')
-  expect(text).not.toContain('ADR-0001')
-  expect(currentReference([kept, setup])).not.toContain('ADR-0001')
+  expect(text).toContain('- ADR-0001:')
+  expect(currentReference([kept, setup])).toContain('ADR-0001')
 })
 
 test('the mod runs only in sessions under the workspace folder', () => {

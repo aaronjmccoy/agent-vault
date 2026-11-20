@@ -63,7 +63,6 @@ export const termNote = (name: string, file: string, text: string): NoteEntry =>
     outcome: def,
     scope: '',
     rule: '',
-    record: false,
   }
 }
 
@@ -115,9 +114,6 @@ export const decisionNote = (name: string, file: string, text: string): NoteEntr
     outcome: outcomeOf(body),
     scope: meta.scope ?? '',
     rule: ruleOf(body),
-    // ADR-0014: a rule that only records setup, or leaves the choice to each project,
-    // stays in force and in Docs but is kept out of what agents read.
-    record: (meta.prompt ?? '').toLowerCase() === 'record',
   }
 }
 
@@ -180,9 +176,8 @@ export const docsDocument = (notes: readonly NoteEntry[]): string => {
     '',
   ]
   rules.forEach((r, j) => {
-    const record = r.record ? ' · a record, not in the base prompt' : ''
     out.push(`**1.${j + 1}** ${one(r.rule)}`, '')
-    out.push(`*Why:* ${one(r.summary)} *Decided in [[${r.name}|${r.title}]] · ${areaTitle(r.scope)}${record}.*`, '')
+    out.push(`*Why:* ${one(r.summary)} *Decided in [[${r.name}|${r.title}]] · ${areaTitle(r.scope)}.*`, '')
   })
   out.push('## 2. Glossary', '')
   for (const t of terms) {
@@ -253,7 +248,7 @@ export const vaultIndex = (notes: readonly NoteEntry[]): string => {
 export const currentReference = (notes: readonly NoteEntry[], limit = 6000): string => {
   const terms = notes.filter(n => n.kind === 'term' && isCurrent(n)).sort((a, b) => a.title.localeCompare(b.title))
   const decided = notes
-    .filter(n => n.kind === 'decision' && isCurrent(n) && !n.record && n.status === 'accepted')
+    .filter(n => n.kind === 'decision' && isCurrent(n) && n.status === 'accepted')
     .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }))
   const pending = notes
     .filter(n => n.kind === 'decision' && (n.status === 'proposed'))
@@ -287,7 +282,7 @@ export const basePrompt = (notes: readonly NoteEntry[], decisionsDir: string): s
   const byTitle = (a: NoteEntry, b: NoteEntry) => a.title.localeCompare(b.title)
   const one = (s: string) => plainText(s).replace(/\s+/g, ' ').trim()
   const terms = notes.filter(x => x.kind === 'term' && isCurrent(x)).sort(byTitle)
-  const rules = notes.filter(x => x.kind === 'decision' && isCurrent(x) && x.status === 'accepted' && x.rule && !x.record).sort(byNumber)
+  const rules = notes.filter(x => x.kind === 'decision' && isCurrent(x) && x.status === 'accepted' && x.rule).sort(byNumber)
   const pending = notes.filter(x => x.kind === 'decision' && (x.status === 'proposed')).sort(byNumber)
   return [
     '# Base prompt',

@@ -17,6 +17,9 @@ Where anything earlier in a conversation, or in memory, disagrees with this file
 - ADR-0009: When handing a job to another agent, the agent hands it as a contract, and both agents communicate only through that contract and a result for each of its scenarios, with no prose.
 - ADR-0010: When an adr that amends another is decided, the agent moves the amended adr to the Archive, gives the decided one its place, and renumbers the ADRs in force so they run in order with no gaps, updating every link to them.
 - ADR-0011: When a reply breaks the reply rule, the reply check holds it back before it enters the chat, and the agent recomposes the whole reply from the problems found, so only the corrected reply is shown.
+- ADR-0012: Where a project sets a test pace, ci runs that project's tests at that pace, and the project also sets the pace at which to autocommit.
+- ADR-0013: Where an agent works in any folder under a workspace listed in AGENT_WORKSPACES, the agent loads the base prompt through the CLAUDE.md at that workspace's root.
+- ADR-0014: Where a rule is in force, the base prompt includes it.
 
 ## How to write a rule
 

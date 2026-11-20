@@ -35,8 +35,6 @@ export type NoteEntry = {
   // The area an ADR belongs to (its scope), and the rule it put in force.
   scope: string
   rule: string
-  // Kept out of the base prompt: it records setup or leaves the choice to each project.
-  record: boolean
 }
 
 declare module 'claude-code' {

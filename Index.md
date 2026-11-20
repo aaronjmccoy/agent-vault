@@ -57,7 +57,7 @@ generated: true
 - **2.11** [[ADR-0011|ADR-0011]] *accepted (A)*: What happens to a [[response|reply]] that breaks the reply [[rule]] before you see it?
 - **2.12** [[ADR-0012|ADR-0012]] *accepted (D)*: When do the tests you've written run automatically?
 - **2.13** [[ADR-0013|ADR-0013]] *accepted (A)*: Which sessions should load the base prompt?
-- **2.14** [[ADR-0014|ADR-0014]] *accepted (A)*: Should the base prompt leave out [[rule|rules]] an [[agent]] cannot act on?
+- **2.14** [[ADR-0014|ADR-0014]] *accepted (B)*: Should the base prompt leave out [[rule|rules]] an [[agent]] cannot act on?
 
 ## Templates
 

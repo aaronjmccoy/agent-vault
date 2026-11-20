@@ -55,19 +55,19 @@ How this system works, written from its 14 [[rule|rules]] in force and 31 define
 
 **1.12** Where a project sets a test pace, [[ci]] runs that project's tests at that pace, and the project also sets the pace at which to [[autocommit]].
 
-*Why:* When do the tests you've written run automatically? *Decided in [[ADR-0012|ADR-0012]] · Agents › Testing · a record, not in the base prompt.*
+*Why:* When do the tests you've written run automatically? *Decided in [[ADR-0012|ADR-0012]] · Agents › Testing.*
 
 **1.13** Where an [[agent]] works in any folder under a workspace listed in AGENT_WORKSPACES, the [[agent]] loads the base prompt through the CLAUDE.md at that workspace's root.
 
-*Why:* Which sessions should load the base prompt? *Decided in [[ADR-0013|ADR-0013]] · Agents › Process · a record, not in the base prompt.*
+*Why:* Which sessions should load the base prompt? *Decided in [[ADR-0013|ADR-0013]] · Agents › Process.*
 
-**1.14** Where a [[rule]] only records setup or leaves the choice to each project, the base prompt leaves it out, and Docs lists it.
+**1.14** Where a [[rule]] is in force, the base prompt includes it.
 
-*Why:* Should the base prompt leave out [[rule|rules]] an [[agent]] cannot act on? *Decided in [[ADR-0014|ADR-0014]] · Agents › Process · a record, not in the base prompt.*
+*Why:* Should the base prompt leave out [[rule|rules]] an [[agent]] cannot act on? *Decided in [[ADR-0014|ADR-0014]] · Agents › Process.*
 
 ## 2. Glossary
 
-**[[adr]]** *(entity)*: A short file recording one decision: the [[question]], its options as [[ears|EARS]] [[rule|rules]], the choice, and its consequences. Used in [[ADR-0001|ADR-0001]], [[ADR-0003|ADR-0003]], [[ADR-0007|ADR-0007]], [[ADR-0010|ADR-0010]].
+**[[adr]]** *(entity)*: A short file recording one decision: the [[question]], its options as [[ears|EARS]] [[rule|rules]], the choice, and its consequences. Used in [[ADR-0001|ADR-0001]], [[ADR-0003|ADR-0003]], [[ADR-0007|ADR-0007]], [[ADR-0010|ADR-0010]], [[ADR-0014|ADR-0014]].
 
 **[[agent]]** *(actor)*: An AI model doing work in a session: it writes, checks and asks, and the [[person]] decides. Used in [[ADR-0001|ADR-0001]], [[ADR-0002|ADR-0002]], [[ADR-0003|ADR-0003]], [[ADR-0004|ADR-0004]], [[ADR-0005|ADR-0005]], [[ADR-0006|ADR-0006]], [[ADR-0007|ADR-0007]], [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]], [[ADR-0010|ADR-0010]], [[ADR-0011|ADR-0011]], [[ADR-0013|ADR-0013]], [[ADR-0014|ADR-0014]].
 
