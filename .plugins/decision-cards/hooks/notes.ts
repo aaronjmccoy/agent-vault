@@ -355,7 +355,7 @@ export const basePrompt = (notes: readonly NoteEntry[], decisionsDir: string): s
     '| "Add X. It is done when …" | The done-when becomes your Check row |',
     '| "Check your work" | List what you will test, get it approved, then check (above) |',
     '| "Make this a rule: …" | Write a proposed ADR with the rule as an option, and ask it |',
-    '| "Revise ADR-nnnn so that …" | Write an ADR that amends it, and ask it; never work around a rule quietly |',
+    '| "Revise ADR-nnnn so that …" | Write an ADR that amends it, and ask it; never work around a rule quietly. Once it is decided, archive both as ADR-nnnn-vN and rewrite ADR-nnnn with the new rule as a Consequences line |',
     '| "Just this once, …" | Do it without recording anything; the rule stays as it is |',
     '| "Propose a decision on …" | Write a proposed ADR with each option as a rule and its cost, and ask it |',
     '| A long explanation | Write it as a doc or a vault note, since replies stop at 8 rows |',

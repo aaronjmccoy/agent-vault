@@ -107,7 +107,7 @@ How this system works, written from its 14 [[rule|rules]] in force and 31 define
 
 **[[result]]** *(entity)*: The pass or fail a [[verdict]] gives one [[scenario]]; a [[requirement]] passes only when all its [[scenario|scenarios]] pass. Used in [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]].
 
-**[[rule]]** *(entity)*: One sentence a [[adr|decision]] put in force, written in [[ears|EARS]]; [[agent|agents]] follow the newest one. Used in [[ADR-0001|ADR-0001]], [[ADR-0005|ADR-0005]], [[ADR-0006|ADR-0006]], [[ADR-0011|ADR-0011]], [[ADR-0014|ADR-0014]].
+**[[rule]]** *(entity)*: One sentence a [[adr|decision]] put in force, written in [[ears|EARS]]; [[agent|agents]] follow the newest one. Used in [[ADR-0001|ADR-0001]], [[ADR-0005|ADR-0005]], [[ADR-0006|ADR-0006]], [[ADR-0010|ADR-0010]], [[ADR-0011|ADR-0011]], [[ADR-0014|ADR-0014]].
 
 **[[rules-not-landing]]** *(problem)*: Instructions get recited back, but their effects never show up in what [[agent|agents]] do. Used in [[ADR-0002|ADR-0002]], [[ADR-0005|ADR-0005]], [[ADR-0011|ADR-0011]], [[ADR-0013|ADR-0013]].
 
@@ -119,7 +119,7 @@ How this system works, written from its 14 [[rule|rules]] in force and 31 define
 
 **[[spec]]** *(entity)*: A short file listing what a change must do: each [[ears|EARS]] [[rule]] states a [[requirement]], and its [[gherkin|Gherkin]] [[scenario|scenarios]] are the executable tests that check it, run through [[test-step|test step]] code. Used in [[ADR-0002|ADR-0002]], [[ADR-0003|ADR-0003]], [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]], [[ADR-0012|ADR-0012]].
 
-**[[term]]** *(entity)*: A note defining one word of the project vocabulary, which [[spec|specs]] and [[adr|decisions]] link to. Used in [[ADR-0001|ADR-0001]], [[ADR-0003|ADR-0003]], [[ADR-0004|ADR-0004]], [[ADR-0005|ADR-0005]], [[ADR-0006|ADR-0006]], [[ADR-0011|ADR-0011]].
+**[[term]]** *(entity)*: A note defining one word of the project vocabulary, which [[spec|specs]] and [[adr|decisions]] link to. Used in [[ADR-0001|ADR-0001]], [[ADR-0003|ADR-0003]], [[ADR-0004|ADR-0004]], [[ADR-0005|ADR-0005]], [[ADR-0006|ADR-0006]], [[ADR-0010|ADR-0010]], [[ADR-0011|ADR-0011]].
 
 **[[test-sprawl]]** *(problem)*: Tests and QA grow far beyond what the work needs.
 

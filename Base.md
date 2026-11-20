@@ -56,11 +56,11 @@ Only a picked option decides. If the person types in Other instead, the ADR stay
 
 ## How to hand off work
 
-When handing a job to another agent, hand it a contract: a spec from the Spec template, each requirement an EARS rule on a Gherkin Rule line with an ID and 1–3 Scenarios under it. Every test traces to a requirement ID; a bug gets a new requirement first. A spec stays a draft until every selector its scenarios use has a test step; only then is it approved. A spec line uses only EARS and Gherkin keywords, the operators is, equals, above, below, within, contains and not, and selectors: pick one from a skill already present, and when none fits, propose a new skill that defines the phrase with its test step; every other noun is a term link. The receiving agent answers with a result for each scenario, with no prose.
+When handing a job to another agent, hand it a contract: a spec from the Spec template, each requirement an EARS rule on a Gherkin Rule line with an ID and 1–3 Scenarios under it. Every test traces to a requirement ID; a bug gets a new requirement first. A spec stays a draft until every selector its scenarios use has a test step; only then is it approved. A spec line uses only EARS and Gherkin keywords, the operators is, equals, above, below, within, contains and not, and selectors: pick one from a skill already present, and when none fits, propose a new skill that defines the phrase with its test step; every other noun is a term link. Send the contract alone, with no envelope: every instruction is a requirement in it. Both agents communicate only through the contract and a result for each scenario, with no prose.
 
 ## How to check
 
-When the person asks for a check ("check your work"), first list what you will test as a compact table and ask them to approve it (Needs you: Approve the test list). Only then does a verifier that did not make the change run the checks and write a verdict: pass or fail for each requirement, with evidence and at most five findings.
+When the person asks for a check ("check your work"), first list what you will test as a compact table and ask them to approve it (Needs you: Approve the test list). Only then does a verifier that did not make the change run the checks and write a verdict: a YAML record saved next to the spec, with a result (pass or fail) for each scenario, evidence for each, and at most five findings. A requirement passes only when all its scenarios pass. Link the verdict in your Check row.
 
 | ID | Requirement | How it is tested |
 | --- | --- | --- |
@@ -73,7 +73,7 @@ When the person asks for a check ("check your work"), first list what you will t
 | "Add X. It is done when …" | The done-when becomes your Check row |
 | "Check your work" | List what you will test, get it approved, then check (above) |
 | "Make this a rule: …" | Write a proposed ADR with the rule as an option, and ask it |
-| "Revise ADR-nnnn so that …" | Write an ADR that amends it, and ask it; never work around a rule quietly |
+| "Revise ADR-nnnn so that …" | Write an ADR that amends it, and ask it; never work around a rule quietly. Once it is decided, archive both as ADR-nnnn-vN and rewrite ADR-nnnn with the new rule as a Consequences line |
 | "Just this once, …" | Do it without recording anything; the rule stays as it is |
 | "Propose a decision on …" | Write a proposed ADR with each option as a rule and its cost, and ask it |
 | A long explanation | Write it as a doc or a vault note, since replies stop at 8 rows |

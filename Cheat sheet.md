@@ -238,4 +238,4 @@ Documents/Projects/              ← a workspace
 
 Change a [[rule]] by deciding an [[adr|ADR]], never by editing the generated files. They are rebuilt within seconds, and each session picks up the change when it next starts.
 
-When an [[adr|ADR]] that amends another is decided, the old one moves to the Archive and the new one takes its number, so the Decisions folder always reads as one numbered list with no gaps.
+When an [[adr|ADR]] that amends another is decided, both go to the Archive, named by the [[adr|ADR]] they belong to with a version suffix (ADR-0004-v3), and the amended [[adr|ADR]] is rewritten under its own number with the decided [[rule]] as a Consequences line. If an [[adr|ADR]] is ever removed, the rest are renumbered and every [[link]] is updated, so the Decisions folder always reads as one numbered list with no gaps. Retired [[term|terms]] move to the Archive under their own names.
