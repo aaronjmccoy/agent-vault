@@ -73,7 +73,7 @@ How this system works, written from its 13 [[rule|rules]] in force and 31 define
 
 **[[contract]]** *(entity)*: The [[spec]] one [[agent]] hands another as the whole of a [[job]]: its [[gherkin|Gherkin]] [[scenario|scenarios]] say what must be done and how it is checked, with no prose beside them. Used in [[ADR-0009|ADR-0009]].
 
-**[[cryptic-questions]]** *(problem)*: [[agent|Agent]] [[question|questions]] assume jargon and treat the [[person]]'s words as fixed picks instead of reasoning about them.
+**[[cryptic-questions]]** *(problem)*: [[agent|Agent]] [[question|questions]] assume jargon and treat the [[person]]'s words as fixed picks instead of reasoning about them. Used in [[ADR-0001|ADR-0001]].
 
 **[[ears]]** *(entity)*: A fixed sentence pattern for a [[rule]], in the present tense: When, While, If or Where something holds, an actor does something, as in "When writing a reply, the agent uses a two-column table of labelled rows." Used in [[ADR-0001|ADR-0001]], [[ADR-0002|ADR-0002]], [[ADR-0003|ADR-0003]].
 
@@ -87,7 +87,7 @@ How this system works, written from its 13 [[rule|rules]] in force and 31 define
 
 **[[job]]** *(entity)*: One piece of work an [[agent]] carries from a [[person]]'s request to a [[verdict]]: its [[spec]], its [[message]]s, and any [[adr]]s it raised. Used in [[ADR-0005|ADR-0005]], [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]].
 
-**[[link]]** *(entity)*: A reference from text to a [[term]]'s note, written as [[term]] in notes, [[spec|specs]] and [[adr|ADRs]], and as a markdown link to the note's file in chat replies, where wiki links show as plain text; every instance of a defined word gets one. Used in [[ADR-0004|ADR-0004]], [[ADR-0010|ADR-0010]].
+**[[link]]** *(entity)*: A reference from text to a [[term]]'s note, written as [[term]] in notes, [[spec|specs]] and [[adr|ADRs]], and as a markdown link to the note's file in chat replies, where wiki links show as plain text; every instance of a defined word gets one. Used in [[ADR-0003|ADR-0003]], [[ADR-0004|ADR-0004]], [[ADR-0010|ADR-0010]].
 
 **[[long-replies]]** *(problem)*: [[agent|Agent]] replies run far too long and are tedious to review. Used in [[ADR-0004|ADR-0004]], [[ADR-0006|ADR-0006]], [[ADR-0013|ADR-0013]].
 
@@ -117,7 +117,7 @@ How this system works, written from its 13 [[rule|rules]] in force and 31 define
 
 **[[term]]** *(entity)*: A note defining one word of the project vocabulary, which [[spec|specs]] and [[adr|decisions]] link to. Used in [[ADR-0001|ADR-0001]], [[ADR-0003|ADR-0003]], [[ADR-0005|ADR-0005]], [[ADR-0006|ADR-0006]].
 
-**[[test-sprawl]]** *(problem)*: Tests and QA grow far beyond what the work needs.
+**[[test-sprawl]]** *(problem)*: Tests and QA grow far beyond what the work needs. Used in [[ADR-0002|ADR-0002]].
 
 **[[test-step]]** *(entity)*: The test code that makes one [[selector]] actually run, so a [[scenario]] line using it can be executed. Used in [[ADR-0002|ADR-0002]], [[ADR-0011|ADR-0011]].
 
