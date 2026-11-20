@@ -9,6 +9,7 @@ export const TEMPLATES: Readonly<Record<string, string>> = {
     'aliases: []',
     'version: 1',
     'status: approved',
+    'decided_by: \"\"',
     '---',
     '**Definition:** One sentence: what {{title}} means here. Link other terms as [[term]].',
     '',

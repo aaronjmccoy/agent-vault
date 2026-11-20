@@ -2,7 +2,8 @@
 notation: t-3m7x
 type: entity
 aliases: [phrase]
-version: 1
+version: 2
 status: approved
+decided_by: ""
 ---
-**Definition:** An approved phrase a [[spec]] may use, such as "is assigned 20".
+**Definition:** A fixed phrase a [[skill]] defines, together with its [[test-step|test step]], that a [[spec]] line may use, such as "is assigned 20".

@@ -106,7 +106,7 @@ Each term is listed with its type: actor (someone or something that acts), entit
 - rule (entity): One sentence a decision put in force, written in EARS; agents follow the newest one.
 - rules-not-landing (problem): Instructions get recited back, but their effects never show up in what agents do.
 - scenario (entity): One concrete case under a requirement, written in Gherkin as Given, When and Then, and run as a test.
-- selector (entity): An approved phrase a spec may use, such as "is assigned 20".
+- selector (entity): A fixed phrase a skill defines, together with its test step, that a spec line may use, such as "is assigned 20".
 - skill (entity): A packaged procedure an agent loads when it is relevant, which can add its own selectors.
 - spec (entity): A short file listing what a change must do: each EARS rule states a requirement, and its Gherkin scenarios are the executable tests that check it, run through test step code.
 - term (entity): A note defining one word of the project vocabulary, which specs and decisions link to.

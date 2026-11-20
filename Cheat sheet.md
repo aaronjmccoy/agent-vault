@@ -39,17 +39,17 @@ Every word with a special meaning has a [[term]] note in the Terms folder: one f
 
 ```markdown
 ---
+notation: t-c7n2
 type: entity
 aliases: [work contract]
 version: 1
+status: approved
 decided_by: "[[ADR-0009]]"
 ---
-**Definition:** The spec one agent hands another as the whole of a job: its
-Gherkin scenarios say what must be done and how it is checked, with no prose
-beside them.
+**Definition:** The [[spec]] one [[agent]] hands another as the whole of a [[job]]: its [[gherkin|Gherkin]] [[scenario|scenarios]] say what must be done and how it is checked, with no prose beside them.
 ```
 
-The type says what kind of word it is:
+The notation is a stable id that survives renaming, and the status says whether the word is approved for use. The type says what kind of word it is:
 
 | Type | Meaning | Example |
 | --- | --- | --- |
@@ -63,7 +63,7 @@ The type says what kind of word it is:
 
 Aliases are other words that mean the same thing. The decided_by line names the [[adr|ADR]] that introduced the word.
 
-Each [[term]] and each [[rule]] has its own version number, which goes up by one with every edit, and [[agent|agents]] always use the newest. The vault is a git repository, so each commit is also a snapshot of every note at once. To refer to the whole set as it stood at one moment, cite the commit.
+Each [[term]] note has its own version number, which goes up by one with every edit, and [[agent|agents]] always use the newest. The vault is a git repository, so each commit is also a snapshot of every note at once. To refer to the whole set as it stood at one moment, cite the commit.
 
 Defining a word once means you and every [[agent]] read the same meaning. Undefined jargon is how a [[question]] ends up asking about something you never agreed to.
 
@@ -74,7 +74,7 @@ Wherever a defined word appears, it is a [[link]] to its [[term]] note, so you c
 | Where you read it | How a link is written | Example |
 | --- | --- | --- |
 | Notes, specs and ADRs in the vault (Obsidian) | A wiki link | `[[contract]]` |
-| An agent's reply in chat | A markdown link to the note's file, because wiki links don't work in chat | `[contract](Terms/contract.md)` |
+| An agent's reply in chat | A markdown link to the note's full path, because wiki links don't work in chat and a full path opens from any project | `[contract](C:/Users/you/agent-vault/Terms/contract.md)` |
 
 Every instance gets a [[link]], not only the first, so a word is never ambiguous wherever you start reading.
 
@@ -149,7 +149,7 @@ Rule: REQ-001 When a [[person]] asks for a check, the [[verifier]] writes one [[
 
 Every test traces to a [[requirement]] ID, and a bug gets a new [[requirement]] before its test is written. A [[spec]] stays a draft until every [[selector]] its [[scenario|scenarios]] use has a [[test-step|test step]]; only then is it approved.
 
-A [[spec]] line may use only EARS and Gherkin keywords, the operators is, equals, above, below, within, contains and not, and approved [[selector|selectors]]: fixed phrases such as "is written". Each [[selector]] has a [[test-step|test step]], the code that makes it run, so every [[scenario]] can be executed. Every other noun is a [[term]] [[link]]. The receiving [[agent]] answers with a [[result]] for each [[scenario]], with no prose.
+A [[spec]] line may use only EARS and Gherkin keywords, the operators is, equals, above, below, within, contains and not, and [[selector|selectors]]: fixed phrases such as "is written", each defined by a [[skill]] together with its [[test-step|test step]], the code that makes it run. The author picks one from a [[skill]] already present, and when none fits, proposes a new [[skill]] that defines it. Every other noun is a [[term]] [[link]]. The receiving [[agent]] answers with a [[result]] for each [[scenario]], with no prose.
 
 Prose between [[agent|agents]] hides both what was asked and what came back. A [[contract]] settles both before the work starts, and its [[scenario|scenarios]] test the result afterwards.
 

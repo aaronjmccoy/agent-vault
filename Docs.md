@@ -67,7 +67,7 @@ How this system works, written from its 14 [[rule|rules]] in force and 31 define
 
 ## 2. Glossary
 
-**[[adr]]** *(entity)*: A short file recording one decision: the [[question]], its options as [[ears|EARS]] [[rule|rules]], the choice, and its consequences. Used in [[ADR-0001|ADR-0001]], [[ADR-0007|ADR-0007]], [[ADR-0010|ADR-0010]].
+**[[adr]]** *(entity)*: A short file recording one decision: the [[question]], its options as [[ears|EARS]] [[rule|rules]], the choice, and its consequences. Used in [[ADR-0001|ADR-0001]], [[ADR-0003|ADR-0003]], [[ADR-0007|ADR-0007]], [[ADR-0010|ADR-0010]].
 
 **[[agent]]** *(actor)*: An AI model doing work in a session: it writes, checks and asks, and the [[person]] decides. Used in [[ADR-0001|ADR-0001]], [[ADR-0002|ADR-0002]], [[ADR-0003|ADR-0003]], [[ADR-0004|ADR-0004]], [[ADR-0005|ADR-0005]], [[ADR-0006|ADR-0006]], [[ADR-0007|ADR-0007]], [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]], [[ADR-0010|ADR-0010]], [[ADR-0011|ADR-0011]], [[ADR-0013|ADR-0013]], [[ADR-0014|ADR-0014]].
 
@@ -103,7 +103,7 @@ How this system works, written from its 14 [[rule|rules]] in force and 31 define
 
 **[[requirement]]** *(entity)*: One [[rule]] in a [[spec]], with an ID such as REQ-003, that its [[gherkin|Gherkin]] [[scenario|scenarios]] check. Used in [[ADR-0002|ADR-0002]], [[ADR-0008|ADR-0008]].
 
-**[[response]]** *(entity)*: What an [[agent]] writes back to a [[person]]: a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each included only when it has something to say, in at most 8 rows. Used in [[ADR-0004|ADR-0004]], [[ADR-0007|ADR-0007]], [[ADR-0011|ADR-0011]].
+**[[response]]** *(entity)*: What an [[agent]] writes back to a [[person]]: a two-column table of up to four labelled rows (Done, Open, Needs you, Check), each included only when it has something to say, in at most 8 rows. Used in [[ADR-0003|ADR-0003]], [[ADR-0004|ADR-0004]], [[ADR-0007|ADR-0007]], [[ADR-0011|ADR-0011]].
 
 **[[result]]** *(entity)*: The pass or fail a [[verdict]] gives one [[requirement]]. Used in [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]].
 
@@ -113,9 +113,9 @@ How this system works, written from its 14 [[rule|rules]] in force and 31 define
 
 **[[scenario]]** *(entity)*: One concrete case under a [[requirement]], written in [[gherkin|Gherkin]] as Given, When and Then, and run as a test. Used in [[ADR-0002|ADR-0002]], [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]], [[ADR-0012|ADR-0012]].
 
-**[[selector]]** *(entity)*: An approved phrase a [[spec]] may use, such as "is assigned 20". Used in [[ADR-0002|ADR-0002]], [[ADR-0003|ADR-0003]].
+**[[selector]]** *(entity)*: A fixed phrase a [[skill]] defines, together with its [[test-step|test step]], that a [[spec]] line may use, such as "is assigned 20". Used in [[ADR-0002|ADR-0002]], [[ADR-0003|ADR-0003]].
 
-**[[skill]]** *(entity)*: A packaged procedure an [[agent]] loads when it is relevant, which can add its own [[selector]]s.
+**[[skill]]** *(entity)*: A packaged procedure an [[agent]] loads when it is relevant, which can add its own [[selector]]s. Used in [[ADR-0003|ADR-0003]].
 
 **[[spec]]** *(entity)*: A short file listing what a change must do: each [[ears|EARS]] [[rule]] states a [[requirement]], and its [[gherkin|Gherkin]] [[scenario|scenarios]] are the executable tests that check it, run through [[test-step|test step]] code. Used in [[ADR-0002|ADR-0002]], [[ADR-0003|ADR-0003]], [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]], [[ADR-0012|ADR-0012]].
 
@@ -123,7 +123,7 @@ How this system works, written from its 14 [[rule|rules]] in force and 31 define
 
 **[[test-sprawl]]** *(problem)*: Tests and QA grow far beyond what the work needs.
 
-**[[test-step]]** *(entity)*: The test code that makes one [[selector]] actually run, so a [[scenario]] line using it can be executed. Used in [[ADR-0002|ADR-0002]], [[ADR-0012|ADR-0012]].
+**[[test-step]]** *(entity)*: The test code that makes one [[selector]] actually run, so a [[scenario]] line using it can be executed. Used in [[ADR-0002|ADR-0002]], [[ADR-0003|ADR-0003]], [[ADR-0012|ADR-0012]].
 
 **[[verdict]]** *(entity)*: A YAML record giving pass or fail for each [[requirement]], with [[evidence]] and up to five [[finding|findings]]. Used in [[ADR-0008|ADR-0008]].
 
