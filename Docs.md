@@ -113,7 +113,7 @@ How this system works, written from its 14 [[rule|rules]] in force and 31 define
 
 **[[scenario]]** *(entity)*: One concrete case under a [[requirement]], written in [[gherkin|Gherkin]] as Given, When and Then, and run as a test. Used in [[ADR-0002|ADR-0002]], [[ADR-0008|ADR-0008]], [[ADR-0009|ADR-0009]], [[ADR-0012|ADR-0012]].
 
-**[[selector]]** *(entity)*: An approved phrase a [[spec]] may use, such as "is assigned 20". Used in [[ADR-0003|ADR-0003]].
+**[[selector]]** *(entity)*: An approved phrase a [[spec]] may use, such as "is assigned 20". Used in [[ADR-0002|ADR-0002]], [[ADR-0003|ADR-0003]].
 
 **[[skill]]** *(entity)*: A packaged procedure an [[agent]] loads when it is relevant, which can add its own [[selector]]s.
 
@@ -121,7 +121,7 @@ How this system works, written from its 14 [[rule|rules]] in force and 31 define
 
 **[[term]]** *(entity)*: A note defining one word of the project vocabulary, which [[spec|specs]] and [[adr|decisions]] link to. Used in [[ADR-0001|ADR-0001]], [[ADR-0003|ADR-0003]], [[ADR-0004|ADR-0004]], [[ADR-0005|ADR-0005]], [[ADR-0006|ADR-0006]], [[ADR-0011|ADR-0011]].
 
-**[[test-sprawl]]** *(problem)*: Tests and QA grow far beyond what the work needs. Used in [[ADR-0002|ADR-0002]].
+**[[test-sprawl]]** *(problem)*: Tests and QA grow far beyond what the work needs.
 
 **[[test-step]]** *(entity)*: The test code that makes one [[selector]] actually run, so a [[scenario]] line using it can be executed. Used in [[ADR-0002|ADR-0002]], [[ADR-0012|ADR-0012]].
 

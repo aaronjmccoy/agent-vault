@@ -147,6 +147,8 @@ Rule: REQ-001 When a [[person]] asks for a check, the [[verifier]] writes one [[
     Then one [[verdict]] is written
 ```
 
+Every test traces to a [[requirement]] ID, and a bug gets a new [[requirement]] before its test is written. A [[spec]] stays a draft until every [[selector]] its [[scenario|scenarios]] use has a [[test-step|test step]]; only then is it approved.
+
 A [[spec]] line may use only EARS and Gherkin keywords, the operators is, equals, above, below, within, contains and not, and approved [[selector|selectors]]: fixed phrases such as "is written". Each [[selector]] has a [[test-step|test step]], the code that makes it run, so every [[scenario]] can be executed. Every other noun is a [[term]] [[link]]. The receiving [[agent]] answers with a [[result]] for each [[scenario]], with no prose.
 
 Prose between [[agent|agents]] hides both what was asked and what came back. A [[contract]] settles both before the work starts, and its [[scenario|scenarios]] test the result afterwards.
